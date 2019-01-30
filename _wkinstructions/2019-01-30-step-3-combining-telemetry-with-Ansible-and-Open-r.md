@@ -302,3 +302,95 @@ The next 3 tasks are used to check if Open/R is already running, clean up if it 
 
 **Since this is the first time you're running this Ansible playbook and the Open/R docker image is not yet on the routers, the run command will invoke a download of the docker image on each router. So expect the last task of the above playbook to take some time for the first run**.
 {:. notice--danger}
+
+
+### Run the Ansible Playbook
+
+Run the playbook as shown below: 
+
+
+```
+
+admin@devbox:ansible$ ansible-playbook -i ansible_hosts docker_bringup.yml 
+
+PLAY [routers_shell] ******************************************************************************************************************
+
+TASK [Copy run_openr script to rtr] ***************************************************************************************************
+ok: [r1]
+ok: [r2]
+
+TASK [Copy hosts_r file to rtr] *******************************************************************************************************
+ok: [r1]
+ok: [r2]
+
+TASK [Copy launch_openr script to rtr] ************************************************************************************************
+ok: [r2]
+ok: [r1]
+
+TASK [Copy increment_ipv4 script to rtr] **********************************************************************************************
+ok: [r1]
+ok: [r2]
+
+TASK [Copy cron file to rtr (CSCvh76067)] *********************************************************************************************
+ok: [r1]
+ok: [r2]
+
+TASK [Set up Cronjob (CSCvh76067)] ****************************************************************************************************
+ok: [r1]
+ok: [r2]
+
+TASK [Check docker container is running] **********************************************************************************************
+ [WARNING]: Consider using 'become', 'become_method', and 'become_user' rather than running sudo
+
+changed: [r1]
+changed: [r2]
+
+TASK [debug] **************************************************************************************************************************
+ok: [r2] => {
+    "output.stdout_lines": "VARIABLE IS NOT DEFINED!"
+}
+ok: [r1] => {
+    "output.stdout_lines": "VARIABLE IS NOT DEFINED!"
+}
+
+TASK [Clean up docker container if running] *******************************************************************************************
+changed: [r2]
+changed: [r1]
+
+TASK [debug] **************************************************************************************************************************
+ok: [r2] => {
+    "output.stdout_lines": [
+        "openr"
+    ]
+}
+ok: [r1] => {
+    "output.stdout_lines": [
+        "openr"
+    ]
+}
+
+TASK [Bring up the docker container] **************************************************************************************************
+changed: [r1]
+changed: [r2]
+
+TASK [debug] **************************************************************************************************************************
+ok: [r1] => {
+    "output.stdout_lines": [
+        "4737c257d5fabf230b06aacd019bcc51e6af2e476befdf7774cd67766e5d1f06"
+    ]
+}
+ok: [r2] => {
+    "output.stdout_lines": [
+        "10ea9e574a27b6132b139d233b52675ba3e8323fbc45c35c36faff71e3f55648"
+    ]
+}
+
+PLAY RECAP ****************************************************************************************************************************
+r1                         : ok=12   changed=3    unreachable=0    failed=0   
+r2                         : ok=12   changed=3    unreachable=0    failed=0   
+
+admin@devbox:ansible$ 
+admin@devbox:ansible$ 
+
+
+```
