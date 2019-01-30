@@ -26,6 +26,8 @@ In this workshop we will look at two of them:
 * Your own python Telemetry client which we will use to extract python data coming from YANG paths set up by YDK:
 <https://learninglabs.cisco.com/tracks/iosxr-programmability/iosxr-streaming-telemetry/03-iosxr-02-telemetry-python/step/1>
 
+
+
 >Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active. 
 >
 > If you haven't connected yet, check out the instructions to do so here: 
@@ -75,29 +77,159 @@ The topology we will be dealing with looks something like this:
 ![topology.png]({{site.baseurl}}/images/topology.png)
 
 
-Ask the proctor for your credentials to access the pod. Click on the "VNC" option under Devnet_Pods/Podx where Podx is the pod assigned to you.
-{: .notice--warning}
 
+## Ansible netconf_config module
 
-## Open up Sublime to view the code pieces we will be dealing with
-![sublime.png]({{site.baseurl}}/images/sublime.png)
-
-Keep this open to view the code at any point. Drop back into the terminal to continue.
-
-
-
-## Execute ncclient code
-
-Hop back over into the `vagrant/code` directory in the devbox and view the available scripts (in sublime or in bash):
+Hop into the devbox and browse to the ansible directory:
 
 
 ```
-vagrant@devbox:code$ cd ncclient/
-vagrant@devbox:ncclient$ ls
-configure-telemetry.py  dump_pyang_tree.py
-vagrant@devbox:ncclient$ 
+AKSHSHAR-M-33WP:~ akshshar$ ssh -p 2211 admin@10.10.20.170
+admin@10.10.20.170's password: 
+Last login: Tue Jan 29 18:35:38 2019 from 192.168.122.1
+admin@devbox:~$ 
+admin@devbox:~$ 
+admin@devbox:~$ cd iosxr-devnet-cleur2019/
+admin@devbox:iosxr-devnet-cleur2019$ ls
+ansible  README.md  ztp_hooks
+admin@devbox:iosxr-devnet-cleur2019$ cd ansible/
+admin@devbox:ansible$ ls
+ansible_hosts  configure_bgp_oc_netconf.yml  docker_bringup.yml  execute_python_ztp.yml  openr  set_ipv6_route.sh  xml
+admin@devbox:ansible$ 
+```
+
+We will be using the playbook: `configure_bgp_oc_netconf.yml` which uses the netconf_config module which in turn utilizes the XML encoded data to configure BGP on routers r1 and r2:
+
+The playbook is dumped below: 
 
 ```
+admin@devbox:ansible$ 
+admin@devbox:ansible$ cat configure_bgp_oc_netconf.yml 
+---
+- hosts: routers_shell
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: set ntp server in the device
+    netconf_config:
+      host: "{{ ansible_host }}"
+      port: "{{ netconf_port }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+      hostkey_verify: no
+      xml: "{{ lookup('file', xml_file) }}"
+admin@devbox:ansible$ 
+admin@devbox:ansible$ 
+```  
+
+The xml file used by the above playbook to configure BGP on router r1 is shown below. 
+This XML data utilizes the IOS-XR BGP Config YANG model:  `Cisco-IOS-XR-ipv4-bgp-cfg`.
+
+
+```
+admin@devbox:ansible$ cat xml/r1-bgp.xml 
+<config>
+  <bgp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ipv4-bgp-cfg">
+   <instance>
+    <instance-name>default</instance-name>
+    <instance-as>
+     <as>0</as>
+     <four-byte-as>
+      <as>65000</as>
+      <bgp-running></bgp-running>
+      <default-vrf>
+       <global>
+        <router-id>50.1.1.1</router-id>
+        <global-afs>
+         <global-af>
+          <af-name>ipv4-unicast</af-name>
+          <enable></enable>
+         </global-af>
+        </global-afs>
+       </global>
+       <bgp-entity>
+        <neighbors>
+         <neighbor>
+          <neighbor-address>60.1.1.1</neighbor-address>
+          <remote-as>
+           <as-xx>0</as-xx>
+           <as-yy>65000</as-yy>
+          </remote-as>
+          <update-source-interface>Loopback0</update-source-interface>
+          <neighbor-afs>
+           <neighbor-af>
+            <af-name>ipv4-unicast</af-name>
+            <activate></activate>
+           </neighbor-af>
+          </neighbor-afs>
+         </neighbor>
+        </neighbors>
+       </bgp-entity>
+      </default-vrf>
+     </four-byte-as>
+    </instance-as>
+   </instance>
+      </bgp>
+    </config>
+admin@devbox:ansible$ 
+```
+
+Similarly, the XML file for router r2:  
+
+
+```
+admin@devbox:ansible$ 
+admin@devbox:ansible$ 
+admin@devbox:ansible$ cat xml/r2-bgp.xml 
+<config>
+  <bgp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ipv4-bgp-cfg"> 
+   <instance> 
+    <instance-name>default</instance-name> 
+    <instance-as> 
+     <as>0</as> 
+     <four-byte-as> 
+      <as>65000</as> 
+      <bgp-running></bgp-running> 
+      <default-vrf> 
+       <global> 
+        <router-id>60.1.1.1</router-id> 
+        <global-afs> 
+         <global-af> 
+          <af-name>ipv4-unicast</af-name> 
+          <enable></enable> 
+         </global-af> 
+        </global-afs> 
+       </global> 
+       <bgp-entity> 
+        <neighbors> 
+         <neighbor> 
+          <neighbor-address>50.1.1.1</neighbor-address> 
+          <remote-as> 
+           <as-xx>0</as-xx> 
+           <as-yy>65000</as-yy> 
+          </remote-as> 
+          <update-source-interface>Loopback0</update-source-interface> 
+          <neighbor-afs> 
+           <neighbor-af> 
+            <af-name>ipv4-unicast</af-name> 
+            <activate></activate> 
+           </neighbor-af> 
+          </neighbor-afs> 
+         </neighbor> 
+        </neighbors> 
+       </bgp-entity> 
+      </default-vrf> 
+     </four-byte-as> 
+    </instance-as> 
+   </instance> 
+  </bgp>
+</config>
+admin@devbox:ansible$ 
+```
+
+
+
 
 
 ### Use pyang to dump YANG model
