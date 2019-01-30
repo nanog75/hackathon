@@ -183,12 +183,6 @@ admin@devbox:openr$
 4. The `increment_ipv4_prefix*.py` script is an optional script we use to push a large set of routes into the configuration file for Open/R to advertise. 
 
 
-### Ansible Playbook to set up IPv6 Fe80::/64 routes in Kernel (Bug)
-
-This particular playbook is only required for this particular version of the IOS-XR software (6.4.1) we are using in the lab.
-
-There is a particular 
-
 
 
 
@@ -299,10 +293,17 @@ admin@devbox:ansible$ cat docker_bringup.yml
 admin@devbox:ansible$ 
 ```
 
-As can be seen above, the first 3 tasks of the playbook copy over the relevant config files and scripts for Open/R into `/misc/app_host` directory on the routers. This particular directory is mounted into the docker containers when we launch the container to make the config files available to Open/R inside the docker container. 
+As can be seen above, the first 4 tasks of the playbook copy over the relevant config files and scripts for Open/R into `/misc/app_host` directory on the routers. This particular directory is mounted into the docker containers when we launch the container to make the config files available to Open/R inside the docker container. 
+
+The 5th task is only required for this particular version of the IOS-XR software (6.4.1) we are using in the lab due to the bug: `CSCvh76067` which prevents `fe80::/64` routes from being installed for all interfaces in the kernel. This is fixed in subsequent releases of IOS-XR.
+We transport a cron job onto the router to fix this issue for this lab.
+
+The next 3 tasks are used to check if Open/R is already running, clean up if it is and then launch the docker container using the `/misc/app_host/launch_openr.sh` we transfered using task 3. 
 
 
 
+**Since this is the first time you're running this Ansible playbook and the Open/R docker image is not yet on the routers, the run command will invoke a download of the docker image on each router. So expect the last task of the above playbook to take some time for the first run**.
+{:. notice--danger}
 
 
 
