@@ -977,5 +977,5 @@ Using GRPC Server IP(10.10.20.170) Port(57021)
 
 
 
-Perfect! Now, we're all set up to  deploy Open/R as an application on the two routers and test out Application-hosting, packet-io and Service-Layer APIs in XR together.
+Perfect! Now, we're all set up to deploy Open/R as an application on the two routers and test out Application-hosting, packet-io and Service-Layer APIs in XR together.
 {: .notice--success}
