@@ -24,7 +24,7 @@ excerpt: >-
 These are APIs at the network infrastructure layer of the IOS-XR stack. These APIs enable model-driven access over gRPC to functionality verticals such as RIB , Label Switch Database, Interface Events and BFD events with more functionalities coming in the future.
 
 Several key attributes of these APIs:
-*  **Performance:** Highly Performant API enabling route programming at a rate of 20000-30000 routes/second
+*  **Performance:** Highly Performant API enabling route programming at a rate of 20000-40000 routes/second
 *  **Model Driven:** Protobuf IDL based model for RPC and data structure definitions
 *  **Multi-Language Client support:** Choose any language binding supported by gRPC to write a service-layer API client
 
@@ -34,7 +34,7 @@ To learn more, head over to:
 
 ### Open/R integration with IOS-XR
 
-In February 20
+In February 2018, we released an open source integration of Facebook's open-source protocol stack (Open/R): <https://github.com/facebook/openr.git> with IOS-XR's service-layer API enabling Open/R to run as an IGP application seamlessly on top of IOS-XR's application hosting infrastructure and provide flexibility to the end user to replace a native IGP (like ISIS, OSPF) with an application that might more suit their operational needs.
 
 ><https://xrdocs.io/telemetry/>
 
