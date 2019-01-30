@@ -30,39 +30,27 @@ Complete CLI support:
 >2) [IOS-XR Python ZTP library](https://xrdocs.io/software-management/tutorials/2016-08-26-working-with-ztp/#ztp_helpersh)
 
 
->The vagrant environment consisting of two IOS-XRv9k instances must already be running. Verify >this by opening up a terminal and running the following commands:
+>Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active. 
 >
->  ```
->  cd ~/topology
->  vagrant status
+> If you haven't connected yet, check out the instructions to do so here: 
+><https://iosxr-devnet-ciscolive.github.io/cleur2019-workshop/assets/CLEUR19-IOS-XR-Programmability-Workshop.pdf>
 >
->  ```
-> You should then see something like this:
->  ```
->  cisco@pod2:~/topology$ vagrant status
->  Current machine states:
 >
->  rtr1                      running (virtualbox)
->  rtr2                      running (virtualbox)
->  devbox                    running (virtualbox)
+> Once you're connected, use the following instructions to connect to the individual nodes.
+> The instructions in the workshop will simply refer to the Name of the box to connect without
+> repeating the connection details and credentials. So refer back to this list when you need it.
+> The 3 nodes in the topology are 
+> 1) Devbox
+> 2) Router r1
+> 3) Router r2
 >
->   This environment represents multiple VMs. The VMs are all listed
->   above with their current state. For more information about a specific
->   VM, run `vagrant status NAME`.
->   cisco@pod2:~/topology$ 
->  ```
-
-{: .notice--info}
-
-
-The topology we will be dealing with looks something like this:
-
-![topology.png]({{site.baseurl}}/images/topology.png)
-
-
-Ask the proctor for your credentials to access the pod. Click on the "VNC" option under Devnet_Pods/Podx where Podx is the pod assigned to you.
-{: .notice--warning}
-
+> * Development Linux System (DevBox)
+>     IP Address: 10.10.20.170 Username/Password: [admin/admin] SSH Port: 2211
+>
+> * IOS-XRv9000 R1: (Router r1)
+>     IP Address: 10.10.20.170 Username/Password: [admin/admin] Management IP: 10.10.20.170 XR SSH >     Port: 2221 NETCONF Port: 8321 gRPC Port: 57021 XR-Bash SSH Port: 2222
+> * IOS-XRv9000 R2:  (Router r2)
+>     IP Address: 10.10.20.170 Username/Password: [admin/admin] Management IP: 10.10.20.170 XR SSH >     Port: 2231 NETCONF Port: 8331 gRPC Port: 57031 XR-Bash SSH Port: 2232
 
 ## Open up Sublime to view the code pieces we will be dealing with
 ![sublime.png]({{site.baseurl}}/images/sublime.png)
