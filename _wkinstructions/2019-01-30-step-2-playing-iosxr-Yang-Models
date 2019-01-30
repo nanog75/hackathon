@@ -670,7 +670,45 @@ RP/0/RP0/CPU0:r1#
 
 
 
+### Verify that the Telemetry sensor-paths are resolved
 
+```
+RP/0/RP0/CPU0:r1#show telemetry model-driven subscription 1
+Wed Jan 30 05:07:56.424 UTC
+Subscription:  1
+-------------
+  State:       NA
+  Sensor groups:
+  Id: BGPSession
+    Sample Interval:      15000 ms
+    Sensor Path:          Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/sessions
+    Sensor Path State:    Resolved
+    Sensor Path:          Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info
+    Sensor Path State:    Resolved
+
+  Collection Groups:
+  ------------------
+  No active collection groups
+
+RP/0/RP0/CPU0:r1#show telemetry model-driven subscription 2
+Wed Jan 30 05:07:59.312 UTC
+Subscription:  2
+-------------
+  State:       NA
+  Sensor groups:
+  Id: IPV6Neighbor
+    Sample Interval:      15000 ms
+    Sensor Path:          Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address
+    Sensor Path State:    Resolved
+
+  Collection Groups:
+  ------------------
+  No active collection groups
+
+RP/0/RP0/CPU0:r1#
+
+
+```
 
 
 
