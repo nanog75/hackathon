@@ -361,8 +361,20 @@ admin@devbox:~$
 
 ```
 
+
 ## Python ZTP hooks
 
+The python ZTP hooks script we intend to use is under `ztp_hooks/` directory in the git repository we cloned earlier:
+
+```
+admin@devbox:~$ 
+admin@devbox:~$ cd ~/iosxr-devnet-cleur2019/
+admin@devbox:iosxr-devnet-cleur2019$ cd ztp_hooks/
+admin@devbox:ztp_hooks$ ls
+automate_cli_bash.sh  automate_cli_python.py
+admin@devbox:ztp_hooks$
+
+```
 
 
 ### Transfer the python script to rtr1 over the connected link
