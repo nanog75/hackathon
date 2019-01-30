@@ -27,6 +27,53 @@ In this workshop we will look at two of them:
 <https://learninglabs.cisco.com/tracks/iosxr-programmability/iosxr-streaming-telemetry/03-iosxr-02-telemetry-python/step/1>
 
      
+>Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active. 
+>
+> If you haven't connected yet, check out the instructions to do so here: 
+><https://iosxr-devnet-ciscolive.github.io/cleur2019-workshop/assets/CLEUR19-IOS-XR-Programmability-Workshop.pdf>
+>
+>
+> Once you're connected, use the following instructions to connect to the individual nodes.
+> The instructions in the workshop will simply refer to the Name of the box to connect without
+> repeating the connection details and credentials. So refer back to this list when you need it.
+>  
+>
+> The 3 nodes in the topology are: 
+> 
+><p style="font-size: 16px;"><b>Development Linux System (DevBox)</b></p> 
+>      IP Address: 10.10.20.170
+>      Username/Password: [admin/admin]
+>      SSH Port: 2211
+> 
+>
+><p style="font-size: 16px;"><b>IOS-XRv9000 R1: (Router r1)</b></p> 
+>
+>     IP Address: 10.10.20.170  
+>     Username/Password: [admin/admin]   
+>     Management IP: 10.10.20.170  
+>     XR SSH Port: 2221    
+>     NETCONF Port: 8321   
+>     gRPC Port: 57021  
+>     XR-Bash SSH Port: 2222    
+>
+>
+><p style="font-size: 16px;"><b>IOS-XRv9000 R2:  (Router r2)</b></p> 
+>
+>     IP Address: 10.10.20.170   
+>     Username/Password: [admin/admin]   
+>     Management IP: 10.10.20.170   
+>     XR SSH Port: 2231    
+>     NETCONF Port: 8331   
+>     gRPC Port: 57031    
+>     XR-Bash SSH Port: 2232
+{: .notice--info}
+
+
+
+
+The topology we will be dealing with looks something like this:
+
+![topology.png]({{site.baseurl}}/images/topology.png)
      
 
 
