@@ -27,7 +27,7 @@ In this workshop we will look at two of them:
 
 * Yang Development Kit (YDK) to configure Telemetry and interfaces on the routers: <http://ydk.io>
 * Your own python Telemetry client which we will use to extract python data coming from YANG paths set up by YDK:
-<https://learninglabs.cisco.com/tracks/iosxr-programmability/iosxr-streaming-telemetry/03-iosxr-02-telemetry-python/step/1>
+<https://learninglabs.cisco.com/tracks/iosxr-programmability/iosxr-streaming-telemetry/03-iosxr-02-telemetry-python/step/1>. Also, a lot more on Telemetry here: <https://xrdocs.io/telemetry/>
 
      
 >Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active. 
