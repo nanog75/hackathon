@@ -909,6 +909,68 @@ admin@devbox:python$
 ```
 
 
+Finally, open up a new shell and run this script to start receiving data from IOS-XR.
+Make sure you export the connection details for the gRPC server running on router r1 before running the script.
+
+```
+export SERVER_IP=10.10.20.170
+export SERVER_PORT=57021
+
+```
+{: .notice--info}
+
+
+```
+admin@devbox:python$ 
+admin@devbox:python$ export SERVER_IP=10.10.20.170
+admin@devbox:python$ export SERVER_PORT=57021
+admin@devbox:python$ 
+admin@devbox:python$ ./telemetry_client_json.py 
+Using GRPC Server IP(10.10.20.170) Port(57021)
+{
+   "encoding_path": "Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/sessions/session", 
+   "subscription_id_str": "1", 
+   "collection_start_time": 1548827148102, 
+   "msg_timestamp": 1548827148108, 
+   "collection_end_time": 1548827148108, 
+   "node_id_str": "r1", 
+   "data_json": [
+      {
+         "keys": {
+            "neighbor-address": "60.1.1.1", 
+            "instance-name": "default"
+         }, 
+         "timestamp": 1548827148107, 
+         "content": {
+            "messages-queued-in": 0, 
+            "is-local-address-configured": false, 
+            "local-as": 65000, 
+            "nsr-state": "bgp-nbr-nsr-st-none", 
+            "description": "", 
+            "connection-remote-address": {
+               "ipv4-address": "60.1.1.1", 
+               "afi": "ipv4"
+            }, 
+            "messages-queued-out": 0, 
+            "connection-state": "bgp-st-idle", 
+            "speaker-id": 0, 
+            "vrf-name": "default", 
+            "remote-as": 65000, 
+            "postit-pending": false, 
+            "nsr-enabled": true, 
+            "connection-local-address": {
+               "ipv4-address": "0.0.0.0", 
+               "afi": "ipv4"
+            }
+         }
+      }
+   ], 
+   "collection_id": 16
+}
+
+
+
+```
 
 
 
