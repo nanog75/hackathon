@@ -630,7 +630,43 @@ admin@devbox:ydk$
 ```
 
 
+### Check the Telemetry configuration on router r1
 
+
+```
+AKSHSHAR-M-33WP:~ akshshar$ ssh -p 2221 admin@10.10.20.170
+
+
+--------------------------------------------------------------------------
+  Router 1 (Cisco IOS XR Sandbox)
+--------------------------------------------------------------------------
+
+
+Password: 
+
+
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#show  running-config telemetry model-driven 
+Wed Jan 30 05:05:03.128 UTC
+telemetry model-driven
+ sensor-group BGPSession
+  sensor-path Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/sessions
+  sensor-path Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info
+ !
+ sensor-group IPV6Neighbor
+  sensor-path Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address
+ !
+ subscription 1
+  sensor-group-id BGPSession sample-interval 15000
+ !
+ subscription 2
+  sensor-group-id IPV6Neighbor sample-interval 15000
+ !
+!
+
+RP/0/RP0/CPU0:r1#
+```
 
 
 
