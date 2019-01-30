@@ -394,3 +394,17 @@ admin@devbox:ansible$
 
 
 ```
+
+
+Perfect! Let's check if the Open/R instances are now running on the routers properly:
+
+
+Log into router r1 and enter the docker container shell:
+
+```
+
+
+```
+
+
+
