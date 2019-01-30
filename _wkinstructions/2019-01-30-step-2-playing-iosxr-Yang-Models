@@ -518,6 +518,10 @@ admin@devbox:ydk$
 
 ```
 
+
+### Execute the YDK script:
+
+
 We intend to configure Model Driven Telemetry on router r1 so that it is ready to stream data associated with BGP Sessions, BGP process and IPv6 neighbor data in the above example.
 The Telemetry client we write later will try and receive the BGP session information from the router.  
 
@@ -624,6 +628,25 @@ admin@devbox:ydk$ ./configure_telemetry_openconfig.py -v ssh://vagrant:vagrant@1
 admin@devbox:ydk$ 
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
