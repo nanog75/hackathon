@@ -764,10 +764,5 @@ admin@devbox:ansible$
 admin@devbox:ansible$ 
 ```
 
-
-
-### Exercise for the Reader  
-
-In order to fetch more details during the run of the ansible playbook, execute the above command again with another option: `-vvv`, like so:  
-`ansible-playbook -i ansible_hosts execute_python_ztp.yml -vvv`.
+Perfect! We're all set for the next section the lab where will look to levarage IOS-XR Yang models to configure BGP and set up a telemetry session.
 {: .notice--success}
