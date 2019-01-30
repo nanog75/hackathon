@@ -400,7 +400,7 @@ end
 ```
 
 
-### Execute python ZTP script using Ansiblea
+### Execute python ZTP script using Ansible
 
 
 Hop into the `ansible/` directory of the git repository we cloned earlier. The ansible playbook we intend to use is shown below (`execute_python_ztp.yml`):
