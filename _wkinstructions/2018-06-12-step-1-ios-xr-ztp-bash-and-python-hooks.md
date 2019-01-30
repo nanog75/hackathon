@@ -53,6 +53,8 @@ Complete CLI support:
 > * IOS-XRv9000 R2:  (Router r2)  
 >
 >     IP Address: 10.10.20.170 Username/Password: [admin/admin] Management IP: 10.10.20.170 XR SSH >     Port: 2231 NETCONF Port: 8331 gRPC Port: 57031 XR-Bash SSH Port: 2232
+{: .notice--info}
+
 
 ## Open up Sublime to view the code pieces we will be dealing with
 ![sublime.png]({{site.baseurl}}/images/sublime.png)
