@@ -728,7 +728,7 @@ We make it slightly simpler and instead of requesting telemetry data in a GPB fo
 
 Before we start, install the dependencies required to connect to the router over gRPC to receive the data.  
 
-### Install dependencies for gRPC telemetry client
+### Install dependencies for the gRPC telemetry client
 
 
 ```
