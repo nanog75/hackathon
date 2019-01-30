@@ -300,9 +300,79 @@ The next 3 tasks are used to check if Open/R is already running, clean up if it 
 
 
 
-**Since this is the first time you're running this Ansible playbook and the Open/R docker image is not yet on the routers, the run command will invoke a download of the docker image on each router. So expect the last task of the above playbook to take some time for the first run**.
-{:. notice--danger}
+### Fetch the image
 
+Before we run the Ansible playbook, let's fetch the docker image for Open/R on each of the routers.
+
+Connect to Router r1 and drop into the "bash" shell:
+
+
+```
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#bash
+Wed Jan 30 11:53:53.420 UTC
+[r1:~]$ 
+[r1:~]$ 
+
+```
+
+
+Let's first restart the docker daemon on the host layer to make sure the change in tpa routing we did using the python ztp hook takes effect:
+
+```
+[r1:~]$source /pkg/bin/ztp_helper.sh
+[r1:~]$echo -ne "run ssh 10.0.2.16 service docker restart\n" | xrcmd "admin"
+ztp-user connected from 127.0.0.1 using console on r2
+sysadmin-vm:0_RP0# run ssh 10.0.2.16 service docker restart
+Wed Jan  30 11:56:36.484 UTC
+docker stop/waiting
+docker start/running, process 4903
+sysadmin-vm:0_RP0# [r2:~]$ 
+[r2:~]$ 
+```
+
+Finally, download the required docker image by issuing the following docker pull command:
+
+```
+[r1:~]$ 
+[r1:~]$ docker pull akshshar/openr-xr
+Using default tag: latest
+latest: Pulling from akshshar/openr-xr
+297061f60c36: Pull complete 
+e9ccef17b516: Pull complete 
+dbc33716854d: Pull complete 
+8fe36b178d25: Pull complete 
+686596545a94: Pull complete 
+27531d038464: Pull complete 
+Digest: sha256:0d81b575830fe776739f960870652c7d9da601eaf32f68fa5569e852a2c5d4b0
+Status: Downloaded newer image for akshshar/openr-xr:latest
+[r1:~]$ 
+
+```
+
+Now login to router r2 and repeat the same procedure. In the end, you should see the image loaded up on the routers:
+
+Router r1:
+
+```
+[r1:~]$ 
+[r1:~]$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+akshshar/openr-xr   latest              b51c260b060e        3 weeks ago         1.756 GB
+[r1:~]$ 
+
+```
+
+Router r2:
+
+```
+[r2:~]$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+akshshar/openr-xr   latest              b51c260b060e        3 weeks ago         1.756 GB
+[r2:~]$ 
+
+```
 
 ### Run the Ansible Playbook
 
@@ -405,6 +475,3 @@ Log into router r1 and enter the docker container shell:
 
 
 ```
-
-
-
