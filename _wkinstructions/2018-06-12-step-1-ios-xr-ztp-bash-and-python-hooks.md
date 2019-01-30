@@ -142,32 +142,16 @@ admin@devbox:iosxr-devnet-cleur2019$
 ```
 
 
-
-You should see the following files:
+cd into the ztp_hooks directory and you should a couple of files we will deal with in this section
 
 ```
-cisco@pod2:~/topology$ vagrant ssh devbox
+admin@devbox:iosxr-devnet-cleur2019$ 
+admin@devbox:iosxr-devnet-cleur2019$ cd ztp_hooks/
+admin@devbox:ztp_hooks$ ls
+automate_cli_bash.sh  automate_cli_python.py
+admin@devbox:ztp_hooks$ 
 
-Welcome to Cisco YDK-Py sandbox (Ubuntu 16.04)
-
-68 packages can be updated.
-10 updates are security updates.
-
-
-Last login: Sat Jun  9 16:09:52 2018 from 10.0.2.2
-
-vagrant@devbox:~$ 
-vagrant@devbox:~$ cd /vagrant/code
-vagrant@devbox:code$ 
-vagrant@devbox:code$ 
-vagrant@devbox:code$ ls
-advanced                          ncclient                ydk
-bigmuddy-network-telemetry-proto  service-layer-objmodel  ztp_cli_automation
-vagrant@devbox:code$ 
 ```
-
-cd into the ztp_cli_automation directory and you should a couple of files we will deal with in this section
-
 
 ## Bash ZTP script
 The bash script will utilize the ZTP bash hooks in IOS-XR to configure netconf-yang agent on rtr1
