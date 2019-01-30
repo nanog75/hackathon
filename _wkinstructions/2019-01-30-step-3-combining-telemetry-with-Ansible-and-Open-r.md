@@ -680,4 +680,20 @@ The `"connection-state": "bgp-st-estab"` in the output above has changed from `"
 {: .notice--success}
 
 
-To wrap up, this is what we achieved 
+
+## Conclusion
+
+To wrap up, this is what we achieved as part of this workshop:
+
+* Used ZTP CLI hooks in bash to configure grpc, interfaces and loopbacks on each router
+* Scaled up the setup by switching to ansible to execute the python ZTP CLI script to configure a new user and configure routes required to allow the docker daemon to download an Open/R image subsequently
+* Used Ansible to with `netconf_config` module to send XML encoded BGP YANG model snippet to configure I-BGP on both the routers over netconf.
+*  Used YDK to configure Telemetry on Router r1 using the OpenConfig Telemetry Yang Model.
+*  Started a simple Telemetry python client that is able to dial-in and receive telemetry data about the BGP session in 15 second intervals
+*  Used Ansible to setup and launch the Open/R docker containers on each router
+*  Utilized the Service-Layer API intergration of Open/R to program routes into the IOS-XR RIB and act as an IGP
+*  With the help of the routes learned by Open/R, the BGP session was able to come up and get established and the same was reflected in the telemetry data received by the telemetry client.
+
+
+
+
