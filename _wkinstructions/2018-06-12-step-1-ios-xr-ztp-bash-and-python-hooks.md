@@ -376,6 +376,19 @@ admin@devbox:ztp_hooks$
 
 ```
 
+Open up the script to understand the code as the execution takes place. You can open up another ssh session to the devbox in a separate terminal tab for this purpose.
+
+The script will use different ZTP python APIs in IOS-XR to do CLI operations such as `xrcmd`(Show commands) and `xrapply`(Merge configuration). `xrreplace` is not shown but it can be used to the Replace existing configuration with a specified snippet.
+
+Eventually the script will configure the following configuration on each router:
+
+```
+
+
+```
+
+
+
 
 ### Transfer the python script to rtr1 over the connected link
 
