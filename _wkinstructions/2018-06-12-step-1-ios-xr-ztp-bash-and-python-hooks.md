@@ -72,15 +72,46 @@ Complete CLI support:
 {: .notice--info}
 
 
-## Open up Sublime to view the code pieces we will be dealing with
-![sublime.png]({{site.baseurl}}/images/sublime.png)
+The Topology in use is shown below:
+![topology_devnet.png]({{site.baseurl}}/images/topology_devnet.png)
 
-Keep this open to view the code at any point. Drop back into the terminal to continue.
+
 
 
 ## SSH into the devbox 
 
-Drop into the devbox and cd into the `/vagrant/code` directory
+Drop into the devbox using the credentials above and clone the following git repository:
+<https://github.com/akshshar/iosxr-devnet-cleur2019>
+
+
+```
+
+AKSHSHAR-M-33WP:~ akshshar$ 
+AKSHSHAR-M-33WP:~ akshshar$ ssh -p 2211 admin@10.10.20.170
+admin@10.10.20.170's password: 
+Last login: Tue Jan 29 18:33:43 2019 from 192.168.122.1
+admin@devbox:~$ 
+admin@devbox:~$ 
+admin@devbox:~$ 
+admin@devbox:~$ git clone https://github.com/akshshar/iosxr-devnet-cleur2019.git
+Cloning into 'iosxr-devnet-cleur2019'...
+remote: Enumerating objects: 33, done.
+remote: Counting objects: 100% (33/33), done.
+remote: Compressing objects: 100% (23/23), done.
+remote: Total 33 (delta 8), reused 33 (delta 8), pack-reused 0
+Unpacking objects: 100% (33/33), done.
+Checking connectivity... done.
+admin@devbox:~$ 
+admin@devbox:~$ 
+admin@devbox:~$ cd iosxr-devnet-cleur2019/
+admin@devbox:iosxr-devnet-cleur2019$ 
+admin@devbox:iosxr-devnet-cleur2019$ ls
+ansible  README.md  ztp_hooks
+admin@devbox:iosxr-devnet-cleur2019$ 
+
+
+```
+
 
 
 You should see the following files:
