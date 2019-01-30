@@ -801,11 +801,6 @@ admin@devbox:python$
 admin@devbox:python$ ./gen-mdt-dialin-bindings.sh 
 Generating Python bindings...Done
 admin@devbox:python$ 
-admin@devbox:python$ 
-admin@devbox:python$ tree src/genpy-bgp-oper/
-src/genpy-bgp-oper/ [error opening dir]
-
-0 directories, 0 files
 admin@devbox:python$ tree src/genpy/
 src/genpy/
 ├── __init__.py
@@ -828,7 +823,7 @@ admin@devbox:python$
 
 ### Writing your own client
 
-While created the bindings for the 
+ 
 
 
 
