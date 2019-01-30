@@ -115,7 +115,7 @@ date: null
             <a href="{{ base_path }}/images/ztp_cli_hooks.png"><img src="{{ base_path }}/images/ztp_cli_hooks.png" alt="" /></a>
           </div>
         <div class="archive__item-body">
-            <h2 class="archive__item-title">Still in love with CLI? - Automat using bash and python libraries!</h2>
+            <h2 class="archive__item-title">Still in love with CLI? - Automate using bash and python libraries!</h2>
             <div class="archive__item-excerpt" style="font-size: 0.65em;">
               <p>As part of the Zero-touch provisioning infrastructure, IOS-XR provides the option to automate CLI operations in either bash or python in the IOS-XR shell environment. This enables a large variety of integrations - including native scripts and offbox integrations with tools like Ansible</p>
               <ul>
