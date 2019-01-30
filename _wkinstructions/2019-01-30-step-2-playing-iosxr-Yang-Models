@@ -672,6 +672,7 @@ RP/0/RP0/CPU0:r1#
 
 ### Verify that the Telemetry sensor-paths are resolved
 
+
 ```
 RP/0/RP0/CPU0:r1#show telemetry model-driven subscription 1
 Wed Jan 30 05:07:56.424 UTC
@@ -707,11 +708,11 @@ Subscription:  2
 
 RP/0/RP0/CPU0:r1#
 
-
 ```
 
 
-
+Awesome! You're now ready to stream telemetry data from the above sensor-paths. Let's proceed to run a custom python Telemetry client.
+{: .notice--success}
 
 
 
