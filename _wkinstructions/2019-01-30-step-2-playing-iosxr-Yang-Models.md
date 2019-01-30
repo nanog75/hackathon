@@ -77,6 +77,9 @@ The Topology in use is shown below:
 ![topology_devnet.png]({{site.baseurl}}/images/topology_devnet.png)
 
      
+     
+## Keep running the Telemetry client
+
 Before we begin Step 3 of this workshop where we combine IOS-XR Telemetry, Ansible, Open/R and Service-Layer APIs in XR, make sure you have run through Steps 1 and 2 already so that you have the Telemetry client already listening to BGP Session updates from router r1.  
 
 To recap, at the end of Step 2, you must have one terminal window connected to your devbox where you have a client receiving data from router r1's BGP Session (Currently in idle state). If not, please start it again as shown below. 
@@ -135,11 +138,42 @@ Using GRPC Server IP(10.10.20.170) Port(57021)
 ```
 
 
+## Open/R Deployment
+
 With the Telemetry client running, we can now progress to the next set of steps where we deploy Open/R as an application on both the routers.  
 
 The basic deployment of Open/R we intend to achieve is represented below:
 
 ![openr-b2b.png]({{site.baseurl}}/images/openr-b2b.png)
+
+
+
+### View the Open/R config files 
+
+We will use Ansible to deploy Open/R as docker instances to the routers r1 and r2. In addition to the docker instances, Open/R requires some configuration files to be present (much like an ISIS or BGP config). We will utilize Ansible to push these files to the routers as well.
+
+
+To view the relevant config files, **open a new shell** on the devbox with the telemetry client running in the earlier shell. 
+
+Drop into the `ansible/openr` folder in the original `iosxr-devnet-cleur2019` git repository you cloned earlier: 
+
+
+```
+admin@devbox:~$ cd iosxr-devnet-cleur2019/
+admin@devbox:iosxr-devnet-cleur2019$ ls
+ansible  README.md  ydk  ztp_hooks
+admin@devbox:iosxr-devnet-cleur2019$ 
+admin@devbox:iosxr-devnet-cleur2019$ 
+admin@devbox:iosxr-devnet-cleur2019$ cd ansible/openr/
+admin@devbox:openr$ 
+admin@devbox:openr$ ls
+hosts_r1  increment_ipv4_prefix1.py  launch_openr_r1.sh  run_openr_r1.sh
+hosts_r2  increment_ipv4_prefix2.py  launch_openr_r2.sh  run_openr_r2.sh
+admin@devbox:openr$ 
+
+
+```
+
 
 
 
