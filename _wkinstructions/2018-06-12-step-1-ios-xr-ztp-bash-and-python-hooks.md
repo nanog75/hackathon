@@ -173,8 +173,6 @@ admin@devbox:ztp_hooks$
 admin@devbox:ztp_hooks$ pwd
 /home/admin/iosxr-devnet-cleur2019/ztp_hooks
 admin@devbox:ztp_hooks$ 
-
-admin@devbox:ztp_hooks$ 
 admin@devbox:ztp_hooks$ scp -P 2221 automate_cli_bash.sh  admin@10.10.20.170:/misc/scratch/
 
 
@@ -191,7 +189,7 @@ admin@devbox:ztp_hooks$
 ```
 
 
-### Execute the copied bash script over ssh 
+### Execute the copied bash script on router r1 over SSH
 
 ```
 admin@devbox:ztp_hooks$ ssh -p 2221  admin@10.10.20.170 run /misc/scratch/automate_cli_bash.sh
@@ -225,9 +223,65 @@ admin@devbox:ztp_hooks$
 
 
 
+Let's do the same for router r2.
+
+### Transfer the bash script to Router r2 over SSH
 
 
 
+```
+admin@devbox:ztp_hooks$ pwd
+/home/admin/iosxr-devnet-cleur2019/ztp_hooks
+admin@devbox:ztp_hooks$ 
+admin@devbox:ztp_hooks$ 
+admin@devbox:ztp_hooks$ scp -P 2231 automate_cli_bash.sh  admin@10.10.20.170:/misc/scratch/
+
+
+--------------------------------------------------------------------------
+  Router 2 (Cisco IOS XR Sandbox)
+--------------------------------------------------------------------------
+
+
+Password: 
+automate_cli_bash.sh                                                                                   100%  838     0.8KB/s   00:00    
+Connection to 10.10.20.170 closed by remote host.
+admin@devbox:ztp_hooks$ 
+
+
+
+```
+
+### Execute the copied bash script on router r2 over SSH
+
+```
+
+admin@devbox:ztp_hooks$ ssh -p 2231  admin@10.10.20.170 run /misc/scratch/automate_cli_bash.sh
+
+
+--------------------------------------------------------------------------
+  Router 2 (Cisco IOS XR Sandbox)
+--------------------------------------------------------------------------
+
+
+Password: 
+
+
+Wed Jan 30 02:46:36.582 UTC
+Building configuration...
+!! IOS XR Configuration version = 6.4.1
+interface Loopback0
+ ipv4 address 60.1.1.1 255.255.255.255
+!
+grpc
+ port 57777
+ no-tls
+ service-layer
+ !
+!
+end
+
+admin@devbox:ztp_hooks$ 
+```
 
 
 
