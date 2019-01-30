@@ -41,9 +41,9 @@ Complete CLI support:
 > repeating the connection details and credentials. So refer back to this list when you need it.
 ><br/>
 > The 3 nodes in the topology are 
-> 1) Devbox
-> 2) Router r1
-> 3) Router r2
+> * Devbox
+> * Router r1
+> * Router r2
 >
 > * Development Linux System (DevBox)
 >     IP Address: 10.10.20.170 Username/Password: [admin/admin] SSH Port: 2211
