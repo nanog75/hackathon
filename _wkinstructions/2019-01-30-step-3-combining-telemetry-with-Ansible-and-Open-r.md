@@ -1,7 +1,7 @@
 ---
 published: true
 date: '2018-06-12 10:13 -0400'
-title: 'Step 3:  Combining IOS-XR Telemetry and Service Layer APIs'
+title: 'Step 3:  Combining Telemetry with Ansible and Open/R '
 author: Akshat Sharma
 tags:
   - iosxr
