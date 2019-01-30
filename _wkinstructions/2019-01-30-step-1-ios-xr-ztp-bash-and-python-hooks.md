@@ -424,6 +424,8 @@ end
 
 ```
 
+Further the script will restart the docker daemon on the host for the routing changes to take effect and finally pull the docker image for Open/R to be run in the last section of the workshop.
+
 
 ### Execute python ZTP script using Ansible
 
