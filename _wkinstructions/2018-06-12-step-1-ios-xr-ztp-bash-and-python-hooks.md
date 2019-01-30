@@ -406,6 +406,8 @@ end
 Hop into the `ansible/` directory of the git repository we cloned earlier. The ansible playbook we intend to use is shown below (`execute_python_ztp.yml`):
 
 
+### Dump the contents of the Ansible playbook
+
 ```
 admin@devbox:~$ cd iosxr-devnet-cleur2019/
 admin@devbox:iosxr-devnet-cleur2019$ ls
@@ -431,6 +433,8 @@ admin@devbox:ansible$
 
 
 ```
+
+### Run the Ansible playbook 
 
 Now, execute the ansible playbook, which will automatically transfer the python script to the shell of each router based on the `ansible_hosts` file which stores the credentials and connection information.
 
@@ -728,7 +732,9 @@ admin@devbox:ansible$
 
 
 
-**Exercise for the Reader:** In order to fetch more details during the run of the ansible playbook, execute the above command again with another option: `-vvv`, like so:  
+### Exercise for the Reader  
+
+In order to fetch more details during the run of the ansible playbook, execute the above command again with another option: `-vvv`, like so:  
 `ansible-playbook -i ansible_hosts execute_python_ztp.yml -vvv`.
 {: .notice--success}
 
