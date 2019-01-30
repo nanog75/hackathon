@@ -188,8 +188,8 @@ automate_cli_bash.sh                                                            
 Connection to 10.10.20.170 closed by remote host.
 admin@devbox:ztp_hooks$ 
 
-
 ```
+
 
 ### Execute the copied bash script over ssh 
 
@@ -222,6 +222,8 @@ end
 admin@devbox:ztp_hooks$ 
 
 ```
+
+
 
 
 
