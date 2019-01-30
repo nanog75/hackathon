@@ -42,12 +42,14 @@ Complete CLI support:
 ><br/>
 > The 3 nodes in the topology are: 
 > 
-<bl> <ul>
+
+<blockquote> <ul>
  <li><p style="font-size: 16px;"><b>Development Linux System (DevBox)</b></p> 
      <p>IP Address: 10.10.20.170</p>
      <p>Username/Password: [admin/admin]</p>
      <p>SSH Port: 2211</p>
-      </li></bl>
+      </li></blockquote>
+
 >
 > * **IOS-XRv9000 R1: (Router r1)** 
 >
