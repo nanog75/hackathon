@@ -382,11 +382,11 @@ admin@devbox:iosxr-devnet-cleur2019$ cd ydk/
 admin@devbox:ydk$ 
 ```
 
-The YDK script used for this purpose is shown below:
-
 >Writing your own python script with YDK to interact with Yang models on IOS-XR and the other Vendor OSes is straightforward and you will find tons of resources in the git repository:
 https://github.com/CiscoDevNet/ydk-py-samples with hundreds of examples across different models supported by IOS-XR.
-
+  
+The YDK script used for this purpose is shown below:
+  
 ```
 admin@devbox:ydk$ cat configure_telemetry_openconfig.py 
 #!/usr/bin/env python
@@ -518,15 +518,21 @@ admin@devbox:ydk$
 
 ```
 
+We intend to configure Model Driven Telemetry on router r1 so that it is ready to stream data associated with BGP Sessions, BGP process and IPv6 neighbor data in the above example.
+The Telemetry client we write later will try and receive the BGP session information from the router.  
 
+Execute the YDK script, passing to it the credentials and connection details for Router r1 and its netconf port:
+
+Pass the `-v` option to the script to dump the requests/responses as the script executes.
 
 ```
+admin@devbox:ydk$ 
 admin@devbox:ydk$ ./configure_telemetry_openconfig.py -v ssh://vagrant:vagrant@10.10.20.170:8321
-2019-01-29 20:51:22,804 - ydk - INFO - Path where models are to be downloaded: /home/admin/.ydk/10.10.20.170_8321
-2019-01-29 20:51:22,824 - ydk - INFO - Connected to 10.10.20.170 on port 8321 using ssh with timeout of -1
-2019-01-29 20:51:22,837 - ydk - INFO - Executing CRUD create operation on [openconfig-telemetry:telemetry-system]
-2019-01-29 20:51:27,067 - ydk - INFO - =============Generating payload to send to device=============
-2019-01-29 20:51:27,067 - ydk - INFO - 
+2019-01-29 21:02:48,375 - ydk - INFO - Path where models are to be downloaded: /home/admin/.ydk/10.10.20.170_8321
+2019-01-29 21:02:48,386 - ydk - INFO - Connected to 10.10.20.170 on port 8321 using ssh with timeout of -1
+2019-01-29 21:02:48,396 - ydk - INFO - Executing CRUD create operation on [openconfig-telemetry:telemetry-system]
+2019-01-29 21:02:52,735 - ydk - INFO - =============Generating payload to send to device=============
+2019-01-29 21:02:52,735 - ydk - INFO - 
 <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
 <edit-config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
   <target>
@@ -587,35 +593,36 @@ admin@devbox:ydk$ ./configure_telemetry_openconfig.py -v ssh://vagrant:vagrant@1
 </config>
 </edit-config>
 </rpc>
-2019-01-29 20:51:27,067 - ydk - INFO - 
+2019-01-29 21:02:52,738 - ydk - INFO - 
 
-2019-01-29 20:51:27,120 - ydk - INFO - =============Reply payload received from device=============
-2019-01-29 20:51:27,121 - ydk - INFO - 
+2019-01-29 21:02:52,789 - ydk - INFO - =============Reply payload received from device=============
+2019-01-29 21:02:52,789 - ydk - INFO - 
 <?xml version="1.0"?>
 <rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
   <ok/>
 </rpc-reply>
 
-2019-01-29 20:51:27,121 - ydk - INFO - 
+2019-01-29 21:02:52,791 - ydk - INFO - 
 
-2019-01-29 20:51:27,121 - ydk - INFO - =============Executing commit=============
-2019-01-29 20:51:27,121 - ydk - INFO - 
+2019-01-29 21:02:52,791 - ydk - INFO - =============Executing commit=============
+2019-01-29 21:02:52,791 - ydk - INFO - 
 <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
   <commit/>
 </rpc>
 
-2019-01-29 20:51:27,537 - ydk - INFO - =============Reply payload received from device=============
-2019-01-29 20:51:27,548 - ydk - INFO - 
+2019-01-29 21:02:53,092 - ydk - INFO - =============Reply payload received from device=============
+2019-01-29 21:02:53,092 - ydk - INFO - 
 <?xml version="1.0"?>
 <rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="2">
   <ok/>
 </rpc-reply>
 
-2019-01-29 20:51:27,548 - ydk - INFO - 
+2019-01-29 21:02:53,093 - ydk - INFO - 
 
-2019-01-29 20:51:27,548 - ydk - INFO - Operation succeeded
-2019-01-29 20:51:27,549 - ydk - INFO - Disconnected from device
+2019-01-29 21:02:53,094 - ydk - INFO - Operation succeeded
+2019-01-29 21:02:53,094 - ydk - INFO - Disconnected from device
 admin@devbox:ydk$ 
+
 ```
 
 
