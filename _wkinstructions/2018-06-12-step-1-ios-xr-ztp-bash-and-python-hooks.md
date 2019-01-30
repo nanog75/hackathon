@@ -384,6 +384,18 @@ Eventually the script will configure the following configuration on each router:
 
 ```
 
+!! IOS XR Configuration version = 6.4.1
+domain name-server 8.8.8.8
+tpa
+ vrf default
+  address-family ipv4
+   default-route mgmt
+   update-source dataports MgmtEth0/RP0/CPU0/0
+  !
+ !
+!
+end
+
 
 ```
 
