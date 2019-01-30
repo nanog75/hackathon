@@ -189,7 +189,7 @@ admin@devbox:ztp_hooks$
 ```
 
 
-### Execute the copied bash script on router r1 over SSH
+### Execute the bash script on router r1 over SSH
 
 ```
 admin@devbox:ztp_hooks$ ssh -p 2221  admin@10.10.20.170 run /misc/scratch/automate_cli_bash.sh
@@ -251,7 +251,7 @@ admin@devbox:ztp_hooks$
 
 ```
 
-### Execute the copied bash script on router r2 over SSH
+### Execute the bash script on router r2 over SSH
 
 
 ```
@@ -737,9 +737,3 @@ admin@devbox:ansible$
 In order to fetch more details during the run of the ansible playbook, execute the above command again with another option: `-vvv`, like so:  
 `ansible-playbook -i ansible_hosts execute_python_ztp.yml -vvv`.
 {: .notice--success}
-
-
-
-
-
-
