@@ -39,7 +39,8 @@ Complete CLI support:
 > Once you're connected, use the following instructions to connect to the individual nodes.
 > The instructions in the workshop will simply refer to the Name of the box to connect without
 > repeating the connection details and credentials. So refer back to this list when you need it.
-><br/>
+>  
+>
 > The 3 nodes in the topology are: 
 > 
 ><p style="font-size: 16px;"><b>Development Linux System (DevBox)</b></p> 
@@ -48,7 +49,7 @@ Complete CLI support:
 >      SSH Port: 2211
 > 
 >
-> * **IOS-XRv9000 R1: (Router r1)** 
+><p style="font-size: 16px;"><b>IOS-XRv9000 R1: (Router r1)</b></p> 
 >
 >     IP Address: 10.10.20.170  
 >     Username/Password: [admin/admin]   
@@ -58,7 +59,7 @@ Complete CLI support:
 >     gRPC Port: 57021  
 >     XR-Bash SSH Port: 2222  
 >
-> * **IOS-XRv9000 R2:  (Router r2)**
+><p style="font-size: 16px;"><b>IOS-XRv9000 R2:  (Router r2)</b></p> 
 >
 >     IP Address: 10.10.20.170   
 >     Username/Password: [admin/admin]   
