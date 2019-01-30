@@ -21,7 +21,7 @@ excerpt: >-
 
 There are several tools in the industry that allow you to play around with YANG models on IOS-XR and other Network OS stacks.
 
-In this workshop we will look at two of them:
+In this workshop we will look at a few of them:
 
 * The Ansible `netconf_config` module to configure a BGP session on the routers. <https://docs.ansible.com/ansible/2.4/netconf_config_module.html>  
 
