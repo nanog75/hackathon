@@ -755,6 +755,83 @@ admin@devbox:~$
 ```
 
 
+### Clone the Telemetry gRPC collectors git repo
+
+We have published a few samples for c++ and python to help developers write their own gRPC based collectors to receive telemetry data from IOS-XR.  
+
+The proto files that we use to create bindings and then write our own clients are published here: <https://github.com/cisco/bigmuddy-network-telemetry-proto/> 
+
+To start, first clone the telemetry-grpc-collectors repo into the devbox home directory:
+
+
+```
+admin@devbox:~$ 
+admin@devbox:~$ git clone --recursive https://github.com/ios-xr/telemetry-grpc-collectors
+Cloning into 'telemetry-grpc-collectors'...
+remote: Enumerating objects: 16, done.
+remote: Counting objects: 100% (16/16), done.
+remote: Compressing objects: 100% (11/11), done.
+remote: Total 137 (delta 4), reused 15 (delta 4), pack-reused 121
+Receiving objects: 100% (137/137), 3.67 MiB | 2.79 MiB/s, done.
+Resolving deltas: 100% (62/62), done.
+Checking connectivity... done.
+Submodule 'bigmuddy-network-telemetry-proto' (https://github.com/cisco/bigmuddy-network-telemetry-proto) registered for path 'bigmuddy-network-telemetry-proto'
+Cloning into 'bigmuddy-network-telemetry-proto'...
+remote: Enumerating objects: 24542, done.
+remote: Total 24542 (delta 0), reused 0 (delta 0), pack-reused 24542
+Receiving objects: 100% (24542/24542), 6.06 MiB | 3.14 MiB/s, done.
+Resolving deltas: 100% (8337/8337), done.
+Checking connectivity... done.
+Submodule path 'bigmuddy-network-telemetry-proto': checked out '4419cd20fb73f05d059a37fa3e41fe55f02a528f'
+admin@devbox:~$ 
+
+
+```
+
+
+### Build the Bindings for Model Driven Telemetry gRPC clients
+
+Hop into the `build/python/` directory and generate the required bindings from the proto files:
+
+```
+admin@devbox:~$ 
+admin@devbox:~$ cd telemetry-grpc-collectors/build/python/
+admin@devbox:python$ 
+admin@devbox:python$ 
+admin@devbox:python$ ./gen-mdt-dialin-bindings.sh 
+Generating Python bindings...Done
+admin@devbox:python$ 
+admin@devbox:python$ 
+admin@devbox:python$ tree src/genpy-bgp-oper/
+src/genpy-bgp-oper/ [error opening dir]
+
+0 directories, 0 files
+admin@devbox:python$ tree src/genpy/
+src/genpy/
+├── __init__.py
+├── mdt_grpc_dialin
+│   ├── __init__.py
+│   ├── mdt_grpc_dialin_pb2_grpc.py
+│   └── mdt_grpc_dialin_pb2.py
+├── mdt_grpc_dialout
+│   ├── __init__.py
+│   ├── mdt_grpc_dialout_pb2_grpc.py
+│   └── mdt_grpc_dialout_pb2.py
+├── telemetry_pb2_grpc.py
+└── telemetry_pb2.py
+
+2 directories, 9 files
+admin@devbox:python$ 
+
+```
+
+
+### Writing your own client
+
+While created the bindings for the 
+
+
+
 
 
 
