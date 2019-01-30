@@ -380,7 +380,7 @@ Open up the script to understand the code as the execution takes place. You can 
 
 The script will use different ZTP python APIs in IOS-XR to do CLI operations such as `xrcmd`(Show commands) and `xrapply`(Merge configuration). `xrreplace` is not shown but it can be used to the Replace existing configuration with a specified snippet.
 
-Eventually the script will configure the following configuration on each router:
+Eventually the script will push the following configuration on each router:
 
 ```
 
@@ -399,5 +399,37 @@ end
 
 ```
 
+
+### Execute the python ZTP script using an Ansible playbook
+
+
+Hop into the `ansible/` directory of the git repository we cloned earlier. The ansible playbook we intend to use is shown below (`execute_python_ztp.yml`):
+
+
+```
+admin@devbox:~$ cd iosxr-devnet-cleur2019/
+admin@devbox:iosxr-devnet-cleur2019$ ls
+ansible  README.md  ztp_hooks
+admin@devbox:iosxr-devnet-cleur2019$ cd ansible/
+admin@devbox:ansible$ 
+admin@devbox:ansible$ cat execute_python_ztp.yml 
+---
+- hosts: routers_shell 
+  strategy: debug
+  become: yes
+  gather_facts: no
+
+  tasks:
+  - debug: msg="hostname={{hostname}}"
+  - name: Copy and Execute the Python Configuration script on the router
+    script: ../ztp_hooks/automate_cli_python.py
+    register: output
+
+  - debug:
+        var: output.stdout_lines
+admin@devbox:ansible$ 
+
+
+```
 
 
