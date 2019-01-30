@@ -180,6 +180,136 @@ admin@devbox:openr$
 
 3. The `run_openr_*.sh` script contains the configuration knobs for Open/R to know what routes to advertise to other Open/R instances on the network, the gRPC port for Service-Layer API to use while running locally on the router, the interfaces of XR that it should send its hellos out on, etc.
 
+4. The `increment_ipv4_prefix*.py` script is an optional script we use to push a large set of routes into the configuration file for Open/R to advertise. 
+
+
+### Ansible Playbook to set up IPv6 Fe80::/64 routes in Kernel (Bug)
+
+This particular playbook is only required for this particular version of the IOS-XR software (6.4.1) we are using in the lab.
+
+There is a particular 
+
+
+
+
+
+
+### Ansible Playbook to deploy Open/R
+
+
+The Ansible playbook we intend to use can be found in the `ansible` directory  of the `iosxr-devnet-cleur2019` git repository:  
+
+
+```
+admin@devbox:~$ 
+admin@devbox:~$ cd ~/iosxr-devnet-cleur2019/
+admin@devbox:iosxr-devnet-cleur2019$ cd ansible/
+admin@devbox:ansible$ 
+admin@devbox:ansible$ cat docker_bringup.yml 
+---
+- hosts: routers_shell
+  gather_facts: no
+  sudo: yes
+
+  vars:
+    connect_vars:
+       host: "{{ ansible_host }}"
+       username: "{{ ansible_user }}"
+       password: "{{ ansible_ssh_pass }}"
+    up: "sudo -i /misc/app_host/launch_openr_{{ inventory_hostname }}.sh"
+    down: "sudo -i docker rm -f openr"
+
+  tasks:
+
+  - name: Copy run_openr script to rtr
+    copy:
+      src: "{{ run_openr_script }}"
+      dest: "/misc/app_host/"
+      owner: root 
+      group: root 
+      mode: a+x 
+  - name: Copy hosts_r file to rtr
+    copy:
+      src: "{{ hosts_r }}"
+      dest: "/misc/app_host/"
+      owner: root 
+      group: root 
+      mode: a+x 
+
+  - name: Copy launch_openr script to rtr
+    copy:
+      src: "{{ launch_openr_script }}"
+      dest: "/misc/app_host/"
+      owner: root 
+      group: root 
+      mode: a+x 
+
+  - name: Copy increment_ipv4 script to rtr
+    copy:
+      src: "{{ increment_ipv4_prefix }}"
+      dest: "/misc/app_host/"
+      owner: root 
+      group: root 
+      mode: a+x 
+
+  - name: Copy cron file to rtr (CSCvh76067)
+    copy:
+      src: "{{ cron_file }}"
+      dest: "/misc/app_host/ipv6_fe80_route_append.sh"
+      owner: root
+      group: root
+      mode: a+x
+
+  - name: Set up Cronjob (CSCvh76067)
+    cron:
+      name: set up ipv6 fe80::/64 routes 
+      weekday: "*"
+      minute: "*"
+      hour: "*"
+      user: root
+      job: "/misc/app_host/ipv6_fe80_route_append.sh"
+      cron_file: ansible_ipv6_fe80_route_append
+
+
+  - name: Check docker container is running
+    shell: sudo -i docker inspect --format={{ '{{.State.Running}}' }}  openr
+    args:
+      executable: /bin/bash
+    register: status
+    ignore_errors: yes
+  - debug: var=output.stdout_lines
+
+ 
+  - name: Clean up docker container if running 
+    shell: "{{ down }}"
+    args:
+      executable: /bin/bash
+    register: output
+    when: status.stdout == "true"
+  - debug: var=output.stdout_lines
+
+
+  - name: Bring up the docker container 
+    shell: "{{ up }}"
+    args:
+      executable: /bin/bash
+    register: output
+    ignore_errors: yes
+  - debug: var=output.stdout_lines  
+admin@devbox:ansible$ 
+```
+
+As can be seen above, the first 3 tasks of the playbook copy over the relevant config files and scripts for Open/R into `/misc/app_host` directory on the routers. This particular directory is mounted into the docker containers when we launch the container to make the config files available to Open/R inside the docker container. 
+
+
+
+
+
+
+
+
+
+
 
 
 
