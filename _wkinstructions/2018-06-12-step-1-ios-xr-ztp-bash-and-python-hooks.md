@@ -432,4 +432,308 @@ admin@devbox:ansible$
 
 ```
 
+Now, execute the ansible playbook, which will automatically transfer the python script to the shell of each router based on the `ansible_hosts` file which stores the credentials and connection information.
+
+
+```
+admin@devbox:ansible$ 
+admin@devbox:ansible$ cat ansible_hosts 
+[routers_shell]
+r1 ansible_user="admin" ansible_password="admin" ansible_sudo_pass="admin" ansible_host=10.10.20.170 ansible_port=2222 hostname=r1 netconf_port=8321 xml_file="./xml/r1-bgp.xml" run_openr_script="./openr/run_openr_r1.sh" launch_openr_script="./openr/launch_openr_r1.sh" hosts_r="./openr/hosts_r1" increment_ipv4_prefix="./openr/increment_ipv4_prefix1.py" cron_file="./set_ipv6_route.sh"
+
+r2 ansible_user="admin" ansible_sudo_pass="admin" ansible_password="admin" ansible_host=10.10.20.170 ansible_port=2232 hostname=r2 netconf_port=8331 xml_file="./xml/r2-bgp.xml" run_openr_script="./openr/run_openr_r2.sh" launch_openr_script="./openr/launch_openr_r2.sh" hosts_r="./openr/hosts_r2" increment_ipv4_prefix="./openr/increment_ipv4_prefix2.py" cron_file="./set_ipv6_route.sh"
+admin@devbox:ansible$ 
+
+```
+
+When we run the playbook, wait for some time before the `ansible-playbook` returns the output of the script run on each router:
+
+
+```
+admin@devbox:ansible$ ansible-playbook -i ansible_hosts execute_python_ztp.yml 
+
+PLAY [routers_shell] ********************************************************************************************************************
+
+TASK [debug] ****************************************************************************************************************************
+ok: [r1] => {
+    "msg": "hostname=r1"
+}
+ok: [r2] => {
+    "msg": "hostname=r2"
+}
+
+TASK [Copy and Execute the Python Configuration script on the router] *******************************************************************
+changed: [r1]
+changed: [r2]
+
+TASK [debug] ****************************************************************************************************************************
+ok: [r1] => {
+    "output.stdout_lines": [
+        "",
+        "###### Debugs enabled ######",
+        "",
+        "",
+        "###### Using Child class method, creating a new user ######",
+        "",
+        "2019-01-30 03:29:46,174 - DebugZTPLogger - DEBUG - Config File content to be applied  !",
+        "                     username vagrant ",
+        "                     group root-lr",
+        "                     group cisco-support",
+        "                     secret 5 $1$FzMk$Y5G3Cv0H./q0fG.LGyIJS1 ",
+        "                     !",
+        "                     end",
+        "2019-01-30 03:29:51,263 - DebugZTPLogger - DEBUG - Received exec command request: \"show configuration commit changes last 1\"",
+        "2019-01-30 03:29:51,264 - DebugZTPLogger - DEBUG - Response to any expected prompt \"\"",
+        "Building configuration...",
+        "2019-01-30 03:29:52,778 - DebugZTPLogger - DEBUG - Exec command output is ['!! IOS XR Configuration version = 6.4.1', 'username vagrant', 'group root-lr', 'group cisco-support', 'secret 5 $1$FzMk$Y5G3Cv0H./q0fG.LGyIJS1', '!', 'end']",
+        "2019-01-30 03:29:52,778 - DebugZTPLogger - DEBUG - Config apply through file successful, last change = ['!! IOS XR Configuration version = 6.4.1', 'username vagrant', 'group root-lr', 'group cisco-support', 'secret 5 $1$FzMk$Y5G3Cv0H./q0fG.LGyIJS1', '!', 'end']",
+        "",
+        "###### New user successfully created, return value: ######",
+        "",
+        "['!! IOS XR Configuration version = 6.4.1',",
+        " 'username vagrant',",
+        " 'group root-lr',",
+        " 'group cisco-support',",
+        " 'secret 5 $1$FzMk$Y5G3Cv0H./q0fG.LGyIJS1',",
+        " '!',",
+        " 'end']",
+        "",
+        "###### return value in json: ######",
+        "",
+        "[",
+        "    \"!! IOS XR Configuration version = 6.4.1\", ",
+        "    \"username vagrant\", ",
+        "    \"group root-lr\", ",
+        "    \"group cisco-support\", ",
+        "    \"secret 5 $1$FzMk$Y5G3Cv0H./q0fG.LGyIJS1\", ",
+        "    \"!\", ",
+        "    \"end\"",
+        "]",
+        "",
+        "###### Debugs Disabled  ######",
+        "",
+        "",
+        "###### Applying an incorrect config  ######",
+        "",
+        "",
+        "###### Failed to apply configuration, error is:######",
+        "",
+        "['!! SYNTAX/AUTHORIZATION ERRORS: This configuration failed due to',",
+        " '!! one or more of the following reasons:',",
+        " '!!  - the entered commands do not exist,',",
+        " '!!  - the entered commands have errors in their syntax,',",
+        " '!!  - the software packages containing the commands are not active,',",
+        " '!!  - the current user is not a member of a task-group that has',",
+        " '!!    permissions to use the commands.',",
+        " 'domain nameserver 8.8.8.8']",
+        "",
+        "###### error in json: ######",
+        "",
+        "[",
+        "    \"!! SYNTAX/AUTHORIZATION ERRORS: This configuration failed due to\", ",
+        "    \"!! one or more of the following reasons:\", ",
+        "    \"!!  - the entered commands do not exist,\", ",
+        "    \"!!  - the entered commands have errors in their syntax,\", ",
+        "    \"!!  - the software packages containing the commands are not active,\", ",
+        "    \"!!  - the current user is not a member of a task-group that has\", ",
+        "    \"!!    permissions to use the commands.\", ",
+        "    \"domain nameserver 8.8.8.8\"",
+        "]",
+        "",
+        "###### Applying the correct config  ######",
+        "",
+        "Building configuration...",
+        "",
+        "###### Successfully applied configuration, checking last commit######",
+        "",
+        "Building configuration...",
+        "['!! IOS XR Configuration version = 6.4.1',",
+        " 'domain name-server 8.8.8.8',",
+        " 'end']",
+        "",
+        "###### last commit in json: ######",
+        "",
+        "[",
+        "    \"!! IOS XR Configuration version = 6.4.1\", ",
+        "    \"domain name-server 8.8.8.8\", ",
+        "    \"end\"",
+        "]",
+        "",
+        "####### Applying tpa configuration to enable docker pull from docker.io######",
+        "",
+        "Building configuration...",
+        "",
+        "###### tpa config successfully applied, return value: ######",
+        "",
+        "['!! IOS XR Configuration version = 6.4.1',",
+        " 'tpa',",
+        " 'vrf default',",
+        " 'address-family ipv4',",
+        " 'default-route mgmt',",
+        " 'update-source dataports MgmtEth0/RP0/CPU0/0',",
+        " '!',",
+        " '!',",
+        " '!',",
+        " 'end']",
+        "",
+        "###### return value in json: ######",
+        "",
+        "[",
+        "    \"!! IOS XR Configuration version = 6.4.1\", ",
+        "    \"tpa\", ",
+        "    \"vrf default\", ",
+        "    \"address-family ipv4\", ",
+        "    \"default-route mgmt\", ",
+        "    \"update-source dataports MgmtEth0/RP0/CPU0/0\", ",
+        "    \"!\", ",
+        "    \"!\", ",
+        "    \"!\", ",
+        "    \"end\"",
+        "]"
+    ]
+}
+ok: [r2] => {
+    "output.stdout_lines": [
+        "",
+        "###### Debugs enabled ######",
+        "",
+        "",
+        "###### Using Child class method, creating a new user ######",
+        "",
+        "2019-01-30 03:29:46,119 - DebugZTPLogger - DEBUG - Config File content to be applied  !",
+        "                     username vagrant ",
+        "                     group root-lr",
+        "                     group cisco-support",
+        "                     secret 5 $1$FzMk$Y5G3Cv0H./q0fG.LGyIJS1 ",
+        "                     !",
+        "                     end",
+        "2019-01-30 03:29:51,270 - DebugZTPLogger - DEBUG - Received exec command request: \"show configuration commit changes last 1\"",
+        "2019-01-30 03:29:51,270 - DebugZTPLogger - DEBUG - Response to any expected prompt \"\"",
+        "Building configuration...",
+        "2019-01-30 03:29:52,900 - DebugZTPLogger - DEBUG - Exec command output is ['!! IOS XR Configuration version = 6.4.1', 'username vagrant', 'group root-lr', 'group cisco-support', 'secret 5 $1$FzMk$Y5G3Cv0H./q0fG.LGyIJS1', '!', 'end']",
+        "2019-01-30 03:29:52,901 - DebugZTPLogger - DEBUG - Config apply through file successful, last change = ['!! IOS XR Configuration version = 6.4.1', 'username vagrant', 'group root-lr', 'group cisco-support', 'secret 5 $1$FzMk$Y5G3Cv0H./q0fG.LGyIJS1', '!', 'end']",
+        "",
+        "###### New user successfully created, return value: ######",
+        "",
+        "['!! IOS XR Configuration version = 6.4.1',",
+        " 'username vagrant',",
+        " 'group root-lr',",
+        " 'group cisco-support',",
+        " 'secret 5 $1$FzMk$Y5G3Cv0H./q0fG.LGyIJS1',",
+        " '!',",
+        " 'end']",
+        "",
+        "###### return value in json: ######",
+        "",
+        "[",
+        "    \"!! IOS XR Configuration version = 6.4.1\", ",
+        "    \"username vagrant\", ",
+        "    \"group root-lr\", ",
+        "    \"group cisco-support\", ",
+        "    \"secret 5 $1$FzMk$Y5G3Cv0H./q0fG.LGyIJS1\", ",
+        "    \"!\", ",
+        "    \"end\"",
+        "]",
+        "",
+        "###### Debugs Disabled  ######",
+        "",
+        "",
+        "###### Applying an incorrect config  ######",
+        "",
+        "",
+        "###### Failed to apply configuration, error is:######",
+        "",
+        "['!! SYNTAX/AUTHORIZATION ERRORS: This configuration failed due to',",
+        " '!! one or more of the following reasons:',",
+        " '!!  - the entered commands do not exist,',",
+        " '!!  - the entered commands have errors in their syntax,',",
+        " '!!  - the software packages containing the commands are not active,',",
+        " '!!  - the current user is not a member of a task-group that has',",
+        " '!!    permissions to use the commands.',",
+        " 'domain nameserver 8.8.8.8']",
+        "",
+        "###### error in json: ######",
+        "",
+        "[",
+        "    \"!! SYNTAX/AUTHORIZATION ERRORS: This configuration failed due to\", ",
+        "    \"!! one or more of the following reasons:\", ",
+        "    \"!!  - the entered commands do not exist,\", ",
+        "    \"!!  - the entered commands have errors in their syntax,\", ",
+        "    \"!!  - the software packages containing the commands are not active,\", ",
+        "    \"!!  - the current user is not a member of a task-group that has\", ",
+        "    \"!!    permissions to use the commands.\", ",
+        "    \"domain nameserver 8.8.8.8\"",
+        "]",
+        "",
+        "###### Applying the correct config  ######",
+        "",
+        "Building configuration...",
+        "",
+        "###### Successfully applied configuration, checking last commit######",
+        "",
+        "Building configuration...",
+        "['!! IOS XR Configuration version = 6.4.1',",
+        " 'domain name-server 8.8.8.8',",
+        " 'end']",
+        "",
+        "###### last commit in json: ######",
+        "",
+        "[",
+        "    \"!! IOS XR Configuration version = 6.4.1\", ",
+        "    \"domain name-server 8.8.8.8\", ",
+        "    \"end\"",
+        "]",
+        "",
+        "####### Applying tpa configuration to enable docker pull from docker.io######",
+        "",
+        "Building configuration...",
+        "",
+        "###### tpa config successfully applied, return value: ######",
+        "",
+        "['!! IOS XR Configuration version = 6.4.1',",
+        " 'tpa',",
+        " 'vrf default',",
+        " 'address-family ipv4',",
+        " 'default-route mgmt',",
+        " 'update-source dataports MgmtEth0/RP0/CPU0/0',",
+        " '!',",
+        " '!',",
+        " '!',",
+        " 'end']",
+        "",
+        "###### return value in json: ######",
+        "",
+        "[",
+        "    \"!! IOS XR Configuration version = 6.4.1\", ",
+        "    \"tpa\", ",
+        "    \"vrf default\", ",
+        "    \"address-family ipv4\", ",
+        "    \"default-route mgmt\", ",
+        "    \"update-source dataports MgmtEth0/RP0/CPU0/0\", ",
+        "    \"!\", ",
+        "    \"!\", ",
+        "    \"!\", ",
+        "    \"end\"",
+        "]"
+    ]
+}
+
+PLAY RECAP ******************************************************************************************************************************
+r1                         : ok=3    changed=1    unreachable=0    failed=0   
+r2                         : ok=3    changed=1    unreachable=0    failed=0   
+
+admin@devbox:ansible$ 
+admin@devbox:ansible$ 
+```
+
+
+
+**Exercise for the Reader:** In order to fetch more details during the run of the ansible playbook, execute the above command again with another option: `-vvv`, like so:  
+`ansible-playbook -i ansible_hosts execute_python_ztp.yml -vvv`.
+{: .notice--success}
+
+
+
+
+
 
