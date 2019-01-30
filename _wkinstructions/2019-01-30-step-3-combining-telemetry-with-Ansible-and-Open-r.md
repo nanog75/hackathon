@@ -36,7 +36,10 @@ To learn more, head over to:
 
 In February 2018, we released an open source integration of Facebook's open-source protocol stack (Open/R): <https://github.com/facebook/openr.git> with IOS-XR's service-layer API enabling Open/R to run as an IGP application seamlessly on top of IOS-XR's application hosting infrastructure. This integrations provides great flexibility to the end user to replace a native IGP (like ISIS, OSPF) with an application that might more suit their operational needs and is representative how the IOS-XR stack has evolved to be an Open, extensible platform that can integrate with a wide variety of custom and open-source tools and applications.
 
-><https://xrdocs.io/telemetry/>
+The integration of Open/R with IOS-XR can be found here: <https://github.com/akshshar/openr-xr>
+
+
+
 >The vagrant environment consisting of two IOS-XRv9k instances must already be running. Verify >this by opening up a terminal and running the following commands:
 >
 >  ```
