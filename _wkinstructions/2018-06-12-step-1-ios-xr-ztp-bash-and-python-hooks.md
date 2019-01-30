@@ -154,11 +154,11 @@ admin@devbox:ztp_hooks$
 ```
 
 ## Bash ZTP script
-The bash script will utilize the ZTP bash hooks in IOS-XR to configure netconf-yang agent on rtr1
+The bash script will utilize the ZTP bash hooks in IOS-XR to configure `Loopback0` and `grpc` on each router.
 
-To learn about all the ZTP Bash hooks available in IOS-XR use the following learning lab on DevNet:
-<https://learninglabs.cisco.com/tracks/iosxr-programmability/iosxr-cli-automation/01-iosxr-01-cli-automation-bash/step/1>
-
+>To learn about all the ZTP Bash hooks available in IOS-XR use the following learning lab on DevNet:
+><https://learninglabs.cisco.com/tracks/iosxr-programmability/iosxr-cli-automation/01-iosxr-01-cli-automation-bash/step/1>
+{: .notice--warning}
 
 ### Transfer the bash script to rtr1 over the connected link
 
