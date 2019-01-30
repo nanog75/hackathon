@@ -16,13 +16,15 @@ excerpt: Using ncclient to work with IOS-XR netconf
 
 ## To Know More
 
-ncclient is a python library available to ease interaction over Netconf with devices that support it. Utilize ncclient to setup netconf sessions with the device and send/receive YANG data encoded in XML.
+There are several tools in the industry that allow you to play around with YANG models on IOS-XR and other Network OS stacks.
 
-To learn more about ncclient, head here:
+In this workshop we will look at two of them:
 
-><https://github.com/ncclient/ncclient>
+* The Ansible `netconf_config` module to configure a BGP session on the routers. <https://docs.ansible.com/ansible/2.4/netconf_config_module.html>  
 
-
+* Yang Development Kit (YDK) to configure Telemetry and interfaces on the routers: <http://ydk.io>
+* Your own python Telemetry client which we will use to extract python data coming from YANG paths set up by YDK:
+<https://learninglabs.cisco.com/tracks/iosxr-programmability/iosxr-streaming-telemetry/03-iosxr-02-telemetry-python/step/1>
 
 >Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active. 
 >
@@ -64,6 +66,8 @@ To learn more about ncclient, head here:
 >     gRPC Port: 57031    
 >     XR-Bash SSH Port: 2232
 {: .notice--info}
+
+
 
 
 The topology we will be dealing with looks something like this:
