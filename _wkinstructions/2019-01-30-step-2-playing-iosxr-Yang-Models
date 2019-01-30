@@ -719,6 +719,11 @@ Awesome! You're now ready to stream telemetry data from the above sensor-paths. 
 
 
 
+## Writing your own Python Telemetry client
+
+The Telemetry client is written based on the same concept described in the following learning lab:
+<https://learninglabs.cisco.com/tracks/iosxr-programmability/iosxr-streaming-telemetry/03-iosxr-02-telemetry-python/step/1>
+
 
 
 
