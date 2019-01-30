@@ -1,7 +1,7 @@
 ---
 published: true
 date: '2018-06-12 08:47 -0400'
-title: 'Step 1: IOS-XR ZTP Bash and Python hooks'
+title: 'Step 1: IOS-XR ZTP Bash and Python hooks (+Ansible!)'
 author: Akshat Sharma
 tags:
   - iosxr
