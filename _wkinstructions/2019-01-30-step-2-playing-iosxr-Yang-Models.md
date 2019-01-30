@@ -823,7 +823,7 @@ admin@devbox:python$
 ```
 
 
-### Writing your own client
+### Running a simple python Telemetry client
 
 Hop into the `clients/python/` directory and dump the `telemetry_client_json.py` script which is written to connect to an IOS-XR router over gRPC, request a json data-stream and dump it to the screen. 
 
