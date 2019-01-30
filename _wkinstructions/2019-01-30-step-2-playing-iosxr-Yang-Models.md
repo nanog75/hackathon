@@ -73,10 +73,9 @@ In this workshop we will look at a few of them:
 
 
 
+The Topology in use is shown below:
+![topology_devnet.png]({{site.baseurl}}/images/topology_devnet.png)
 
-The topology we will be dealing with looks something like this:
-
-![topology.png]({{site.baseurl}}/images/topology.png)
      
 
 
