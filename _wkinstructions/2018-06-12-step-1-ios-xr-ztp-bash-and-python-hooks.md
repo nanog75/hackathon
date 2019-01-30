@@ -42,7 +42,7 @@ Complete CLI support:
 ><br/>
 > The 3 nodes in the topology are: 
 > 
-> * **Development Linux System (DevBox)**
+> * <p style="font-size: 16;"><b>Development Linux System (DevBox)</b></p> 
 >
 >     IP Address: 10.10.20.170   
 >     Username/Password: [admin/admin]   
