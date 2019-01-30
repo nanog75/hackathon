@@ -155,6 +155,7 @@ admin@devbox:ztp_hooks$
 
 ## Bash ZTP script
 The bash script will utilize the ZTP bash hooks in IOS-XR to configure `Loopback0` and `grpc` on each router.
+Further it will configure and bring-up interfaces Gig0/0/0/0, Gig0/0/0/1 and Gig0/0/0/2 on each router. These are the b2b connected interfaces of the router r1 and r2.
 
 >To learn about all the ZTP Bash hooks available in IOS-XR use the following learning lab on DevNet:
 ><https://learninglabs.cisco.com/tracks/iosxr-programmability/iosxr-cli-automation/01-iosxr-01-cli-automation-bash/step/1>
