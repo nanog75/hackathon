@@ -278,11 +278,23 @@ admin@devbox:ztp_hooks$ ssh -p 2231  admin@10.10.20.170 run /misc/scratch/automa
 Password: 
 
 
-Wed Jan 30 02:46:36.582 UTC
+Wed Jan 30 06:03:59.093 UTC
 Building configuration...
 !! IOS XR Configuration version = 6.4.1
 interface Loopback0
  ipv4 address 60.1.1.1 255.255.255.255
+!
+interface GigabitEthernet0/0/0/0
+ ipv4 address 10.1.1.20 255.255.255.0
+ ipv6 enable
+!
+interface GigabitEthernet0/0/0/1
+ ipv4 address 11.1.1.20 255.255.255.0
+ ipv6 enable
+!
+interface GigabitEthernet0/0/0/2
+ ipv4 address 12.1.1.20 255.255.255.0
+ ipv6 enable
 !
 grpc
  port 57777
@@ -293,6 +305,7 @@ grpc
 end
 
 admin@devbox:ztp_hooks$ 
+ 
 ```
 
 
