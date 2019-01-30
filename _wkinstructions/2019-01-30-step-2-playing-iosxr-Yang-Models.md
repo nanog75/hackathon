@@ -6,9 +6,12 @@ author: Akshat Sharma
 tags:
   - iosxr
   - cisco
-  - clus2018
   - devnet
-excerpt: Using ncclient to work with IOS-XR netconf
+  - cleur2019
+excerpt: >-
+  Learn to use Ansible , YDK and Telemetry to solve several provisioning and
+  monitoring tasks. We run some clients from written from scratch to help the
+  reader grasp these new techniques.
 ---
 
 
@@ -976,6 +979,3 @@ Using GRPC Server IP(10.10.20.170) Port(57021)
 
 Perfect! Now, we're all set up to  deploy Open/R as an application on the two routers and test out Application-hosting, packet-io and Service-Layer APIs in XR together.
 {: .notice--success}
-
-
-
