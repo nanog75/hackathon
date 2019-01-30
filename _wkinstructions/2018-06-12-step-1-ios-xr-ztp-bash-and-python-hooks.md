@@ -285,30 +285,6 @@ admin@devbox:ztp_hooks$
 
 
 
-password for rtr1 is `vagrant`
-{: .notice--info}
-
-```
-vagrant@devbox:ztp_cli_automation$ 
-vagrant@devbox:ztp_cli_automation$ ssh vagrant@20.1.1.10 run /misc/scratch/automate_cli_bash.sh
-Password: 
-
-
-Tue Jun 12 04:25:37.278 UTC
-Building configuration...
-!! IOS XR Configuration version = 6.2.25
-netconf-yang agent
- ssh
-!
-end
-
-vagrant@devbox:ztp_cli_automation$ 
-```
-
-
-Excellent, we just configured netconf-yang agent in rtr1 to run over ssh as a subsystem and open up port 830 for subsequent netconf connections.
-{: .notice--success}
-
 
 
 ## Python ZTP script
