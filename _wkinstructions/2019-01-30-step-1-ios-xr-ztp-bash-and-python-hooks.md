@@ -461,6 +461,14 @@ admin@devbox:ansible$
 
 ### Run the Ansible playbook 
 
+>IMPORTANT: Before you run the ansible playbook, 
+>
+>```
+>admin@devbox:ansible$ 
+>admin@devbox:ansible$ export ANSIBLE_HOST_KEY_CHECKING=False
+>```
+{. notice--danger} . 
+
 Now, execute the ansible playbook, which will automatically transfer the python script to the shell of each router based on the `ansible_hosts` file which stores the credentials and connection information.
 
 
