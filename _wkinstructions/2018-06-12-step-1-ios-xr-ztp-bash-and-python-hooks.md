@@ -39,6 +39,7 @@ Complete CLI support:
 > Once you're connected, use the following instructions to connect to the individual nodes.
 > The instructions in the workshop will simply refer to the Name of the box to connect without
 > repeating the connection details and credentials. So refer back to this list when you need it.
+><br/>
 > The 3 nodes in the topology are 
 > 1) Devbox
 > 2) Router r1
