@@ -469,9 +469,141 @@ admin@devbox:ansible$
 Perfect! Let's check if the Open/R instances are now running on the routers properly:
 
 
-Log into router r1 and enter the docker container shell:
+Log into router r1 and drop into "bash":
+
+```
+RP/0/RP0/CPU0:r1#bash
+Wed Jan 30 12:41:59.867 UTC
+
+
+[r1:~]$ 
+[r1:~]$ 
+```
+
+Issue a `docker ps` command to check that the container is running: 
+
+```
+[r1:~]$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+ada4bf59c0b5        akshshar/openr-xr   "/root/run_openr_r1.s"   17 minutes ago      Up 17 minutes                           openr
+[r1:~]$ 
 
 ```
 
 
+Enter the docker container shell and exec into the `global-vrf` network namespace where open/R as a process is launched:
+
+
+
 ```
+[r1:~]$ 
+[r1:~]$ docker exec -it openr bash
+root@r1:/# 
+root@r1:/# 
+root@r1:/# ip netns exec global-vrf bash
+root@r1:/# 
+
+
+```
+
+Issue the Open/R CLI commands (breeze commands) to check that the adjacency is properly established with router r2:
+
+```
+
+root@r1:/# 
+root@r1:/# breeze kvstore adj
+
+
+> r1's adjacencies, version: 30, Node Label: 1, Overloaded?: False
+Neighbor    Local Interface    Remote Interface      Metric    Weight    Adj Label  NextHop-v4    NextHop-v6               Uptime
+r2          Gi0_0_0_0          Gi0_0_0_0                  7         1        50009  10.1.1.20     fe80::5054:ff:fe93:8ab0  15m53s
+r2          Gi0_0_0_1          Gi0_0_0_1                  7         1        50010  11.1.1.20     fe80::5054:ff:fe93:8ab1  15m53s
+r2          Gi0_0_0_2          Gi0_0_0_2                  6         1        50011  12.1.1.20     fe80::5054:ff:fe93:8ab2  15m53s
+
+
+root@r1:/# 
+root@r1:/# 
+
+```
+
+Check the number of routes learnt by Open/R in its FIB:
+
+```
+root@r1:/# breeze fib counters
+
+== r1's Fib counters  ==
+
+fibagent.num_of_routes : 1004
+
+root@r1:/#
+
+
+```
+
+
+Now exit back out from the container shell and from XR bash shell and issue a "show route" in the XR CLI of router r1:
+
+
+```
+root@r1:/# 
+root@r1:/# exit
+exit
+root@r1:/# 
+root@r1:/# exit
+exit
+[r1:~]$ 
+[r1:~]$ 
+[r1:~]$ exit
+logout
+
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#show route
+route  router  
+RP/0/RP0/CPU0:r1#show route
+Wed Jan 30 12:47:08.968 UTC
+
+Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+       U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+       A - access/subscriber, a - Application route
+       M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+
+Gateway of last resort is 192.168.122.1 to network 0.0.0.0
+
+S*   0.0.0.0/0 [1/0] via 192.168.122.1, 01:15:05
+C    10.1.1.0/24 is directly connected, 01:07:20, GigabitEthernet0/0/0/0
+L    10.1.1.10/32 is directly connected, 01:07:20, GigabitEthernet0/0/0/0
+C    11.1.1.0/24 is directly connected, 01:07:20, GigabitEthernet0/0/0/1
+L    11.1.1.10/32 is directly connected, 01:07:20, GigabitEthernet0/0/0/1
+C    12.1.1.0/24 is directly connected, 01:07:20, GigabitEthernet0/0/0/2
+L    12.1.1.10/32 is directly connected, 01:07:20, GigabitEthernet0/0/0/2
+L    50.1.1.1/32 is directly connected, 01:07:20, Loopback0
+a    60.1.1.1/32 [99/0] via 11.1.1.20, 00:00:04, GigabitEthernet0/0/0/1
+a    120.1.1.0/24 [99/0] via 11.1.1.20, 00:00:03, GigabitEthernet0/0/0/1
+a    120.1.2.0/24 [99/0] via 11.1.1.20, 00:00:03, GigabitEthernet0/0/0/1
+a    120.1.3.0/24 [99/0] via 11.1.1.20, 00:00:03, GigabitEthernet0/0/0/1
+a    120.1.4.0/24 [99/0] via 11.1.1.20, 00:00:04, GigabitEthernet0/0/0/1
+a    120.1.5.0/24 [99/0] via 11.1.1.20, 00:00:03, GigabitEthernet0/0/0/1
+a    120.1.6.0/24 [99/0] via 11.1.1.20, 00:00:03, GigabitEthernet0/0/0/1
+a    120.1.7.0/24 [99/0] via 11.1.1.20, 00:00:04, GigabitEthernet0/0/0/1
+a    120.1.8.0/24 [99/0] via 11.1.1.20, 00:00:03, GigabitEthernet0/0/0/1
+a    120.1.9.0/24 [99/0] via 11.1.1.20, 00:00:04, GigabitEthernet0/0/0/1
+a    120.1.10.0/24 [99/0] via 11.1.1.20, 00:00:04, GigabitEthernet0/0/0/1
+a    120.1.11.0/24 [99/0] via 11.1.1.20, 00:00:03, GigabitEthernet0/0/0/1
+a    120.1.12.0/24 [99/0] via 11.1.1.20, 00:00:03, GigabitEthernet0/0/0/1
+a    120.1.13.0/24 [99/0] via 11.1.1.20, 00:00:04, GigabitEthernet0/0/0/1
+a    120.1.14.0/24 [99/0] via 11.1.1.20, 00:00:04, GigabitEthernet0/0/0/1
+ --More-- 
+
+
+```
+
+Awesome! Routes are learnt by Open/R from its neighbor running on r2 and these routes are programmed into Router r1's RIB using the Service-Layer API. These routes show up as application routes (`a` routes in the `show route` output above).
+
+
+
