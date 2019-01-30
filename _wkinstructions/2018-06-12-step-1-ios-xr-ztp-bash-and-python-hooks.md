@@ -57,7 +57,8 @@ Complete CLI support:
 >     XR SSH Port: 2221    
 >     NETCONF Port: 8321   
 >     gRPC Port: 57021  
->     XR-Bash SSH Port: 2222  
+>     XR-Bash SSH Port: 2222    
+>
 >
 ><p style="font-size: 16px;"><b>IOS-XRv9000 R2:  (Router r2)</b></p> 
 >
