@@ -278,7 +278,91 @@ admin@devbox:ansible$
 
 ### Execute the Ansible playbook to configure BGP
 
+With ncclient installed, execute the Ansible playbook to configure BGP on the two routers:
 
+
+
+```
+admin@devbox:ansible$ ansible-playbook -i ansible_hosts configure_bgp_oc_netconf.yml 
+
+PLAY [routers_shell] ********************************************************************************************************************
+
+TASK [Configure BGP on the router] ******************************************************************************************************
+ok: [r1]
+ok: [r2]
+
+PLAY RECAP ******************************************************************************************************************************
+r1                         : ok=1    changed=0    unreachable=0    failed=0   
+r2                         : ok=1    changed=0    unreachable=0    failed=0   
+
+admin@devbox:ansible$ 
+
+```
+
+### Check the BGP configuration on the routers
+
+Hop over to router r1 and see that BGP has been configured:  
+
+
+```
+AKSHSHAR-M-33WP:~ akshshar$ ssh -p 2221 admin@10.10.20.170
+
+
+--------------------------------------------------------------------------
+  Router 1 (Cisco IOS XR Sandbox)
+--------------------------------------------------------------------------
+
+
+Password: 
+
+
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#show run router bgp
+Wed Jan 30 04:32:27.173 UTC
+router bgp 65000
+ bgp router-id 50.1.1.1
+ address-family ipv4 unicast
+ !
+ neighbor 60.1.1.1
+  remote-as 65000
+  update-source Loopback0
+  address-family ipv4 unicast
+  !
+ !
+!
+
+RP/0/RP0/CPU0:r1#
+
+
+```
+
+Similarly, on router r2:  
+
+
+```
+
+RP/0/RP0/CPU0:r2#show run router bgp
+Wed Jan 30 04:29:24.722 UTC
+% No such configuration item(s)
+
+RP/0/RP0/CPU0:r2#show run router bgp
+Wed Jan 30 04:32:14.159 UTC
+router bgp 65000
+ bgp router-id 60.1.1.1
+ address-family ipv4 unicast
+ !
+ neighbor 50.1.1.1
+  remote-as 65000
+  update-source Loopback0
+  address-family ipv4 unicast
+  !
+ !
+!
+
+RP/0/RP0/CPU0:r2#
+
+
+```
 
 
 
