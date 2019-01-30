@@ -253,8 +253,8 @@ admin@devbox:ztp_hooks$
 
 ### Execute the copied bash script on router r2 over SSH
 
-```
 
+```
 admin@devbox:ztp_hooks$ ssh -p 2231  admin@10.10.20.170 run /misc/scratch/automate_cli_bash.sh
 
 
