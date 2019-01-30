@@ -311,7 +311,7 @@ admin@devbox:ztp_hooks$
 
 
 
-Great, so we know how to run ZTP scripts on the box. In the steps above, we did so over SSH.
+Great, so we know how to run ZTP-API based scripts on the box. In the steps above, we did so over SSH.
 But it can soon grow to be cumbersome, if you have to manually transfer the scripts to each router in the topology and then execute over SSH. Further, the manual password entry greatly reduces the speed at which these actions can be performed and is not a scalable automation technique.
 So for the python ZTP scripts we will deal with below, we scale out the process using Ansible
 {: .notice--success}
