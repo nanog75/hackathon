@@ -103,13 +103,42 @@ Unpacking objects: 100% (33/33), done.
 Checking connectivity... done.
 admin@devbox:~$ 
 admin@devbox:~$ 
+
+```
+
+You should see the following files:
+
+```
 admin@devbox:~$ cd iosxr-devnet-cleur2019/
 admin@devbox:iosxr-devnet-cleur2019$ 
-admin@devbox:iosxr-devnet-cleur2019$ ls
-ansible  README.md  ztp_hooks
+admin@devbox:iosxr-devnet-cleur2019$ tree .
+.
+├── ansible
+│   ├── ansible_hosts
+│   ├── configure_bgp_oc_netconf.yml
+│   ├── docker_bringup.retry
+│   ├── docker_bringup.yml
+│   ├── execute_python_ztp.yml
+│   ├── openr
+│   │   ├── hosts_r1
+│   │   ├── hosts_r2
+│   │   ├── increment_ipv4_prefix1.py
+│   │   ├── increment_ipv4_prefix2.py
+│   │   ├── launch_openr_r1.sh
+│   │   ├── launch_openr_r2.sh
+│   │   ├── run_openr_r1.sh
+│   │   └── run_openr_r2.sh
+│   ├── set_ipv6_route.sh
+│   └── xml
+│       ├── r1-bgp.xml
+│       └── r2-bgp.xml
+├── README.md
+└── ztp_hooks
+    ├── automate_cli_bash.sh
+    └── automate_cli_python.py
+
+4 directories, 19 files
 admin@devbox:iosxr-devnet-cleur2019$ 
-
-
 ```
 
 
