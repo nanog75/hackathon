@@ -174,8 +174,11 @@ admin@devbox:openr$
 
 ```
 
+1. The `hosts_rtr*` files are used to set up `/etc/hosts` inside the docker container that we launch using Ansible. This setting is important for Open/R to work.
 
+2. The `launch_openr_*.sh` scripts contain the actual docker run command which will launch the container and mount relevant config files into it.
 
+3. The `run_openr_*.sh` script contains the configuration knobs for Open/R to know what routes to advertise to other Open/R instances on the network, the gRPC port for Service-Layer API to use while running locally on the router, the interfaces of XR that it should send its hellos out on, etc.
 
 
 
