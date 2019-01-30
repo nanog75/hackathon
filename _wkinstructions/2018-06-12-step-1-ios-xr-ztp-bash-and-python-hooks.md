@@ -169,7 +169,24 @@ password for `Router r1` is `admin`
 
 
 ```
+admin@devbox:ztp_hooks$ 
+admin@devbox:ztp_hooks$ pwd
+/home/admin/iosxr-devnet-cleur2019/ztp_hooks
+admin@devbox:ztp_hooks$ 
 
+admin@devbox:ztp_hooks$ 
+admin@devbox:ztp_hooks$ scp -P 2221 automate_cli_bash.sh  admin@10.10.20.170:/misc/scratch/
+
+
+--------------------------------------------------------------------------
+  Router 1 (Cisco IOS XR Sandbox)
+--------------------------------------------------------------------------
+
+
+Password: 
+automate_cli_bash.sh                                                                                   100%  838     0.8KB/s   00:00    
+Connection to 10.10.20.170 closed by remote host.
+admin@devbox:ztp_hooks$ 
 
 
 ```
