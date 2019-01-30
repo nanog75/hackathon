@@ -160,23 +160,56 @@ The bash script will utilize the ZTP bash hooks in IOS-XR to configure `Loopback
 ><https://learninglabs.cisco.com/tracks/iosxr-programmability/iosxr-cli-automation/01-iosxr-01-cli-automation-bash/step/1>
 {: .notice--warning}
 
-### Transfer the bash script to rtr1 over the connected link
 
-password for rtr1 is `vagrant`
+
+### Transfer the bash script to Router r1 over SSH
+
+password for `Router r1` is `admin`
 {: .notice--info}  
 
+
 ```
-vagrant@devbox:ztp_cli_automation$ scp automate_cli_bash.sh vagrant@20.1.1.10:/misc/scratch/
+
+
+
+```
+
+### Execute the copied bash script over ssh 
+
+```
+admin@devbox:ztp_hooks$ ssh -p 2221  admin@10.10.20.170 run /misc/scratch/automate_cli_bash.sh
+
+
+--------------------------------------------------------------------------
+  Router 1 (Cisco IOS XR Sandbox)
+--------------------------------------------------------------------------
+
+
 Password: 
-automate_cli_bash.sh                          100%  444     0.4KB/s   00:00    
-Connection to 20.1.1.10 closed by remote host.
-vagrant@devbox:ztp_cli_automation$ 
+
+
+Wed Jan 30 02:43:20.540 UTC
+Building configuration...
+!! IOS XR Configuration version = 6.4.1
+interface Loopback0
+ ipv4 address 50.1.1.1 255.255.255.255
+!
+grpc
+ port 57777
+ no-tls
+ service-layer
+ !
+!
+end
+
+admin@devbox:ztp_hooks$ 
+
 ```
 
 
 
 
-### Execute the copied bash script over ssh
+
 
 
 password for rtr1 is `vagrant`
