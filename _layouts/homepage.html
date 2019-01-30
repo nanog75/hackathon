@@ -1,0 +1,54 @@
+---
+---
+
+<!doctype html>
+<html lang="{{ site.locale | slice: 0,2 | default: "en" }}" class="no-js">
+<head>
+    {% include head.html %}
+    {% include head/custom.html %}
+</head>
+
+<body class="layout--{{ page.layout | default: layout.layout }}{% if page.classes or layout.classes %}{{ page.classes | default: layout.classes | join: ' ' | prepend: ' ' }}{% endif %}">
+
+{% include browser-upgrade.html %}
+{% include masthead.html %}
+
+<div class="page__hero--overlay" style="background-image: url('images/classroom-unsplash.jpg');">
+    <div class="wrapper" style="text-align:center;">
+        <h1 class="page__title" itemprop="headline" style="">
+            IOS-XR Programmability Crash Course
+        </h1>
+        <p class="page__lead" style="font-size: 0.9em;text-align:center;">
+            As network provisioning, monitoring and application-driven policy decisions become more prevalant in traditional service provider networks, IOS-XR has stepped up to be the network operating system of choice.
+            Learn how APIs and hooks at every layer of the IOS-XR stack make it the ideal choice for network programmers.
+        </p>
+        <p>
+            <a href="{{ base_path }}/lab-instructions" class="btn btn--large"><i class='fa fa-step-forward'></i> Get Started!</a>
+            <a href="https://pods.iosxr-devnet-cisco.live" class="btn btn--x-large"><i class='fa fa-step-forward'></i> Connect to your pods!</a>
+            <!--<a href="https://www.youtube.com/watch?v=yiN8fAxlfwg" class="btn btn&#45;&#45;large" data-lity><i class='fa fa-play-circle-o'></i> Watch Video</a>-->
+            <!--<a href="https://github.com/cisco-service-layer" class="btn btn&#45;&#45;large" data-lity><i class='fa fa-github'></i> Github</a>-->
+        </p>
+    </div>
+</div>
+
+<div id="main" role="main">
+    <article class="splash" itemscope itemtype="http://schema.org/CreativeWork">
+        {% if page.title %}<meta itemprop="headline" content="{{ page.title | markdownify | strip_html | strip_newlines | escape_once }}">{% endif %}
+        {% if page.excerpt %}<meta itemprop="description" content="{{ page.excerpt | markdownify | strip_html | strip_newlines | escape_once }}">{% endif %}
+
+        <section class="page__content" itemprop="text">
+            {{ content }}
+        </section>
+    </article>
+</div>
+
+<div class="page__footer">
+    <footer>
+        {% include footer.html %}
+    </footer>
+</div>
+
+{% include scripts.html %}
+
+</body>
+</html>
