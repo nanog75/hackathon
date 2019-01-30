@@ -42,17 +42,32 @@ Complete CLI support:
 ><br/>
 > The 3 nodes in the topology are: 
 > 
-> * Development Linux System (DevBox)  
+> * **Development Linux System (DevBox)**
 >
->     IP Address: 10.10.20.170 Username/Password: [admin/admin] SSH Port: 2211
+>     IP Address: 10.10.20.170   
+>     Username/Password: [admin/admin]   
+>     SSH Port: 2211  
 >
-> * IOS-XRv9000 R1: (Router r1)   
 >
->     IP Address: 10.10.20.170 Username/Password: [admin/admin] Management IP: 10.10.20.170 XR SSH >     Port: 2221 NETCONF Port: 8321 gRPC Port: 57021 XR-Bash SSH Port: 2222  
+> * **IOS-XRv9000 R1: (Router r1)** 
 >
-> * IOS-XRv9000 R2:  (Router r2)  
+>     IP Address: 10.10.20.170  
+>     Username/Password: [admin/admin]   
+>     Management IP: 10.10.20.170  
+>     XR SSH Port: 2221    
+>     NETCONF Port: 8321   
+>     gRPC Port: 57021  
+>     XR-Bash SSH Port: 2222  
 >
->     IP Address: 10.10.20.170 Username/Password: [admin/admin] Management IP: 10.10.20.170 XR SSH >     Port: 2231 NETCONF Port: 8331 gRPC Port: 57031 XR-Bash SSH Port: 2232
+> * **IOS-XRv9000 R2:  (Router r2)**
+>
+>     IP Address: 10.10.20.170   
+>     Username/Password: [admin/admin]   
+>     Management IP: 10.10.20.170   
+>     XR SSH Port: 2231    
+>     NETCONF Port: 8331   
+>     gRPC Port: 57031    
+>     XR-Bash SSH Port: 2232
 {: .notice--info}
 
 
