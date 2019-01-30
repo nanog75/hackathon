@@ -77,13 +77,849 @@ The Topology in use is shown below:
 ![topology_devnet.png]({{site.baseurl}}/images/topology_devnet.png)
 
      
-     
-## Keep running the Telemetry client
 
-Before we begin Step 3 of this workshop where we combine IOS-XR Telemetry, Ansible, Open/R and Service-Layer APIs in XR, make sure you have run through Steps 1 and 2 already so that you have the Telemetry client already listening to BGP Session updates from router r1.  
 
-To recap, at the end of Step 2, you must have one terminal window connected to your devbox where you have a client receiving data from router r1's BGP Session (Currently in idle state). If not, please start it again as shown below. 
+## Ansible netconf_config module
 
+Hop into the devbox and browse to the ansible directory:
+
+
+```
+AKSHSHAR-M-33WP:~ akshshar$ ssh -p 2211 admin@10.10.20.170
+admin@10.10.20.170's password: 
+Last login: Tue Jan 29 18:35:38 2019 from 192.168.122.1
+admin@devbox:~$ 
+admin@devbox:~$ 
+admin@devbox:~$ cd iosxr-devnet-cleur2019/
+admin@devbox:iosxr-devnet-cleur2019$ ls
+ansible  README.md  ztp_hooks
+admin@devbox:iosxr-devnet-cleur2019$ cd ansible/
+admin@devbox:ansible$ ls
+ansible_hosts  configure_bgp_oc_netconf.yml  docker_bringup.yml  execute_python_ztp.yml  openr  set_ipv6_route.sh  xml
+admin@devbox:ansible$ 
+```
+
+We will be using the playbook: `configure_bgp_oc_netconf.yml` which uses the netconf_config module which in turn utilizes the XML encoded data to configure BGP on routers r1 and r2:
+
+The playbook is dumped below: 
+
+```
+admin@devbox:ansible$ 
+admin@devbox:ansible$ cat configure_bgp_oc_netconf.yml 
+---
+- hosts: routers_shell
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: set ntp server in the device
+    netconf_config:
+      host: "{{ ansible_host }}"
+      port: "{{ netconf_port }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+      hostkey_verify: no
+      xml: "{{ lookup('file', xml_file) }}"
+admin@devbox:ansible$ 
+admin@devbox:ansible$ 
+```  
+
+The xml file used by the above playbook to configure BGP on router r1 is shown below. 
+This XML data utilizes the IOS-XR BGP Config YANG model:  `Cisco-IOS-XR-ipv4-bgp-cfg`.
+
+
+```
+admin@devbox:ansible$ cat xml/r1-bgp.xml 
+<config>
+  <bgp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ipv4-bgp-cfg">
+   <instance>
+    <instance-name>default</instance-name>
+    <instance-as>
+     <as>0</as>
+     <four-byte-as>
+      <as>65000</as>
+      <bgp-running></bgp-running>
+      <default-vrf>
+       <global>
+        <router-id>50.1.1.1</router-id>
+        <global-afs>
+         <global-af>
+          <af-name>ipv4-unicast</af-name>
+          <enable></enable>
+         </global-af>
+        </global-afs>
+       </global>
+       <bgp-entity>
+        <neighbors>
+         <neighbor>
+          <neighbor-address>60.1.1.1</neighbor-address>
+          <remote-as>
+           <as-xx>0</as-xx>
+           <as-yy>65000</as-yy>
+          </remote-as>
+          <update-source-interface>Loopback0</update-source-interface>
+          <neighbor-afs>
+           <neighbor-af>
+            <af-name>ipv4-unicast</af-name>
+            <activate></activate>
+           </neighbor-af>
+          </neighbor-afs>
+         </neighbor>
+        </neighbors>
+       </bgp-entity>
+      </default-vrf>
+     </four-byte-as>
+    </instance-as>
+   </instance>
+      </bgp>
+    </config>
+admin@devbox:ansible$ 
+```
+
+Similarly, the XML file for router r2:  
+
+
+```
+admin@devbox:ansible$ 
+admin@devbox:ansible$ 
+admin@devbox:ansible$ cat xml/r2-bgp.xml 
+<config>
+  <bgp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ipv4-bgp-cfg"> 
+   <instance> 
+    <instance-name>default</instance-name> 
+    <instance-as> 
+     <as>0</as> 
+     <four-byte-as> 
+      <as>65000</as> 
+      <bgp-running></bgp-running> 
+      <default-vrf> 
+       <global> 
+        <router-id>60.1.1.1</router-id> 
+        <global-afs> 
+         <global-af> 
+          <af-name>ipv4-unicast</af-name> 
+          <enable></enable> 
+         </global-af> 
+        </global-afs> 
+       </global> 
+       <bgp-entity> 
+        <neighbors> 
+         <neighbor> 
+          <neighbor-address>50.1.1.1</neighbor-address> 
+          <remote-as> 
+           <as-xx>0</as-xx> 
+           <as-yy>65000</as-yy> 
+          </remote-as> 
+          <update-source-interface>Loopback0</update-source-interface> 
+          <neighbor-afs> 
+           <neighbor-af> 
+            <af-name>ipv4-unicast</af-name> 
+            <activate></activate> 
+           </neighbor-af> 
+          </neighbor-afs> 
+         </neighbor> 
+        </neighbors> 
+       </bgp-entity> 
+      </default-vrf> 
+     </four-byte-as> 
+    </instance-as> 
+   </instance> 
+  </bgp>
+</config>
+admin@devbox:ansible$ 
+```
+
+
+
+### Install ncclient
+
+ncclient is an open source library (<https://pypi.org/project/ncclient/>) that can be used to connect to the netconf subsystem over SSH for multiple different vendor OSes (including IOS-XR).
+It then allows the user to pass in XML encoded YANG data to interact with the router OS and manipulate its provisioned state or extract operational data.
+
+The Ansible netconf_config module requires ncclient to be installed on the system. Let's install ncclient first:
+
+```
+admin@devbox:ansible$ sudo pip2 install ncclient
+The directory '/home/admin/.cache/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+The directory '/home/admin/.cache/pip' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+Collecting ncclient
+  Downloading https://files.pythonhosted.org/packages/dc/95/acc44c2ff966743fedd1ad991ecf2498f40fd434883c67138b60a6373d49/ncclient-0.6.3.tar.gz (88kB)
+    100% |████████████████████████████████| 92kB 598kB/s 
+Requirement already satisfied: setuptools>0.6 in /usr/lib/python3/dist-packages (from ncclient) (20.7.0)
+Requirement already satisfied: paramiko>=1.15.0 in /usr/local/lib/python3.5/dist-packages (from ncclient) (2.4.2)
+Collecting lxml>=3.3.0 (from ncclient)
+  Downloading https://files.pythonhosted.org/packages/f0/b6/6423a06e3fd191c5c9bea3cd636a175eb7b0b3e3c8d5c58c4e6bf3b43193/lxml-4.3.0-cp35-cp35m-manylinux1_x86_64.whl (5.6MB)
+    100% |████████████████████████████████| 5.6MB 7.5MB/s 
+Collecting selectors2>=2.0.1 (from ncclient)
+  Downloading https://files.pythonhosted.org/packages/c9/89/8a07d6d6c78422c5151f68453e9741af4cd82bebcfa73923f73b3bdbef0d/selectors2-2.0.1-py2.py3-none-any.whl
+Requirement already satisfied: six in /usr/lib/python3/dist-packages (from ncclient) (1.10.0)
+Requirement already satisfied: pynacl>=1.0.1 in /usr/local/lib/python3.5/dist-packages (from paramiko>=1.15.0->ncclient) (1.3.0)
+Requirement already satisfied: cryptography>=1.5 in /usr/local/lib/python3.5/dist-packages (from paramiko>=1.15.0->ncclient) (2.5)
+Requirement already satisfied: pyasn1>=0.1.7 in /usr/local/lib/python3.5/dist-packages (from paramiko>=1.15.0->ncclient) (0.4.5)
+Requirement already satisfied: bcrypt>=3.1.3 in /usr/local/lib/python3.5/dist-packages (from paramiko>=1.15.0->ncclient) (3.1.6)
+Requirement already satisfied: cffi>=1.4.1 in /usr/local/lib/python3.5/dist-packages (from pynacl>=1.0.1->paramiko>=1.15.0->ncclient) (1.11.5)
+Requirement already satisfied: asn1crypto>=0.21.0 in /usr/local/lib/python3.5/dist-packages (from cryptography>=1.5->paramiko>=1.15.0->ncclient) (0.24.0)
+Requirement already satisfied: pycparser in /usr/local/lib/python3.5/dist-packages (from cffi>=1.4.1->pynacl>=1.0.1->paramiko>=1.15.0->ncclient) (2.19)
+Installing collected packages: lxml, selectors2, ncclient
+  Running setup.py install for ncclient ... done
+Successfully installed lxml-4.3.0 ncclient-0.6.3 selectors2-2.0.1
+You are using pip version 10.0.1, however version 19.0.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+admin@devbox:ansible$ 
+
+```
+
+In the end, you should have a relatively latest version of ncclient installed (version could differ based on when you run this lab): 
+
+```
+admin@devbox:ansible$ pip2 list | grep ncclient
+ncclient                0.6.3  
+admin@devbox:ansible$
+```
+
+
+### Execute the Ansible playbook to configure BGP
+
+With ncclient installed, execute the Ansible playbook to configure BGP on the two routers:
+
+
+
+```
+admin@devbox:ansible$ ansible-playbook -i ansible_hosts configure_bgp_oc_netconf.yml 
+
+PLAY [routers_shell] ********************************************************************************************************************
+
+TASK [Configure BGP on the router] ******************************************************************************************************
+ok: [r1]
+ok: [r2]
+
+PLAY RECAP ******************************************************************************************************************************
+r1                         : ok=1    changed=0    unreachable=0    failed=0   
+r2                         : ok=1    changed=0    unreachable=0    failed=0   
+
+admin@devbox:ansible$ 
+
+```
+
+### Check the BGP configuration on the routers
+
+Hop over to router r1 and see that BGP has been configured:  
+
+
+```
+AKSHSHAR-M-33WP:~ akshshar$ ssh -p 2221 admin@10.10.20.170
+
+
+--------------------------------------------------------------------------
+  Router 1 (Cisco IOS XR Sandbox)
+--------------------------------------------------------------------------
+
+
+Password: 
+
+
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#show run router bgp
+Wed Jan 30 04:32:27.173 UTC
+router bgp 65000
+ bgp router-id 50.1.1.1
+ address-family ipv4 unicast
+ !
+ neighbor 60.1.1.1
+  remote-as 65000
+  update-source Loopback0
+  address-family ipv4 unicast
+  !
+ !
+!
+
+RP/0/RP0/CPU0:r1#
+
+
+```
+
+Similarly, on router r2:  
+
+
+```
+
+RP/0/RP0/CPU0:r2#show run router bgp
+Wed Jan 30 04:29:24.722 UTC
+% No such configuration item(s)
+
+RP/0/RP0/CPU0:r2#show run router bgp
+Wed Jan 30 04:32:14.159 UTC
+router bgp 65000
+ bgp router-id 60.1.1.1
+ address-family ipv4 unicast
+ !
+ neighbor 50.1.1.1
+  remote-as 65000
+  update-source Loopback0
+  address-family ipv4 unicast
+  !
+ !
+!
+
+RP/0/RP0/CPU0:r2#
+
+
+```
+
+
+## YDK
+
+To know more about YDK, head over to <http://ydk.io>
+
+### YDK python script to configure Model-Driven Telemetry
+
+YDK-py is already installed in the devbox for you. 
+
+Jump into the `ydk` directory in the clone github repository:  
+
+
+```
+admin@devbox:~$ cd ~/iosxr-devnet-cleur2019/
+admin@devbox:iosxr-devnet-cleur2019$ cd ydk/
+admin@devbox:ydk$ 
+```
+
+>Writing your own python script with YDK to interact with Yang models on IOS-XR and the other Vendor OSes is straightforward and you will find tons of resources in the git repository:
+https://github.com/CiscoDevNet/ydk-py-samples with hundreds of examples across different models supported by IOS-XR.
+  
+The YDK script used for this purpose is shown below:
+  
+```
+admin@devbox:ydk$ cat configure_telemetry_openconfig.py 
+#!/usr/bin/env python
+#
+# Copyright 2016 Cisco Systems, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+"""
+Create configuration for model openconfig-telemetry.
+
+usage: configure_telemetry_openconfig.py [-h] [-v] device
+
+positional arguments:
+  device         NETCONF device (ssh://user:password@host:port)
+
+optional arguments:
+  -h, --help     show this help message and exit
+  -v, --verbose  print debugging messages
+"""
+
+from argparse import ArgumentParser
+from urlparse import urlparse
+
+from ydk.services import CRUDService
+from ydk.providers import NetconfServiceProvider
+from ydk.models.openconfig import openconfig_telemetry \
+    as oc_telemetry
+import logging
+
+
+def config_telemetry_system(telemetry_system):
+    """Add config data to telemetry_system object."""
+    #sensor-group
+    sensor_group = telemetry_system.sensor_groups.SensorGroup()
+
+
+    sensor_group.sensor_group_id = "BGPSession"
+
+    sensor_path = sensor_group.sensor_paths.SensorPath()
+    sensor_path.path = "Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/sessions"
+    sensor_group.sensor_paths.sensor_path.append(sensor_path)
+    telemetry_system.sensor_groups.sensor_group.append(sensor_group)
+
+    sensor_path = sensor_group.sensor_paths.SensorPath()
+    sensor_path.path = "Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info"
+    sensor_group.sensor_paths.sensor_path.append(sensor_path)
+    telemetry_system.sensor_groups.sensor_group.append(sensor_group)
+
+
+    sensor_group = telemetry_system.sensor_groups.SensorGroup()
+    sensor_group.sensor_group_id = "IPV6Neighbor"
+
+    sensor_path = sensor_group.sensor_paths.SensorPath()
+    sensor_path.path = "Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address"
+    sensor_group.sensor_paths.sensor_path.append(sensor_path)
+    telemetry_system.sensor_groups.sensor_group.append(sensor_group)
+
+
+    #subscription
+    subscription = telemetry_system.subscriptions.persistent.Subscription()
+    subscription.subscription_id = 1
+    sensor_profile = subscription.sensor_profiles.SensorProfile()
+    sensor_profile.sensor_group = "BGPSession"
+    sensor_profile.config.sensor_group = "BGPSession"
+    sensor_profile.config.sample_interval = 15000
+    subscription.sensor_profiles.sensor_profile.append(sensor_profile)
+    telemetry_system.subscriptions.persistent.subscription.append(subscription)
+
+    subscription = telemetry_system.subscriptions.persistent.Subscription()
+    subscription.subscription_id = 2
+    sensor_profile = subscription.sensor_profiles.SensorProfile()
+    sensor_profile.sensor_group = "IPV6Neighbor"
+    sensor_profile.config.sensor_group = "IPV6Neighbor"
+    sensor_profile.config.sample_interval = 15000
+    subscription.sensor_profiles.sensor_profile.append(sensor_profile)
+    telemetry_system.subscriptions.persistent.subscription.append(subscription)
+
+if __name__ == "__main__":
+    """Execute main program."""
+    parser = ArgumentParser()
+    parser.add_argument("-v", "--verbose", help="print debugging messages",
+                        action="store_true")
+    parser.add_argument("device",
+                        help="NETCONF device (ssh://user:password@host:port)")
+    args = parser.parse_args()
+    device = urlparse(args.device)
+
+    # log debug messages if verbose argument specified
+    if args.verbose:
+        logger = logging.getLogger("ydk")
+        logger.setLevel(logging.INFO)
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter(("%(asctime)s - %(name)s - "
+                                      "%(levelname)s - %(message)s"))
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
+    # create NETCONF provider
+    provider = NetconfServiceProvider(address=device.hostname,
+                                      port=device.port,
+                                      username=device.username,
+                                      password=device.password,
+                                      protocol=device.scheme)
+    # create CRUD service
+    crud = CRUDService()
+
+    telemetry_system = oc_telemetry.TelemetrySystem()  # create object
+    config_telemetry_system(telemetry_system)  # add object configuration
+
+    # create configuration on NETCONF device
+    crud.create(provider, telemetry_system)
+
+    exit()
+# End of script
+admin@devbox:ydk$ 
+
+
+```
+
+
+### Execute the YDK script:
+
+
+We intend to configure Model Driven Telemetry on router r1 so that it is ready to stream data associated with BGP Sessions, BGP process and IPv6 neighbor data in the above example.
+The Telemetry client we write later will try and receive the BGP session information from the router.  
+
+Execute the YDK script, passing to it the credentials and connection details for Router r1 and its netconf port:
+
+Pass the `-v` option to the script to dump the requests/responses as the script executes.
+
+```
+admin@devbox:ydk$ 
+admin@devbox:ydk$ ./configure_telemetry_openconfig.py -v ssh://vagrant:vagrant@10.10.20.170:8321
+2019-01-29 21:02:48,375 - ydk - INFO - Path where models are to be downloaded: /home/admin/.ydk/10.10.20.170_8321
+2019-01-29 21:02:48,386 - ydk - INFO - Connected to 10.10.20.170 on port 8321 using ssh with timeout of -1
+2019-01-29 21:02:48,396 - ydk - INFO - Executing CRUD create operation on [openconfig-telemetry:telemetry-system]
+2019-01-29 21:02:52,735 - ydk - INFO - =============Generating payload to send to device=============
+2019-01-29 21:02:52,735 - ydk - INFO - 
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<edit-config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <target>
+    <candidate/>
+  </target>
+  <error-option>rollback-on-error</error-option>
+  <config><telemetry-system xmlns="http://openconfig.net/yang/telemetry" xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="merge">
+  <sensor-groups>
+    <sensor-group>
+      <sensor-group-id>BGPSession</sensor-group-id>
+      <sensor-paths>
+        <sensor-path>
+          <path>Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/sessions</path>
+        </sensor-path>
+        <sensor-path>
+          <path>Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info</path>
+        </sensor-path>
+      </sensor-paths>
+    </sensor-group>
+    <sensor-group>
+      <sensor-group-id>IPV6Neighbor</sensor-group-id>
+      <sensor-paths>
+        <sensor-path>
+          <path>Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address</path>
+        </sensor-path>
+      </sensor-paths>
+    </sensor-group>
+  </sensor-groups>
+  <subscriptions>
+    <persistent>
+      <subscription>
+        <subscription-id>1</subscription-id>
+        <sensor-profiles>
+          <sensor-profile>
+            <sensor-group>BGPSession</sensor-group>
+            <config>
+              <sensor-group>BGPSession</sensor-group>
+              <sample-interval>15000</sample-interval>
+            </config>
+          </sensor-profile>
+        </sensor-profiles>
+      </subscription>
+      <subscription>
+        <subscription-id>2</subscription-id>
+        <sensor-profiles>
+          <sensor-profile>
+            <sensor-group>IPV6Neighbor</sensor-group>
+            <config>
+              <sensor-group>IPV6Neighbor</sensor-group>
+              <sample-interval>15000</sample-interval>
+            </config>
+          </sensor-profile>
+        </sensor-profiles>
+      </subscription>
+    </persistent>
+  </subscriptions>
+</telemetry-system>
+</config>
+</edit-config>
+</rpc>
+2019-01-29 21:02:52,738 - ydk - INFO - 
+
+2019-01-29 21:02:52,789 - ydk - INFO - =============Reply payload received from device=============
+2019-01-29 21:02:52,789 - ydk - INFO - 
+<?xml version="1.0"?>
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+  <ok/>
+</rpc-reply>
+
+2019-01-29 21:02:52,791 - ydk - INFO - 
+
+2019-01-29 21:02:52,791 - ydk - INFO - =============Executing commit=============
+2019-01-29 21:02:52,791 - ydk - INFO - 
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <commit/>
+</rpc>
+
+2019-01-29 21:02:53,092 - ydk - INFO - =============Reply payload received from device=============
+2019-01-29 21:02:53,092 - ydk - INFO - 
+<?xml version="1.0"?>
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="2">
+  <ok/>
+</rpc-reply>
+
+2019-01-29 21:02:53,093 - ydk - INFO - 
+
+2019-01-29 21:02:53,094 - ydk - INFO - Operation succeeded
+2019-01-29 21:02:53,094 - ydk - INFO - Disconnected from device
+admin@devbox:ydk$ 
+
+```
+
+
+### Check the Telemetry configuration on router r1
+
+
+```
+AKSHSHAR-M-33WP:~ akshshar$ ssh -p 2221 admin@10.10.20.170
+
+
+--------------------------------------------------------------------------
+  Router 1 (Cisco IOS XR Sandbox)
+--------------------------------------------------------------------------
+
+
+Password: 
+
+
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#show  running-config telemetry model-driven 
+Wed Jan 30 05:05:03.128 UTC
+telemetry model-driven
+ sensor-group BGPSession
+  sensor-path Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/sessions
+  sensor-path Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info
+ !
+ sensor-group IPV6Neighbor
+  sensor-path Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address
+ !
+ subscription 1
+  sensor-group-id BGPSession sample-interval 15000
+ !
+ subscription 2
+  sensor-group-id IPV6Neighbor sample-interval 15000
+ !
+!
+
+RP/0/RP0/CPU0:r1#
+```
+
+
+
+### Verify that the Telemetry sensor-paths are resolved
+
+
+```
+RP/0/RP0/CPU0:r1#show telemetry model-driven subscription 1
+Wed Jan 30 05:07:56.424 UTC
+Subscription:  1
+-------------
+  State:       NA
+  Sensor groups:
+  Id: BGPSession
+    Sample Interval:      15000 ms
+    Sensor Path:          Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/sessions
+    Sensor Path State:    Resolved
+    Sensor Path:          Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info
+    Sensor Path State:    Resolved
+
+  Collection Groups:
+  ------------------
+  No active collection groups
+
+RP/0/RP0/CPU0:r1#show telemetry model-driven subscription 2
+Wed Jan 30 05:07:59.312 UTC
+Subscription:  2
+-------------
+  State:       NA
+  Sensor groups:
+  Id: IPV6Neighbor
+    Sample Interval:      15000 ms
+    Sensor Path:          Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address
+    Sensor Path State:    Resolved
+
+  Collection Groups:
+  ------------------
+  No active collection groups
+
+RP/0/RP0/CPU0:r1#
+
+```
+
+
+Awesome! You're now ready to stream telemetry data from the above sensor-paths. Let's proceed to run a custom python Telemetry client.
+{: .notice--success}
+
+
+
+
+
+
+## Writing your own Python Telemetry client
+
+The Telemetry client is written based on the same concept described in the following learning lab:
+<https://learninglabs.cisco.com/tracks/iosxr-programmability/iosxr-streaming-telemetry/03-iosxr-02-telemetry-python/step/1>
+
+We make it slightly simpler and instead of requesting telemetry data in a GPB format, we simply request json and dump it. 
+
+Before we start, install the dependencies required to connect to the router over gRPC to receive the data.  
+
+### Install dependencies for the gRPC telemetry client
+
+
+```
+admin@devbox:~$ sudo pip2 install grpcio-tools==1.7.0 googleapis-common-protos
+The directory '/home/admin/.cache/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+The directory '/home/admin/.cache/pip' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+Collecting grpcio-tools==1.7.0
+  Downloading https://files.pythonhosted.org/packages/0e/c3/d9a9960f12e0bab789da875b1c9a3eb348b51fa3af9544c1edd1f7ef6000/grpcio_tools-1.7.0-cp27-cp27mu-manylinux1_x86_64.whl (21.3MB)
+    100% |████████████████████████████████| 21.3MB 50kB/s 
+Collecting googleapis-common-protos
+  Downloading https://files.pythonhosted.org/packages/61/29/1549f61917eadd11650e42b78b4afcfe9cb467157af4510ab8cb59535f14/googleapis-common-protos-1.5.6.tar.gz
+Requirement already satisfied (use --upgrade to upgrade): protobuf>=3.3.0 in /usr/local/lib/python2.7/dist-packages (from grpcio-tools==1.7.0)
+Requirement already satisfied (use --upgrade to upgrade): grpcio>=1.7.0 in /usr/local/lib/python2.7/dist-packages (from grpcio-tools==1.7.0)
+Requirement already satisfied (use --upgrade to upgrade): setuptools in /usr/lib/python2.7/dist-packages (from protobuf>=3.3.0->grpcio-tools==1.7.0)
+Requirement already satisfied (use --upgrade to upgrade): six>=1.9 in /usr/lib/python2.7/dist-packages (from protobuf>=3.3.0->grpcio-tools==1.7.0)
+Requirement already satisfied (use --upgrade to upgrade): enum34>=1.0.4 in /usr/lib/python2.7/dist-packages (from grpcio>=1.7.0->grpcio-tools==1.7.0)
+Requirement already satisfied (use --upgrade to upgrade): futures>=2.2.0 in /usr/local/lib/python2.7/dist-packages (from grpcio>=1.7.0->grpcio-tools==1.7.0)
+Installing collected packages: grpcio-tools, googleapis-common-protos
+  Running setup.py install for googleapis-common-protos ... done
+Successfully installed googleapis-common-protos-1.5.6 grpcio-tools-1.7.0
+You are using pip version 8.1.1, however version 19.0.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+admin@devbox:~$ 
+```
+
+
+### Clone the Telemetry gRPC collectors git repo
+
+We have published a few samples for c++ and python to help developers write their own gRPC based collectors to receive telemetry data from IOS-XR.  
+
+The proto files that we use to create bindings and then write our own clients are published here: <https://github.com/cisco/bigmuddy-network-telemetry-proto/> 
+
+To start, first clone the telemetry-grpc-collectors repo into the devbox home directory:
+
+
+```
+admin@devbox:~$ 
+admin@devbox:~$ git clone --recursive https://github.com/ios-xr/telemetry-grpc-collectors
+Cloning into 'telemetry-grpc-collectors'...
+remote: Enumerating objects: 16, done.
+remote: Counting objects: 100% (16/16), done.
+remote: Compressing objects: 100% (11/11), done.
+remote: Total 137 (delta 4), reused 15 (delta 4), pack-reused 121
+Receiving objects: 100% (137/137), 3.67 MiB | 2.79 MiB/s, done.
+Resolving deltas: 100% (62/62), done.
+Checking connectivity... done.
+Submodule 'bigmuddy-network-telemetry-proto' (https://github.com/cisco/bigmuddy-network-telemetry-proto) registered for path 'bigmuddy-network-telemetry-proto'
+Cloning into 'bigmuddy-network-telemetry-proto'...
+remote: Enumerating objects: 24542, done.
+remote: Total 24542 (delta 0), reused 0 (delta 0), pack-reused 24542
+Receiving objects: 100% (24542/24542), 6.06 MiB | 3.14 MiB/s, done.
+Resolving deltas: 100% (8337/8337), done.
+Checking connectivity... done.
+Submodule path 'bigmuddy-network-telemetry-proto': checked out '4419cd20fb73f05d059a37fa3e41fe55f02a528f'
+admin@devbox:~$ 
+
+
+```
+
+
+### Build the Bindings for Model Driven Telemetry gRPC clients
+
+Hop into the `build/python/` directory and generate the required bindings from the proto files:
+
+```
+admin@devbox:~$ 
+admin@devbox:~$ cd telemetry-grpc-collectors/build/python/
+admin@devbox:python$ 
+admin@devbox:python$ 
+admin@devbox:python$ ./gen-mdt-dialin-bindings.sh 
+Generating Python bindings...Done
+admin@devbox:python$ 
+admin@devbox:python$ tree src/genpy/
+src/genpy/
+├── __init__.py
+├── mdt_grpc_dialin
+│   ├── __init__.py
+│   ├── mdt_grpc_dialin_pb2_grpc.py
+│   └── mdt_grpc_dialin_pb2.py
+├── mdt_grpc_dialout
+│   ├── __init__.py
+│   ├── mdt_grpc_dialout_pb2_grpc.py
+│   └── mdt_grpc_dialout_pb2.py
+├── telemetry_pb2_grpc.py
+└── telemetry_pb2.py
+
+2 directories, 9 files
+admin@devbox:python$ 
+
+```
+
+
+### Writing your own client
+
+Hop into the `clients/python/` directory and dump the `telemetry_client_json.py` script which is written to connect to an IOS-XR router over gRPC, request a json data-stream and dump it to the screen. 
+
+The script is dumped below.
+
+```
+admin@devbox:~$ 
+admin@devbox:~$ cd ~/telemetry-grpc-collectors/clients/python/
+admin@devbox:python$ ls
+telemetry_client_json.py  telemetry_client.py
+admin@devbox:python$ cat telemetry_client_json.py 
+#!/usr/bin/env python
+
+# Standard python libs
+import os,sys
+sys.path.append("../../build/python/src/genpy")
+
+import ast, pprint 
+import pdb
+import yaml, json
+import telemetry_pb2
+from mdt_grpc_dialin import mdt_grpc_dialin_pb2
+from mdt_grpc_dialin import mdt_grpc_dialin_pb2_grpc
+import grpc
+ 
+#
+# Get the GRPC Server IP address and port number
+#
+def get_server_ip_port():
+    # Get GRPC Server's IP from the environment
+    if 'SERVER_IP' not in os.environ.keys():
+        print("Need to set the SERVER_IP env variable e.g.")
+        print("export SERVER_IP='10.30.110.214'")
+        os._exit(0)
+    
+    # Get GRPC Server's Port from the environment
+    if 'SERVER_PORT' not in os.environ.keys():
+        print("Need to set the SERVER_PORT env variable e.g.")
+        print("export SERVER_PORT='57777'")
+        os._exit(0)
+    
+    return (os.environ['SERVER_IP'], int(os.environ['SERVER_PORT']))
+
+
+#
+# Setup the GRPC channel with the server, and issue RPCs
+#
+if __name__ == '__main__':
+    server_ip, server_port = get_server_ip_port()
+
+    print("Using GRPC Server IP(%s) Port(%s)" %(server_ip, server_port))
+
+    # Create the channel for gRPC.
+    channel = grpc.insecure_channel(str(server_ip)+":"+str(server_port))
+
+    unmarshal = True
+
+    # Ereate the gRPC stub.
+    stub = mdt_grpc_dialin_pb2_grpc.gRPCConfigOperStub(channel)
+
+    metadata = [('username', 'vagrant'), ('password', 'vagrant')]
+    Timeout = 3600*24*365 # Seconds
+
+    sub_args = mdt_grpc_dialin_pb2.CreateSubsArgs(ReqId=99, encode=4, subidstr='1')
+    stream = stub.CreateSubs(sub_args, timeout=Timeout, metadata=metadata)
+    for segment in stream:
+        if not unmarshal:
+            print(segment)
+        else:
+            # Go straight for telemetry data
+            telemetry_pb = telemetry_pb2.Telemetry()
+
+            encoding_path = 'Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/'+\
+                            'instance/instance-active/default-vrf/sessions/session'
+
+
+            try:
+                # Return in JSON format instead of protobuf.
+                if json.loads(segment.data)["encoding_path"] == encoding_path: 
+                    print(json.dumps(json.loads(segment.data), indent=3))
+            except Exception as e: 
+                print("Failed to receive data, error: " +str(e))
+    os._exit(0)
+admin@devbox:python$ 
+```
+
+
+Finally, open up a new shell and run this script to start receiving data from IOS-XR.
+Make sure you export the connection details for the gRPC server running on router r1 before running the script.
+
+```
+export SERVER_IP=10.10.20.170
+export SERVER_PORT=57021
+
+```
+{: .notice--info}
 
 
 ```
@@ -135,184 +971,10 @@ Using GRPC Server IP(10.10.20.170) Port(57021)
 }
 
 
-```
-
-
-## Open/R Deployment
-
-With the Telemetry client running, we can now progress to the next set of steps where we deploy Open/R as an application on both the routers.  
-
-The basic deployment of Open/R we intend to achieve is represented below:
-
-![openr-b2b.png]({{site.baseurl}}/images/openr-b2b.png)
-
-
-
-### View the Open/R config files 
-
-We will use Ansible to deploy Open/R as docker instances to the routers r1 and r2. In addition to the docker instances, Open/R requires some configuration files to be present (much like an ISIS or BGP config). We will utilize Ansible to push these files to the routers as well.
-
-
-To view the relevant config files, **open a new shell** on the devbox with the telemetry client running in the earlier shell. 
-
-Drop into the `ansible/openr` folder in the original `iosxr-devnet-cleur2019` git repository you cloned earlier: 
-
-
-```
-admin@devbox:~$ cd iosxr-devnet-cleur2019/
-admin@devbox:iosxr-devnet-cleur2019$ ls
-ansible  README.md  ydk  ztp_hooks
-admin@devbox:iosxr-devnet-cleur2019$ 
-admin@devbox:iosxr-devnet-cleur2019$ 
-admin@devbox:iosxr-devnet-cleur2019$ cd ansible/openr/
-admin@devbox:openr$ 
-admin@devbox:openr$ ls
-hosts_r1  increment_ipv4_prefix1.py  launch_openr_r1.sh  run_openr_r1.sh
-hosts_r2  increment_ipv4_prefix2.py  launch_openr_r2.sh  run_openr_r2.sh
-admin@devbox:openr$ 
-
 
 ```
 
-1. The `hosts_rtr*` files are used to set up `/etc/hosts` inside the docker container that we launch using Ansible. This setting is important for Open/R to work.
-
-2. The `launch_openr_*.sh` scripts contain the actual docker run command which will launch the container and mount relevant config files into it.
-
-3. The `run_openr_*.sh` script contains the configuration knobs for Open/R to know what routes to advertise to other Open/R instances on the network, the gRPC port for Service-Layer API to use while running locally on the router, the interfaces of XR that it should send its hellos out on, etc.
-
-4. The `increment_ipv4_prefix*.py` script is an optional script we use to push a large set of routes into the configuration file for Open/R to advertise. 
 
 
-
-
-
-
-
-### Ansible Playbook to deploy Open/R
-
-
-The Ansible playbook we intend to use can be found in the `ansible` directory  of the `iosxr-devnet-cleur2019` git repository:  
-
-
-```
-admin@devbox:~$ 
-admin@devbox:~$ cd ~/iosxr-devnet-cleur2019/
-admin@devbox:iosxr-devnet-cleur2019$ cd ansible/
-admin@devbox:ansible$ 
-admin@devbox:ansible$ cat docker_bringup.yml 
----
-- hosts: routers_shell
-  gather_facts: no
-  sudo: yes
-
-  vars:
-    connect_vars:
-       host: "{{ ansible_host }}"
-       username: "{{ ansible_user }}"
-       password: "{{ ansible_ssh_pass }}"
-    up: "sudo -i /misc/app_host/launch_openr_{{ inventory_hostname }}.sh"
-    down: "sudo -i docker rm -f openr"
-
-  tasks:
-
-  - name: Copy run_openr script to rtr
-    copy:
-      src: "{{ run_openr_script }}"
-      dest: "/misc/app_host/"
-      owner: root 
-      group: root 
-      mode: a+x 
-  - name: Copy hosts_r file to rtr
-    copy:
-      src: "{{ hosts_r }}"
-      dest: "/misc/app_host/"
-      owner: root 
-      group: root 
-      mode: a+x 
-
-  - name: Copy launch_openr script to rtr
-    copy:
-      src: "{{ launch_openr_script }}"
-      dest: "/misc/app_host/"
-      owner: root 
-      group: root 
-      mode: a+x 
-
-  - name: Copy increment_ipv4 script to rtr
-    copy:
-      src: "{{ increment_ipv4_prefix }}"
-      dest: "/misc/app_host/"
-      owner: root 
-      group: root 
-      mode: a+x 
-
-  - name: Copy cron file to rtr (CSCvh76067)
-    copy:
-      src: "{{ cron_file }}"
-      dest: "/misc/app_host/ipv6_fe80_route_append.sh"
-      owner: root
-      group: root
-      mode: a+x
-
-  - name: Set up Cronjob (CSCvh76067)
-    cron:
-      name: set up ipv6 fe80::/64 routes 
-      weekday: "*"
-      minute: "*"
-      hour: "*"
-      user: root
-      job: "/misc/app_host/ipv6_fe80_route_append.sh"
-      cron_file: ansible_ipv6_fe80_route_append
-
-
-  - name: Check docker container is running
-    shell: sudo -i docker inspect --format={{ '{{.State.Running}}' }}  openr
-    args:
-      executable: /bin/bash
-    register: status
-    ignore_errors: yes
-  - debug: var=output.stdout_lines
-
- 
-  - name: Clean up docker container if running 
-    shell: "{{ down }}"
-    args:
-      executable: /bin/bash
-    register: output
-    when: status.stdout == "true"
-  - debug: var=output.stdout_lines
-
-
-  - name: Bring up the docker container 
-    shell: "{{ up }}"
-    args:
-      executable: /bin/bash
-    register: output
-    ignore_errors: yes
-  - debug: var=output.stdout_lines  
-admin@devbox:ansible$ 
-```
-
-As can be seen above, the first 4 tasks of the playbook copy over the relevant config files and scripts for Open/R into `/misc/app_host` directory on the routers. This particular directory is mounted into the docker containers when we launch the container to make the config files available to Open/R inside the docker container. 
-
-The 5th task is only required for this particular version of the IOS-XR software (6.4.1) we are using in the lab due to the bug: `CSCvh76067` which prevents `fe80::/64` routes from being installed for all interfaces in the kernel. This is fixed in subsequent releases of IOS-XR.
-We transport a cron job onto the router to fix this issue for this lab.
-
-The next 3 tasks are used to check if Open/R is already running, clean up if it is and then launch the docker container using the `/misc/app_host/launch_openr.sh` we transfered using task 3. 
-
-
-
-**Since this is the first time you're running this Ansible playbook and the Open/R docker image is not yet on the routers, the run command will invoke a download of the docker image on each router. So expect the last task of the above playbook to take some time for the first run**.
-{:. notice--danger}
-
-
-
-
-
-
-
-
-
-
-
-
+Perfect! Now, we're all set up to deploy Open/R as an application on the two routers and test out Application-hosting, packet-io and Service-Layer APIs in XR together.
+{: .notice--success}
