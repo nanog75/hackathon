@@ -606,4 +606,78 @@ a    120.1.14.0/24 [99/0] via 11.1.1.20, 00:00:04, GigabitEthernet0/0/0/1
 Awesome! Routes are learnt by Open/R from its neighbor running on r2 and these routes are programmed into Router r1's RIB using the Service-Layer API. These routes show up as application routes (`a` routes in the `show route` output above).
 
 
+## Establishing the BGP session
 
+
+Now that Open/R has learnt the routes from router r2, particularly the loopback0 route (60.1.1.1) from r2, the BGP session between the two routers should now be established:
+
+```
+RP/0/RP0/CPU0:r1#show  bgp sessions 
+Wed Jan 30 12:49:57.225 UTC
+
+Neighbor        VRF                   Spk    AS   InQ  OutQ  NBRState     NSRState
+60.1.1.1        default                 0 65000     0     0  Established  None
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+
+```
+
+
+### Check the Output of the Telemetry client 
+
+
+With the BGP session established, you should now see the following change in the output of the telemetry client we were running initially
+
+
+```
+{
+   "encoding_path": "Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/sessions/session", 
+   "subscription_id_str": "1", 
+   "collection_start_time": 1548852684404, 
+   "msg_timestamp": 1548852684408, 
+   "collection_end_time": 1548852684408, 
+   "node_id_str": "r1", 
+   "data_json": [
+      {
+         "keys": {
+            "neighbor-address": "60.1.1.1", 
+            "instance-name": "default"
+         }, 
+         "timestamp": 1548852684407, 
+         "content": {
+            "messages-queued-in": 0, 
+            "is-local-address-configured": false, 
+            "local-as": 65000, 
+            "nsr-state": "bgp-nbr-nsr-st-none", 
+            "description": "", 
+            "connection-remote-address": {
+               "ipv4-address": "60.1.1.1", 
+               "afi": "ipv4"
+            }, 
+            "messages-queued-out": 0, 
+            "connection-state": "bgp-st-estab", 
+            "speaker-id": 0, 
+            "vrf-name": "default", 
+            "remote-as": 65000, 
+            "postit-pending": false, 
+            "nsr-enabled": true, 
+            "connection-local-address": {
+               "ipv4-address": "50.1.1.1", 
+               "afi": "ipv4"
+            }
+         }
+      }
+   ], 
+   "collection_id": 33
+}
+
+
+```
+
+
+
+The `"connection-state": "bgp-st-estab"` in the output above has changed from `"connection-state": "bgp-st-idle"`. Open/R acts as an IGP, learning the loopback routes used by BGP to establish the required session!
+{: .notice--success}
+
+
+To wrap up, this is what we achieved 
