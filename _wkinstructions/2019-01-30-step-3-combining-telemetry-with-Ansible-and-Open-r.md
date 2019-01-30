@@ -32,17 +32,9 @@ To learn more, head over to:
 
 ><https://xrdocs.io/cisco-service-layer/>
 
-### Streaming Telemetry
+### Open/R integration with IOS-XR
 
-Streaming Telemetry helps deliver a push-based technique for getting operational data out of an IOS-XR box - using model-driven YANG paths with the capacity to integrate with a wide variety of open source tools like pipeline, kafka, influxdb, ELK, prometheus and more or just write a gRPC telemetry client of your own and subscribe to the stream
-
-Key features:
-
-*  **Model Driven:** Structured data is sent back to collectors/clients allowing easy parsing and integration with larger remediation/alarm systems.
-*  **Highly Scalable and Performant:** Telemetry has been shown to beat SNMP both at scale and at the rate at which data can be streamed out without negligible effect on the resources of the network device.
-*  **Wide variety of integrations:** Open Source tools and integrations available for a vast set of monitoring tools in the industry.
-
-To learn more, head over to:
+In February 20
 
 ><https://xrdocs.io/telemetry/>
 
