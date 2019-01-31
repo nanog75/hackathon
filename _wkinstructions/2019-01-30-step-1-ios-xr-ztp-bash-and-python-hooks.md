@@ -824,5 +824,6 @@ admin@devbox:ansible$
 ```
 
 
+
 Perfect! We're all set for the next section the lab where will look to levarage IOS-XR Yang models to configure BGP and set up a telemetry session.
 {: .notice--success}
