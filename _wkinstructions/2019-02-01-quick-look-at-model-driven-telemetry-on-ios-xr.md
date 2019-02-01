@@ -978,7 +978,7 @@ telemetry model-driven
 If we wait a few seconds, we will notice that this sensor-path gets `Resolved` indicating that the router is now ready to send Telemetry data to an external collector.
 
 
-<p><pre><code>
+<div class="highlighter-rouge"><pre class="highlight"><code>
 RP/0/RP0/CPU0:r1#
 RP/0/RP0/CPU0:r1#
 RP/0/RP0/CPU0:r1#show  telemetry model-driven subscription IPV6 internal
@@ -998,7 +998,7 @@ Subscription:  IPV6
 
 RP/0/RP0/CPU0:r1#
 
-</code></pre></p>
+</code></pre></div>
 
 
 ## Testing the Sensor path
