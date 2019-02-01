@@ -1,6 +1,6 @@
 ---
 published: true
-date: '2019-02-01 08:47 -0400'
+date: '2019-02-01 04:45 -0400'
 title: 'Step 3: IOS-XR ZTP Bash and Python hooks (+Ansible!)'
 author: Akshat Sharma
 tags:
