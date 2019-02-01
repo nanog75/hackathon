@@ -1,0 +1,108 @@
+---
+published: true
+date: '2019-02-01 03:18 +0100'
+title: Understanding ZTP Libraries on IOS-XR
+author: Akshat Sharma
+excerpt: >-
+  Understanding the basic ZTP infrastructure of IOS-XR and libraries available
+  for CLI automation
+tags:
+  - iosxr
+  - cisco
+  - ztp
+  - cleur2019
+  - lab
+---
+
+{% include toc %} . 
+
+Introduction: Understanding ZTP and the ZTP bash helper library
+
+Zero Touch Provisioning(ZTP) is a device provisioning mechanism that allows network devices running IOS-XR to be powered-on and provisioned in a completely automated fashion. The high-level workflow for ZTP is as follows:
+
+1. The network-device with an IOS-XR image installed is powered on.
+2. Upon boot-up, the ZTP process runs if the device does not have a prior configuration.
+3. The ZTP process triggers dhclient on the Management port (and with the upcoming IOS-XR 6.5.1 release, even on the production/data ports) to send out a DHCP request identifying itself using DHCP options:
+    * DHCP(v4/v6) client-id=Serial Number,
+    * DHCPv4 option 124: Vendor, Platform, Serial-Number
+    * DHCPv6 option 16: Vendor, Platform, Serial-Number
+4. The DHCP server identifies the device and responds with either an IOS-XR configuration file or a ZTP script as the filename option.
+5. If the device receives a configuration file, it would simply apply the configuration and terminate the ZTP process.
+6. If the device receives a script or binary executable, it will simply execute the script/binary in the default bash shell in a network namespace corresponding to the global/default VRF. This script can be used to configure the device and/or install IOS-XR packages, set up linux applications etc.
+
+This workflow is depicted in the figure below:
+
+![ztp_workflow](assets/images/ztp_workflow.png)  
+
+>The concepts behind IOS-XR ZTP and further details on its operationalization in your network are expanded upon in the great set of blogs and tutorials on <https://xrdocs.io>.   
+In particular:
+>  * [**Working with IOS-XR ZTP**](https://xrdocs.io/software-management/tutorials/2016-08-26-working-with-ztp/)
+>  * [**IOS-XR ZTP: Learning through Packet Captures**](https://xrdocs.io/software-management/blogs/2017-09-21-ios-xr-ztp-learning-through-packet-captures/)
+
+
+
+<div style="margin: 2em 0 !important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><h3>Resetting router configurations</h3><p> Use this section to reset your router configurations to their base config when they're just launched using the devnet sandbox UI. **If you have just reserved the devnet sandbox and this is your first lab, you will NOT need to reset the router configurations and you can skip this Red box :)**. However, if you've been running multiple labs with the same reservation, you might want to clean the palate before proceeding to make sure all the following instructions match your experience with the sandbox environment.<br/><br/> To reset the configuration, first connect to the devbox:<br/><p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Username**: admin<br/>**Password**: admin<br/>**SSH port**: 2211</p><pre><code>Laptop-terminal:$ ssh -p 2211 admin@10.10.20.170
+admin@10.10.20.170's password:
+Last login: Sun Aug 26 17:34:49 2018 from 192.168.122.1
+admin@devbox:~$
+admin@devbox:~$
+</code></pre>Clone the <https://github.com/CiscoDevNet/iosxr-programmability-devnet-labs-code> github repo and drop into the `reset_setup` directory:<pre><code>admin@devbox:~$
+admin@devbox:~$ git clone https://github.com/CiscoDevNet/iosxr-programmability-devnet-labs-code
+Cloning into 'iosxr-programmability-devnet-labs-code'...
+remote: Counting objects: 38, done.
+remote: Compressing objects: 100% (27/27), done.
+remote: Total 38 (delta 5), reused 33 (delta 3), pack-reused 0
+Unpacking objects: 100% (38/38), done.
+Checking connectivity... done.
+admin@devbox:~$
+admin@devbox:~$
+admin@devbox:~$ cd iosxr-programmability-devnet-labs-code/reset_setup/
+admin@devbox:reset_setup$ ls
+configs  connection_details.sh  reset_setup.sh
+admin@devbox:reset_setup$
+</code></pre>Now run `./reset_setup.sh` and your router configurations should get reset:<pre><code>admin@devbox:reset_setup$ ./reset_setup.sh
+
+Starting Reset process for Router r1....
+Connection to 10.10.20.170 closed.
+Configuration done!
+Verifying running configuration...
+Connection to 10.10.20.170 closed.
+
+Configuration Successful!
+
+
+Starting Reset process for Router r2....
+Connection to 10.10.20.170 closed.
+Configuration done!
+Verifying running configuration...
+Connection to 10.10.20.170 closed.
+Configuration Successful!
+
+admin@devbox:reset_setup$
+</code></pre><p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">And with that, you're all set to start this lab!</p></p></div>
+
+
+## The ZTP Helper Libraries
+
+It is clear from the above workflow that the DHCP server can respond to the device with a script/binary as one of the options.
+This script/binary is executed in the IOS-XR Bash shell and may be used to interact with IOS-XR CLI to configure, verify the configured state and even run exec commands based on the workflow that the operator chooses.
+
+So it goes without saying that the IOS-XR Bash shell must offer utilties/APIs/hooks that can allow a downloaded script/binary to interact-with/automate the IOS-XR CLI.
+
+These utilities are provided by the `ZTP helper libraries for Bash and Python` that are available for scripts running on-box in the IOS-XR Linux shell.
+
+### ZTP Helper bash Libary
+
+The ZTP helper bash library is simply a bash script that creates useful wrappers out of pre-existing IOS-XR CLI interaction binaries in the IOS-XR shell.
+
+On the router, this helper script is located at `/pkg/bin/ztp_helper.sh`.
+To use this library, any Bash script (or even python scripts utilizing bash calls) must import the `ztp_helper.sh` library.  Upon import, the following bash hooks become available:
+
+|Bash Utility|Argument|Function|
+|:-------------:|:-------------|:------------|
+|`xrcmd`|`<exec or show command>`|<br/>Exec commands and show commands in XR CLI<br/><br/>|
+|`xrapply`| `<local filename>`|<br/> **Configuration Merge.**<br/>Apply additional configuration using a file<br/><br/>|
+|`xrapply_with_reason`| **Arg1**: `<reason>` <br/>**Arg2**: `<local filename>`<br/><img width=180/> |<br/> **Configuration Merge**<br/> Apply additional configuration using a file along with a **reason** <br/> <br/> P.S. **reason** shows up as comment in `show configuration commit list detail`<br/><br/>|
+|`xrapply_string`|`<config string>`|<br/>**Configuration Merge.**<br/> Apply additional configuration using a single line string (carriage returns are affected using `\n`)<br/><br/>|
+|`xrapply_string_with_reason`|**Arg1**: `<reason>`<br/>**Arg2**:`<config string>`|<br/>**Configuration Merge.**<br/>Apply additional configuration using a single line string (carriage returns are affected using `\n`)<br/> <br/> P.S. **reason** shows up as comment in `show configuration commit list detail`<br/><br/>|
+|`xrreplace`|``<local filename>``|<br/>**Configuration Replace**.<br/>Replace existing configuration with the configuration contained in the filename specified as argument.<br/><br/>|
