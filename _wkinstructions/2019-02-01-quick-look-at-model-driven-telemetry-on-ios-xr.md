@@ -15,7 +15,9 @@ tags:
 
 {% include toc %} 
 
-Have a look at the set of Telemetry learning labs on DevNet for more details on Telemetry, available workflows, configurations and usage of tools.
+>Have a look at the set of Telemetry learning labs on DevNet for more details on Telemetry, >available workflows, configurations and usage of tools:
+><https://learninglabs.cisco.com/modules/iosxr-streaming-telemetry>
+
 
 # Setting up a Telemetry Client/Collector
 
