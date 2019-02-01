@@ -23,7 +23,7 @@ tags:
 # Setting up a Telemetry Client/Collector
 
 
-As a precursor to the rest of the labs in this module, let's consider the options available to set up a Telemetry client/collector that can receive Streaming data from the router.
+Let's consider the options available to set up a Telemetry client/collector that can receive Streaming data from the router.
 
 ## Open-Source tool: Pipeline
 
