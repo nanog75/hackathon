@@ -29,7 +29,8 @@ As a precursor to the rest of the labs in this module, let's consider the option
 Pipeline is a flexible, multi-function collection service that is written in Go. It can ingest telemetry data from any XR release starting from 6.0.1. Pipeline’s input stages support raw UDP and TCP, as well as gRPC dial-in and dial-out capability. For encoding, Pipeline can consume JSON, compact GPB and self-describing GPB. On the output side, Pipeline can write the telemetry data to a text file as a JSON object, push the data to a Kafka bus and/or format it for consumption by open source stacks. Pipeline can easily be extended to include other output stages and we encourage contributions from anyone who wants to get involved.
 
 
-<img src="assets/images/pipeline_stack.png" alt="model-driven"  style=" margin-left: auto; margin-right: auto; display: block;" align="middle"/>
+
+<img src="{{site.baseurl}}/images/telemetry_stack.png" alt="model-driven"  style=" margin-left: auto; margin-right: auto; display: block;" align="middle"/>
 
 It’s important to understand that Pipeline is not a complete big data analytics stack. Think of it as the first layer in a scalable, modular, analytics architecture. Depending on your use case, that architecture would also include separate components for big data storage, stream processing, analysis, alerting and visualization.
 
