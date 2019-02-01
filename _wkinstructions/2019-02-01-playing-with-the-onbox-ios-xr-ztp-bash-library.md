@@ -318,7 +318,7 @@ So let's create a file in the IOS-XR shell with the following content:
 [r1:~]$ cat > /root/gig0up.conf << EOF
 > !
 > interface GigabitEthernet0/0/0/0
->   ipv4 address 100.1.1.10/24
+>   ipv4 address 10.1.1.10/24
 >   no shutdown
 > !
 > end
@@ -331,14 +331,14 @@ You could use `vi` for this purpose as well. In the end the file looks something
 [r1:~]$ cat /root/gig0up.conf
 !
 interface GigabitEthernet0/0/0/0
-  ipv4 address 100.1.1.10/24
+  ipv4 address 10.1.1.10/24
   no shutdown
 !
 end
 [r1:~]$
 ```
 
-Now `xrapply` will add this configuration to the pre-existing configuration and will bring up `GigabitEthernet0/0/0/0` with the ip address `100.1.1.10/24`.
+Now `xrapply` will add this configuration to the pre-existing configuration and will bring up `GigabitEthernet0/0/0/0` with the ip address `10.1.1.10/24`.
 
 #### Source /pkg/bin/ztp_helper.sh
 
@@ -378,7 +378,7 @@ We'll use the `xrcmd` utility to verify (exactly as you would in your own script
 Building configuration...
 !! IOS XR Configuration version = 6.4.1
 interface GigabitEthernet0/0/0/0
- ipv4 address 100.1.1.10 255.255.255.0
+ ipv4 address 10.1.1.10 255.255.255.0
 !
 end
 
@@ -393,7 +393,7 @@ Also, verify that the interface is up as expected:
 
 Interface                      IP-Address      Status          Protocol Vrf-Name
 MgmtEth0/RP0/CPU0/0            192.168.122.21  Up              Up       default
-GigabitEthernet0/0/0/0         100.1.1.10      Up              Up       default
+GigabitEthernet0/0/0/0         10.1.1.10       Up              Up       default
 GigabitEthernet0/0/0/1         unassigned      Shutdown        Down     default
 GigabitEthernet0/0/0/2         unassigned      Shutdown        Down     default
 GigabitEthernet0/0/0/3         unassigned      Shutdown        Down     default
@@ -469,7 +469,7 @@ The steps remain the same as `xrapply`:
 [r1:~]$ cat > /root/gig1up.conf << EOF
 > !
 > interface GigabitEthernet0/0/0/1
->   ipv4 address 101.1.1.10/24
+>   ipv4 address 11.1.1.10/24
 >   no shutdown
 > !
 > end
@@ -479,7 +479,7 @@ The steps remain the same as `xrapply`:
 [r1:~]$ cat /root/gig1up.conf
 !
 interface GigabitEthernet0/0/0/1
-  ipv4 address 101.1.1.10/24
+  ipv4 address 11.1.1.10/24
   no shutdown
 !
 end
@@ -519,7 +519,7 @@ Perfect!, the comment shows up as expected. Very useful for accounting purposes.
 Building configuration...
 !! IOS XR Configuration version = 6.4.1
 interface GigabitEthernet0/0/0/1
- ipv4 address 101.1.1.10 255.255.255.0
+ ipv4 address 11.1.1.10 255.255.255.0
  no shutdown
 !
 end
@@ -528,8 +528,8 @@ end
 
 Interface                      IP-Address      Status          Protocol Vrf-Name
 MgmtEth0/RP0/CPU0/0            192.168.122.21  Up              Up       default
-GigabitEthernet0/0/0/0         100.1.1.10      Up              Up       default
-GigabitEthernet0/0/0/1         101.1.1.10      Up              Up       default
+GigabitEthernet0/0/0/0         10.1.1.10       Up              Up       default
+GigabitEthernet0/0/0/1         11.1.1.10       Up              Up       default
 GigabitEthernet0/0/0/2         unassigned      Shutdown        Down     default
 GigabitEthernet0/0/0/3         unassigned      Shutdown        Down     default
 GigabitEthernet0/0/0/4         unassigned      Shutdown        Down     default
@@ -550,7 +550,7 @@ We can either create a multiline string as shown below:
 [r1:~]$ read -r -d '' gig2up_config << EOF
 > !
 > interface GigabitEthernet0/0/0/2
->   ipv4 address 102.1.1.10/24
+>   ipv4 address 12.1.1.10/24
 >   no shutdown
 > !
 > end
@@ -559,7 +559,7 @@ We can either create a multiline string as shown below:
 [r1:~]$ echo "$gig2up_config"
 !
 interface GigabitEthernet0/0/0/2
-  ipv4 address 102.1.1.10/24
+  ipv4 address 12.1.1.10/24
   no shutdown
 !
 end
@@ -568,12 +568,12 @@ end
 Or a single line string with the appropriate carriage return and escape characters:
 
 ```
-[r1:~]$ echo "\!\ninterface GigabitEthernet0/0/0/2\nipv4 address 102.1.1.10/24\nno shutdown\n\!\nend" > gig2up_config
+[r1:~]$ echo "\!\ninterface GigabitEthernet0/0/0/2\nipv4 address 12.1.1.10/24\nno shutdown\n\!\nend" > gig2up_config
 [r1:~]$
 [r1:~]$ echo "$gig2up_config"
 !
 interface GigabitEthernet0/0/0/2
-  ipv4 address 102.1.1.10/24
+  ipv4 address 12.1.1.10/24
   no shutdown
 !
 end
@@ -595,7 +595,7 @@ Once you have the variable available, pass it to `xrapply_string` and verify (as
 Building configuration...
 !! IOS XR Configuration version = 6.4.1
 interface GigabitEthernet0/0/0/2
- ipv4 address 102.1.1.10 255.255.255.0
+ ipv4 address 12.1.1.10 255.255.255.0
  no shutdown
 !
 end
@@ -604,9 +604,9 @@ end
 
 Interface                      IP-Address      Status          Protocol Vrf-Name
 MgmtEth0/RP0/CPU0/0            192.168.122.21  Up              Up       default
-GigabitEthernet0/0/0/0         100.1.1.10      Up              Up       default
-GigabitEthernet0/0/0/1         101.1.1.10      Up              Up       default
-GigabitEthernet0/0/0/2         102.1.1.10      Up              Up       default
+GigabitEthernet0/0/0/0         10.1.1.10       Up              Up       default
+GigabitEthernet0/0/0/1         11.1.1.10       Up              Up       default
+GigabitEthernet0/0/0/2         12.1.1.10       Up              Up       default
 GigabitEthernet0/0/0/3         unassigned      Shutdown        Down     default
 GigabitEthernet0/0/0/4         unassigned      Shutdown        Down     default
 [r1:~]$
@@ -623,7 +623,7 @@ The steps are illustrated below, think of it as a combination of the requirement
 [r1:~]$ read -r -d '' gigup3_config << EOF
 > !
 > interface GigabitEthernet0/0/0/3
->   ipv4 address 103.1.1.10/24
+>   ipv4 address 13.1.1.10/24
 >   no shutdown
 > !
 > end
@@ -632,7 +632,7 @@ The steps are illustrated below, think of it as a combination of the requirement
 [r1:~]$ echo "$gigup3_config"
 !
 interface GigabitEthernet0/0/0/3
-  ipv4 address 103.1.1.10/24
+  ipv4 address 13.1.1.10/24
   no shutdown
 !
 end
@@ -652,7 +652,7 @@ end
 Building configuration...
 !! IOS XR Configuration version = 6.4.1
 interface GigabitEthernet0/0/0/3
- ipv4 address 103.1.1.10 255.255.255.0
+ ipv4 address 13.1.1.10 255.255.255.0
  no shutdown
 !
 end
@@ -662,10 +662,10 @@ end
 
 Interface                      IP-Address      Status          Protocol Vrf-Name
 MgmtEth0/RP0/CPU0/0            192.168.122.21  Up              Up       default
-GigabitEthernet0/0/0/0         100.1.1.10      Up              Up       default
-GigabitEthernet0/0/0/1         101.1.1.10      Up              Up       default
-GigabitEthernet0/0/0/2         102.1.1.10      Up              Up       default
-GigabitEthernet0/0/0/3         103.1.1.10      Up              Up       default
+GigabitEthernet0/0/0/0         10.1.1.10       Up              Up       default
+GigabitEthernet0/0/0/1         11.1.1.10       Up              Up       default
+GigabitEthernet0/0/0/2         12.1.1.10       Up              Up       default
+GigabitEthernet0/0/0/3         13.1.1.10       Up              Up       default
 GigabitEthernet0/0/0/4         unassigned      Shutdown        Down     default
 [r1:~]$
 [r1:~]$
@@ -678,406 +678,5 @@ GigabitEthernet0/0/0/4         unassigned      Shutdown        Down     default
 <p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Very Very Important**: Configuration Replace can be potentially dangerous. If you make a mistake with the type of configuration you want to enforce, you can potentially lose connectivity to the router. So make sure you take precautions to ensure the final config is what you want at the end of the process</p>
 
 
->In case you do lose ssh access to the router as a result of xrreplace with an incorrect config, do the following to gain telnet access to the router and then try to correct the configuration:
->
-> * SSH to the virtualization host:
->
->   <p><u><b>Virtualization Host Connection details</b></u></p>
->   **IP**: 10.10.20.170   
->   **Username** admin   
->   **Password** root123  
->   **SSH Port** 22  
->  
->   ```
->   Laptop-terminal:$ ssh admin@10.10.20.170
->   admin@10.10.20.170's password:
->   Welcome to Ubuntu 16.04.4 LTS (GNU/Linux 4.4.0-130-generic x86_64)
->
->   * Documentation:  https://help.ubuntu.com
->   * Management:     https://landscape.canonical.com
->   * Support:        https://ubuntu.com/advantage
->
->   29 packages can be updated.
->   0 updates are security updates.
->
->   New release '18.04.1 LTS' available.
->   Run 'do-release-upgrade' to upgrade to it.
->
->   *** System restart required ***
->   Last login: Mon Aug 13 04:03:16 2018 from 192.168.80.2
->   admin@vhost:~$
->   admin@vhost:~$
->   ```
->
-> * Now Telnet into **r1 (port 6001)** or **r2 (port 6002)** as the case may be.
->   The credentials for telnet access for each router:  `admin/admin`
->
->   ``` admin@vhost:~$
->   admin@vhost:~$ telnet localhost 6001
->   Trying ::1...
->   Trying 127.0.0.1...
->   Connected to localhost.
->   Escape character is '^]'.
->  ------------------------------------------------------------------------
->    Router 1 (Cisco IOS XR Sandbox)
->  ------------------------------------------------------------------------
->   
->    User Access Verification
->    
->    Username: admin
->    Password:
->    
->    RP/0/RP0/CPU0:r1#
->    RP/0/RP0/CPU0:r1#
->    ```
->
+We will not be attempting an xrreplace as part of this lab. But The basic workflow for using `xrreplace` is the same as `xrapply`. Provide a file containing the config to `xrreplace` and upon execution it will replace the entire configuration on the router with the configuration specified in the file. 
 
-
-So, with the above disclaimers in place, let's take stock of the current configuration on the router:
-
-
-```
-RP/0/RP0/CPU0:r1#bash
-Mon Aug 20 01:32:15.644 UTC
-
-[r1:~]$
-[r1:~]$ source /pkg/bin/ztp_helper.sh
-[r1:~]$ xrcmd "show running-config"
-Building configuration...
-!! IOS XR Configuration version = 6.4.1
-!! Last configuration change at Mon Aug 20 00:47:24 2018 by ZTP
-!
-hostname r1
-banner motd ;
---------------------------------------------------------------------------
-  Router 1 (Cisco IOS XR Sandbox)
---------------------------------------------------------------------------
-;
-service timestamps log datetime msec
-service timestamps debug datetime msec
-username admin
- group root-lr
- group cisco-support
- secret 5 $1$A4C9$oaNorr6BXDruE4gDd086L.
-!
-line console
- timestamp disable
- exec-timeout 0 0
-!
-vty-pool default 0 4 line-template VTY-TEMPLATE
-call-home
- service active
- contact smart-licensing
- profile CiscoTAC-1
-  active
-  destination transport-method http
- !
-!
-interface MgmtEth0/RP0/CPU0/0
- description *** MANAGEMENT INTERFACE ***
- ipv4 address dhcp
-!
-interface GigabitEthernet0/0/0/0
- ipv4 address 100.1.1.10 255.255.255.0
-!
-interface GigabitEthernet0/0/0/1
- ipv4 address 101.1.1.10 255.255.255.0
-!
-interface GigabitEthernet0/0/0/2
- ipv4 address 102.1.1.10 255.255.255.0
-!
-interface GigabitEthernet0/0/0/3
- ipv4 address 103.1.1.10 255.255.255.0
-!
-interface GigabitEthernet0/0/0/4
- shutdown
-!
-router static
- address-family ipv4 unicast
-  0.0.0.0/0 192.168.122.1
- !
-!
-netconf-yang agent
- ssh
-!
-ssh server v2
-ssh server netconf vrf default
-end
-
-[r1:~]$
-```
-
-What we intend to do is to revert the configuration on `GigabitEthernet0/0/0/2` and `GigabitEthernet0/0/0/3` by enforcing a configuration replace with a configuration that does not contain the config for these 2 interfaces.
-**However, as mentioned in the disclaimer above, we will make sure that all the rest of the configuration changes remain so that SSH access into the router is not affected**.
-
-So, create a local file on the router with the following content:
-
-```
-[r1:~]$ cat /root/config_to_replace
-!! IOS XR Configuration version = 6.4.1
-!! Last configuration change at Mon Aug 20 00:47:24 2018 by ZTP
-!
-hostname r1
-banner motd ;
---------------------------------------------------------------------------
-  Router 1 (Cisco IOS XR Sandbox)
---------------------------------------------------------------------------
-;
-service timestamps log datetime msec
-service timestamps debug datetime msec
-username admin
- group root-lr
- group cisco-support
- secret 5 $1$A4C9$oaNorr6BXDruE4gDd086L.
-!
-line console
- timestamp disable
- exec-timeout 0 0
-!
-vty-pool default 0 4 line-template VTY-TEMPLATE
-call-home
- service active
- contact smart-licensing
- profile CiscoTAC-1
-  active
-  destination transport-method http
- !
-!
-interface MgmtEth0/RP0/CPU0/0
- description *** MANAGEMENT INTERFACE ***
- ipv4 address dhcp
-!
-interface GigabitEthernet0/0/0/0
- ipv4 address 100.1.1.10 255.255.255.0
-!
-interface GigabitEthernet0/0/0/1
- ipv4 address 101.1.1.10 255.255.255.0
-!
-interface GigabitEthernet0/0/0/4
- shutdown
-!
-router static
- address-family ipv4 unicast
-  0.0.0.0/0 192.168.122.1
- !
-!
-netconf-yang agent
- ssh
-!
-ssh server v2
-ssh server netconf vrf default
-end
-[r1:~]$
-
-```
-
-Now let's replace the existing configuration:  
-
-
-#### Source /pkg/bin/ztp_helper.sh
-
-Again, source the file in the XR bash shell before continuing:
-
-```
-[r1:~]$ source /pkg/bin/ztp_helper.sh
-```
-
-#### Replace the existing config using xrreplace
-We pass the file we just created as an argument:
-
-```
-[r1:~]$
-[r1:~]$ xrreplace /root/config_to_replace
-[r1:~]$
-```
-
-#### Check the return code - should be 0 for success
-
-```
-[r1:~]$ echo $?
-0
-[r1:~]$
-```
-
-#### Verify the last commit
-
-```
-[r1:~]$ xrcmd "show configuration commit changes last 1"
-Building configuration...
-!! IOS XR Configuration version = 6.4.1
-no interface GigabitEthernet0/0/0/2
-no interface GigabitEthernet0/0/0/3
-end
-```
-Exactly what we expected, the `xrreplace` operation effectively removed the configuration we earlier applied for `GigabitEthernet0/0/0/2` and `GigabitEthernet0/0/0/3` since the configuration to be enforced did not contain it.
-
-
-#### Verify the final Configuration
-
-Verify that the final configuration matches the configuration in the file we created (`/root/config_to_replace`)
-
-```
-[r1:~]$
-[r1:~]$
-[r1:~]$ xrcmd "show running-config"
-Building configuration...
-!! IOS XR Configuration version = 6.4.1
-!! Last configuration change at Mon Aug 20 01:38:49 2018 by ZTP
-!
-hostname r1
-banner motd ;
---------------------------------------------------------------------------
-  Router 1 (Cisco IOS XR Sandbox)
---------------------------------------------------------------------------
-;
-service timestamps log datetime msec
-service timestamps debug datetime msec
-username admin
- group root-lr
- group cisco-support
- secret 5 $1$A4C9$oaNorr6BXDruE4gDd086L.
-!
-line console
- timestamp disable
- exec-timeout 0 0
-!
-vty-pool default 0 4 line-template VTY-TEMPLATE
-call-home
- service active
- contact smart-licensing
- profile CiscoTAC-1
-  active
-  destination transport-method http
- !
-!
-interface MgmtEth0/RP0/CPU0/0
- description *** MANAGEMENT INTERFACE ***
- ipv4 address dhcp
-!
-interface GigabitEthernet0/0/0/0
- ipv4 address 100.1.1.10 255.255.255.0
-!
-interface GigabitEthernet0/0/0/1
- ipv4 address 101.1.1.10 255.255.255.0
-!
-interface GigabitEthernet0/0/0/4
- shutdown
-!
-router static
- address-family ipv4 unicast
-  0.0.0.0/0 192.168.122.1
- !
-!
-netconf-yang agent
- ssh
-!
-ssh server v2
-ssh server netconf vrf default
-end
-
-[r1:~]$
-```
-
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Perfect! We have now walked through all the available ZTP bash utilties.
-</p>  
-
-
-## Task for the Reader
-
-Now that we've gone through the above steps, use the same set of steps or a combination you feel comfortable with to make sure that the final configuration on `Router r2` ends up being the following:  
-
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">This will be important for the next section of this lab. You cannot continue without it. Challenge is to ensure that you do not use the traditional CLI at all. Only use the ZTP bash utilities discussed here.
-</p>   
-
-**Final expected config on Router r2**  
-
-```
-!! IOS XR Configuration version = 6.4.1
-!! Last configuration change at Mon Aug 20 01:53:34 2018 by ZTP
-!
-hostname r2
-banner motd ;
---------------------------------------------------------------------------
-  Router 2 (Cisco IOS XR Sandbox)
---------------------------------------------------------------------------
-;
-service timestamps log datetime msec
-service timestamps debug datetime msec
-username admin
- group root-lr
- group cisco-support
- secret 5 $1$A4C9$oaNorr6BXDruE4gDd086L.
-!
-line console
- timestamp disable
- exec-timeout 0 0
-!
-call-home
- service active
- contact smart-licensing
- profile CiscoTAC-1
-  active
-  destination transport-method http
- !
-!
-interface MgmtEth0/RP0/CPU0/0
- description *** MANAGEMENT INTERFACE ***
- ipv4 address dhcp
-!
-interface GigabitEthernet0/0/0/0
- ipv4 address 100.1.1.20 255.255.255.0
- no shutdown
-!
-interface GigabitEthernet0/0/0/1
- ipv4 address 101.1.1.20 255.255.255.0
- no shutdown
-!
-interface GigabitEthernet0/0/0/2
- shutdown
-!
-interface GigabitEthernet0/0/0/3
- shutdown
-!
-interface GigabitEthernet0/0/0/4
- shutdown
-!
-router static
- address-family ipv4 unicast
-  0.0.0.0/0 192.168.122.1
- !
-!
-netconf-yang agent
- ssh
-!
-ssh server v2
-ssh server netconf vrf default
-end
-
-
-```
-
-
-### Verify the configuration
-
-Apart from the final configuration, verify that the state of your topology is such that the following pings are successful from router r2:
-
-```
-
-RP/0/RP0/CPU0:r2#       ping 100.1.1.10
-Mon Aug 20 01:53:49.497 UTC
-Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 100.1.1.10, timeout is 2 seconds:
-!!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 102/185/506 ms
-RP/0/RP0/CPU0:r2#       ping 101.1.1.10
-Mon Aug 20 01:53:57.783 UTC
-Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 101.1.1.10, timeout is 2 seconds:
-!!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 94/129/236 ms
-RP/0/RP0/CPU0:r2#
-RP/0/RP0/CPU0:r2#
-RP/0/RP0/CPU0:r2#
-RP/0/RP0/CPU0:r2#
-
-```
