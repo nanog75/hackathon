@@ -8,7 +8,7 @@ author: "Cisco IOS-XR Team"
 
 {% include base_path %}
 {% capture written_year %}'None'{% endcapture %}
-{% assign sorted = (site.wkinstructions | sort: 'date') | reverse %}
+{% assign sorted = (site.wkinstructions | sort: 'date') %}
 {% for post in sorted %}
 {% if post.position == "top" %}
   {% capture year %}{{ post.date | date: '%B %Y' }}{% endcapture %}
