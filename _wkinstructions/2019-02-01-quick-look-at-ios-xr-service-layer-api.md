@@ -1,7 +1,16 @@
 ---
-published: false
+published: true
 date: '2019-02-01 05:58 +0100'
 title: Quick Look at IOS-XR Service-Layer API
+author: Akshat Sharma
+excerpt: >-
+  Service-Layer Overview, build process for python bindings, running simple
+  python clients
+tags:
+  - iosxr
+  - cisco
+  - service-layer
+  - lab
 ---
 
 
