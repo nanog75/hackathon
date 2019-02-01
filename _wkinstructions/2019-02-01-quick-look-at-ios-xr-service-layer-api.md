@@ -27,7 +27,8 @@ tags:
 Let's focus on the Service Adaptation layer from the earlier breakdown of the stack:  
 
 
-<a href="assets/images/service-adaptation-layer.png"><img src="assets/images/service-adaptation-layer.png" alt="service-adaptation-layer" width="1000px" style="margin-left: auto !important; margin-right: auto !important;"/></a>
+
+<a href="{{site.baseurl}}/images/api_layers_service-layer.png"><img src="{{site.baseurl}}/images/api_layers_service-layer.png" alt="service-adaptation-layer" width="1000px" style="margin-left: auto !important; margin-right: auto !important;"/></a>
 
   &nbsp;  
   &nbsp;  
