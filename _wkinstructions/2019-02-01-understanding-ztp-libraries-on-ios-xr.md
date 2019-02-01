@@ -32,7 +32,8 @@ Zero Touch Provisioning(ZTP) is a device provisioning mechanism that allows netw
 
 This workflow is depicted in the figure below:
 
-![ztp_workflow](assets/images/ztp_workflow.png)  
+![ztp_workflow.png]({{site.baseurl}}/images/ztp_workflow.png)
+
 
 >The concepts behind IOS-XR ZTP and further details on its operationalization in your network are expanded upon in the great set of blogs and tutorials on <https://xrdocs.io>.   
 In particular:
