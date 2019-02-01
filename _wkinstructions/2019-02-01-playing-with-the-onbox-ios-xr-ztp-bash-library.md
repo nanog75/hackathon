@@ -248,7 +248,7 @@ sysadmin-vm:0_RP0# [r1:~]$
 
 ```
 
-<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Perfect! Any admin command you would potentially want to perform (even configuration in the admin shell) can be performed using the above method - reloads, reload to ipxe, change the state of the LEDs on the box, etc. Just use a combination of `\n` to separate out individual lines meant for the admin CLI. We can now proceed with the configuration manipulation hooks.<p>
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Perfect! Any admin command you would potentially want to perform (even configuration in the admin shell) can be performed using the above method - reloads, reload to ipxe, change the state of the LEDs on the box, etc. Just use a combination of `\n` to separate out individual lines meant for the admin CLI. We can now proceed with the configuration manipulation hooks.</p>
 
 
 
@@ -641,5 +641,4 @@ GigabitEthernet0/0/0/4         unassigned      Shutdown        Down     default
 <p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Very Very Important</b>: Configuration Replace can be potentially dangerous. If you make a mistake with the type of configuration you want to enforce, you can potentially lose connectivity to the router. So make sure you take precautions to ensure the final config is what you want at the end of the process</p>
 
 
-We will not be attempting an xrreplace as part of this lab. But The basic workflow for using `xrreplace` is the same as `xrapply`. Provide a file containing the config to `xrreplace` and upon execution it will replace the entire configuration on the router with the configuration specified in the file. 
-
+We will not be attempting an xrreplace as part of this lab. But The basic workflow for using `xrreplace` is the same as `xrapply`. Provide a file containing the config to `xrreplace` and upon execution it will replace the entire configuration on the router with the configuration specified in the file.
