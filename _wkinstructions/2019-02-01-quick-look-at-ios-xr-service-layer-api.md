@@ -412,16 +412,16 @@ admin@devbox:tutorial$
 
 ```
 
-All the tutorials described below, expect the following environment variables to be set before running them:   
-  * SERVER_IP</b>: IP address over which the router's gRPC server is reachable</li>
-  * SERVER_PORT</b>: TCP port over which the router's gRPC server is reachable</li>
-To set these variables, simply export them in the shell of the admin box before running the tutorials (The tutorials will ask you to if you miss this):  
-```
-admin@devbox:tutorial$
-admin@devbox:tutorial$ export SERVER_IP=10.10.20.170
-admin@devbox:tutorial$ export SERVER_PORT=57021
-admin@devbox:tutorial$
-```
+>All the tutorials described below, expect the following environment variables to be set before running them:   
+>  * SERVER_IP</b>: IP address over which the router's gRPC server is reachable</li>
+>  * SERVER_PORT</b>: TCP port over which the router's gRPC server is reachable</li>
+>To set these variables, simply export them in the shell of the admin box before running the >tutorials (The tutorials will ask you to if you miss this):  
+>```
+>admin@devbox:tutorial$
+>admin@devbox:tutorial$ export SERVER_IP=10.10.20.170
+>admin@devbox:tutorial$ export SERVER_PORT=57021
+>admin@devbox:tutorial$
+>```
 {: .notice--warning}
   
 
