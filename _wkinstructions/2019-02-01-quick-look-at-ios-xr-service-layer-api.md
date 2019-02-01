@@ -691,7 +691,7 @@ RP/0/RP0/CPU0:r1(config-if)#commit
 Sun Sep  2 01:24:35.402 UTC
 RP/0/RP0/CPU0:r1(config-if)#
 ```
-```
+
 
 Hop back to the running client, and you should notice the following message show up:  
 
