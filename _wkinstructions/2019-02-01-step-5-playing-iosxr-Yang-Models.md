@@ -21,7 +21,7 @@ excerpt: >-
 
 There are several tools in the industry that allow you to play around with YANG models on IOS-XR and other Network OS stacks.
 
-In this workshop we will look at a few of them:
+In this lab we will look at a few of them:
 
 * The Ansible `netconf_config` module to configure a BGP session on the routers. <https://docs.ansible.com/ansible/2.4/netconf_config_module.html>  
 
@@ -33,7 +33,7 @@ In this workshop we will look at a few of them:
 >Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active. 
 >
 > If you haven't connected yet, check out the instructions to do so here: 
-><https://iosxr-devnet-ciscolive.github.io/cleur2019-workshop/assets/CLEUR19-IOS-XR-Programmability-Workshop.pdf>
+><https://iosxr-lab-ciscolive.github.io/LTRSPG-2414-cleur2019/assets/CLEUR19-AkshatSharma-IOS-XR-Programmability-Session-1-Friday.pdf>
 >
 >
 > Once you're connected, use the following instructions to connect to the individual nodes.
