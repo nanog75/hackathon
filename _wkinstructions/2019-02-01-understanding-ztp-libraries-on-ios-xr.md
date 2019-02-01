@@ -1,7 +1,7 @@
 ---
 published: true
 date: '2019-02-01 03:18 +0100'
-title: Understanding ZTP Libraries on IOS-XR
+title: 'Step 1: Understanding ZTP Libraries on IOS-XR'
 author: Akshat Sharma
 excerpt: >-
   Understanding the basic ZTP infrastructure of IOS-XR and libraries available
