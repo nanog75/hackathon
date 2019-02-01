@@ -1236,6 +1236,28 @@ We can generate bindings in the language of choice (python, c++, golang etc.) us
 
 
 
+## Clean up!
+
+Finally, clean up the telemetry configuration from router r2 as we progress to the next stage of the lab:
+
+
+Remove existing telemetry configurations from `r1`:
+
+```
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#conf t
+Tue Sep  4 08:01:03.269 UTC
+RP/0/RP0/CPU0:r1(config)#no telemetry model-driven
+RP/0/RP0/CPU0:r1(config)#commit
+Tue Sep  4 08:01:06.422 UTC
+RP/0/RP0/CPU0:r1(config)#
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+
+```
+
+
+
 
 
 
