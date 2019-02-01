@@ -12,6 +12,9 @@ tags:
   - telemetry
   - lab
 ---
+
+{% include toc %} 
+
 # Setting up a Telemetry Client/Collector
 
 
