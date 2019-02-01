@@ -75,7 +75,8 @@ We will develop and run the service-layer python clients on the `devbox`. The sl
 
 The process is depicted below:  
 
-![protoc_compilation](assets/images/protoc_compilation.png)
+![]({{site.baseurl}}/images/protoc_compilation.png)![protoc_compilation.png]
+
 
 
 ### Connect to the Devbox
