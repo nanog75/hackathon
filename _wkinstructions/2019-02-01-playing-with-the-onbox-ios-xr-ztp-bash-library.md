@@ -225,11 +225,9 @@ Log Buffer (2097152 bytes):
 In IOS-XR the admin mode is a privileged mode that allows you to run certain administrative exec commands like reloading or shutting down the box, running privileged show commands like "admin show environment power" etc.
 
 To run these commands we again utilize `xrcmd` and the power of `echo` to funnel in the required admin show/exec commands to the admin mode.
-Since we're on a virtual router, we can't really get environment dumps, so let's trigger a `reload` of the instance r1 using xrcmd.
+Since we're on a virtual router, we can't really get environment dumps, so let's issue a simple "show platform" on the admin cli.
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Warning!**: We intend to reload the box using an admin privileged command thanks to the xrcmd utility. This is just to showcase how you can potentially perform such actions as part of your scripts as well. If you do not intend to reload the box (which will cause a 3-4 minute wait till the router comes back up) and would much rather continue with the lab, then skip this section (or just read through) instead of performing the task.</p>
 
-First, let's try to run a simple show command in the admin mode:
 
 <p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Running admin commands require a root-lr user to be configured on the router and an environment variable AAA_USER is used along with ZTP bash hooks to enable privilege associated with the root-lr user to gain access to the admin mode. Since the router has `admin` configured as the root-lr user, we set `AAA_USER=admin`
 </p>  
@@ -250,43 +248,7 @@ sysadmin-vm:0_RP0# [r1:~]$
 
 ```
 
-Great, now let's run the reload command. The reload command is:  "hw-module location all reload". However it also requires us to answer a prompt with "yes" to trigger the reload. We can feed that "yes" as part of the echo -ne "<>" directive, as shown below:
-
-
-```
-[r1:~]$ export AAA_USER=admin && echo -ne "hw-module location all reload\nyes\n" | xrcmd "admin"
-
-ztp-user connected from 127.0.0.1 using console on r1
-sysadmin-vm:0_RP0# hw-module location all reload
-Mon Aug  20 02:31:14.392 UTC
-Reload hardware module ? [no,yes] yes
-result Card graceful reload request on all acknowledged.
-sysadmin-vm:0_RP0# [r1:~]$
-
-```
-
-Wait a few seconds and the box will reload and you will lose SSH access to the box. Then within 3-4 minutes, you should have access again and can continue the lab.
-
-After a wait of 3-4 minutes, check that you again have ssh access to the Router r1 post reload:
-
-```
-ssh -p 2221 admin@10.10.20.170
-
-
---------------------------------------------------------------------------
-  Router 1 (Cisco IOS XR Sandbox)
---------------------------------------------------------------------------
-
-
-Password:
-
-
-RP/0/RP0/CPU0:r1#
-RP/0/RP0/CPU0:r1#
-RP/0/RP0/CPU0:r1#
-```
-
-Perfect! we can now proceed with the configuration manipulation hooks.  
+Perfect! Any admin command you would potentially want to perform (even configuration in the admin shell) can be performed using the above method - reloads, reload to ipxe, change the state of the LEDs on the box, etc. Just use a combination of `\n` to separate out individual lines meant for the admin CLI. We can now proceed with the configuration manipulation hooks.  
 
 
 
