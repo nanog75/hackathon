@@ -124,7 +124,7 @@ The ZTP python library defines a single Python class called `ZtpHelpers`. This c
 #### ZtpHelpers class Methods:   
 
 
-<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Object Creation:  `__init__()`</b></p></div></div>
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Object Creation:  <pre><code>__init__()</code></pre></b></p></div></div>
 
 **Purpose**: This method is invoked when the `ZtpHelpers` object is created.
 
@@ -145,7 +145,7 @@ All of the following parameters are optional. Python's default `syslog` capabili
 
 
 
-<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Debug Logging:  `toggle_debug()`</b></p></div></div>
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Debug Logging:  <pre><code>toggle_debug()</code></pre></b></p></div></div>
 
 **Purpose**: Used to Enable/disable verbose debug logging
 
@@ -155,7 +155,7 @@ All of the following parameters are optional. Python's default `syslog` capabili
     * Parameter Type: `int`  
 
 
-<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Show/Exec CLI commands:    `xrcmd()`</b></p></div></div>
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Show/Exec CLI commands:    <pre><code>xrcmd()</code></pre></b></p></div></div>
 
 **Purpose**: Issue an IOS-XR show command or exec command and obtain the output.
 
@@ -178,7 +178,7 @@ Here `status`=`error` if an invalid exec/show command is specified as input to X
 
 
 
-<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Configuration Merge using a File: `xrapply()`</b></p></div></div>
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Configuration Merge using a File: <pre><code>xrapply()</code></pre></b></p></div></div>
 
 **Purpose**: Apply Configuration to XR using a local file on the router. This method does a **configuration merge**.  
 
@@ -202,7 +202,7 @@ Dictionary specifying the effect of the config change:
 * Similarly, `status`=`success` if the configuration merge is successful and the corresponding `output` is the response of `show configuration commit changes last 1`  
 
 
-<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Configuration Merge using a String: `xrapply_string()`</b></p></div></div>
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Configuration Merge using a String: <pre><code>xrapply_string()</code></pre></b></p></div></div>
 
 **Purpose**: Apply Configuration to XR using a string. This method does a **configuration merge**.  
 
@@ -226,7 +226,7 @@ Dictionary specifying the effect of the config change:
 * Similarly, `status`=`success` if the configuration merge is successful and the corresponding `output` is the response of `show configuration commit changes last 1`  
 
 
-<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Configuration Replace using a file: `xrreplace()`</b></p></div></div>
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Configuration Replace using a file: <pre><code>xrreplace()</code></pre></b></p></div></div>
 
 **Purpose**: Completely Replace existing Router configuration with the configuration specified in a file.
 
