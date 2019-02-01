@@ -40,7 +40,7 @@ This is shown in the figure below. The Manageability Layer derives its capabilit
 &nbsp;  
 
 <p style="text-align: center;">
-<a href="assets/images/service-layer-sysdb.png"><img src="assets/images/service-layer-sysdb.png" alt="service-adaptation-layer" width="600px" style="margin-left: auto !important; margin-right: auto !important;"/></a>
+<a href="{{site.baseurl}}/images/service-layer-sysdb-relation.png"><img src="{{site.baseurl}}/images/service-layer-sysdb-relation.png" alt="service-adaptation-layer" width="600px" style="margin-left: auto !important; margin-right: auto !important;"/></a>
 </p>
 
 &nbsp;  
