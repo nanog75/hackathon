@@ -15,6 +15,8 @@ tags:
 
 {% include toc %} 
 
+Have a look at the set of Telemetry learning labs on DevNet for more details on Telemetry, available workflows, configurations and usage of tools.
+
 # Setting up a Telemetry Client/Collector
 
 
