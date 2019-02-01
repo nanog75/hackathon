@@ -12,9 +12,9 @@ title_short              : "IOSXR-DEVNET-CLEUR2019"
 title_separator          : "|"
 name                     : &name "Cisco Systems Inc"
 description              : &description "Welcome to the Cisco Live Europe 2019 Devnet Workshop for IOS-XR programmability!"
-url                      : "https://iosxr-devnet-ciscolive.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
-baseurl                  : "/cleur2019-workshop" # the subpath of your site, e.g. "/blog"
-gh_repo                  : "https://github.com/iosxr-devnet-ciscolive/cleur2019-workshop"
+url                      : "https://iosxr-lab-ciscolive.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+baseurl                  : "/LTRSPG-2414-cleur2019" # the subpath of your site, e.g. "/blog"
+gh_repo                  : "https://github.com/iosxr-lab-ciscolive/LTRSPG-2414-cleur2019"
 teaser                   : # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
 breadcrumbs              : true # true, false (default)
 words_per_minute         : 200
@@ -224,7 +224,7 @@ tags:
 
 
 prose:
-  siteurl: 'https://iosxr-devnet-cisco.live'
+  siteurl: 'https://iosxr-lab-ciscolive.github.io'
   relativeLinks: 'http://prose.github.io/starter/links.jsonp'
   media: 'images'
   ignore:
