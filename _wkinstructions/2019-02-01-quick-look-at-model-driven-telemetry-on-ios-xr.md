@@ -1240,7 +1240,7 @@ We can generate bindings in the language of choice (python, c++, golang etc.) us
 
 ## Clean up!
 
-Finally, clean up the telemetry configuration from router r2 as we progress to the next stage of the lab:
+Finally, clean up the telemetry configuration from router r1 as we progress to the next stage of the lab:
 
 
 Remove existing telemetry configurations from `r1`:
