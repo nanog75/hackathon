@@ -1,7 +1,7 @@
 ---
 published: true
 date: '2019-02-01 03:24 +0100'
-title: Playing with the onbox IOS-XR ZTP bash Library
+title: Playing with the onbox IOS-XR ZTP bash and Python Library
 author: Akshat Sharma
 excerpt: >-
   Play around with the onbox ZTP hooks for bash to familiarize yourself with the
@@ -263,7 +263,7 @@ xrapply_string
 xrapply_string_with_reason
 ```
 
-Let's try each one of these out. We've already seen the existing configuration, so let's use the config merge utilities one by one to bring up four GigabitEthernet Interfaces on r1.
+We will just try `xrapply` and `xrapply_string_with_reason` as a quick showcase. It is an exercise for the reader to try out the other utilities outside the context of this lab. We've already seen the existing configuration, so let's use the config merge utilities one by one to bring up GigabitEthernet Interfaces on r1.
 
 
 <p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Important</b>: We expect the user to perform the same exact steps on r2 before we head to the next section! Remember interfaces on both the routers should be up before we try to bring up protocols on the box using a bash script we will develop in the next section</p>
@@ -418,17 +418,14 @@ Great! it throws up an error!
 ```
 This is very useful: by throwing up a distinct non-zero exit code upon failure to apply the configuration, it allows us to automate more deterministically.  
 
-### Using xrapply_with_reason to bring up GigabitEthernet0/0/0/1
 
-`xrapply_with_reason` works in exactly the same way as `xrapply`, except it takes a **reason** (i.e. a string of your choice to identify the config merge in IOS-XR's internal database - SYSDB) as the first argument.
+### Using xrapply_string_with_reason to configure GigabitEthernet0/0/0/1
 
-The steps remain the same as `xrapply`:
-
-#### Create the configuration file for GigabitEthernet0/0/0/1
+The steps are illustrated below, think of it as a combination of the requirements for `xrapply_string` and `xrapply_with_reason`.
 
 ```
 [r1:~]$
-[r1:~]$ cat > /root/gig1up.conf << EOF
+[r1:~]$ read -r -d '' gigup1_config << EOF
 > !
 > interface GigabitEthernet0/0/0/1
 >   ipv4 address 11.1.1.10/24
@@ -437,169 +434,15 @@ The steps remain the same as `xrapply`:
 > end
 > EOF
 [r1:~]$
-[r1:~]$
-[r1:~]$ cat /root/gig1up.conf
+[r1:~]$ echo "$gigup1_config"
 !
-interface GigabitEthernet0/0/0/1
+interface GigabitEthernet0/0/0/3
   ipv4 address 11.1.1.10/24
   no shutdown
 !
 end
 [r1:~]$
-```
-
-#### Provide a "reason" when configuring using xrapply_with_reason
-
-```
-[r1:~]$
-[r1:~]$ source /pkg/bin/ztp_helper.sh
-[r1:~]$
-[r1:~]$
-[r1:~]$ xrapply_with_reason "Testing out xrapply_with_reason" /root/gig1up.conf
-[r1:~]$
-```
-
-#### Check that the "reason" was committed to SYSDB
-The last commit automatically has the id `1`. So fetch the last commit's details:
-
-```
-[r1:~]$ xrcmd "show configuration commit list 1 detail"
-
-   1) CommitId: 1000000022                 Label: NONE
-      UserId:   ZTP                        Line:  ZTP
-      Client:   CLI                        Time:  Mon Aug 20 00:24:30 2018
-      Comment:  Testing out xrapply_with_reason
-[r1:~]$
-```
-Perfect!, the comment shows up as expected. Very useful for accounting purposes.
-
-
-#### Verify the last commit was accurate
-
-```
-[r1:~]$ xrcmd "show configuration commit changes last 1"
-Building configuration...
-!! IOS XR Configuration version = 6.4.1
-interface GigabitEthernet0/0/0/1
- ipv4 address 11.1.1.10 255.255.255.0
- no shutdown
-!
-end
-[r1:~]$
-[r1:~]$ xrcmd "show ipv4 interface brief"
-
-Interface                      IP-Address      Status          Protocol Vrf-Name
-MgmtEth0/RP0/CPU0/0            192.168.122.21  Up              Up       default
-GigabitEthernet0/0/0/0         10.1.1.10       Up              Up       default
-GigabitEthernet0/0/0/1         11.1.1.10       Up              Up       default
-GigabitEthernet0/0/0/2         unassigned      Shutdown        Down     default
-GigabitEthernet0/0/0/3         unassigned      Shutdown        Down     default
-GigabitEthernet0/0/0/4         unassigned      Shutdown        Down     default
-[r1:~]$
-[r1:~]$
-```
-
-
-
-### Using xrapply_string to configure GigabitEthernet0/0/0/2
-
-`xrapply_string` also does a configuration merge but accepts a single string instead of a file. Useful when you're working with only variables in your scripts.
-
-We can either create a multiline string as shown below:
-
-```
-[r1:~]$
-[r1:~]$ read -r -d '' gig2up_config << EOF
-> !
-> interface GigabitEthernet0/0/0/2
->   ipv4 address 12.1.1.10/24
->   no shutdown
-> !
-> end
-> EOF
-[r1:~]$
-[r1:~]$ echo "$gig2up_config"
-!
-interface GigabitEthernet0/0/0/2
-  ipv4 address 12.1.1.10/24
-  no shutdown
-!
-end
-[r1:~]$
-```
-Or a single line string with the appropriate carriage return and escape characters:
-
-```
-[r1:~]$ echo "\!\ninterface GigabitEthernet0/0/0/2\nipv4 address 12.1.1.10/24\nno shutdown\n\!\nend" > gig2up_config
-[r1:~]$
-[r1:~]$ echo "$gig2up_config"
-!
-interface GigabitEthernet0/0/0/2
-  ipv4 address 12.1.1.10/24
-  no shutdown
-!
-end
-[r1:~]$
-```
-I think it's fair to say that multiline strings are more readable.
-
-Once you have the variable available, pass it to `xrapply_string` and verify (as before) that the configuration goes through fine.
-
-```
-[r1:~]$
-[r1:~]$ xrapply_string "$gig2up_config"
-[r1:~]$
-[r1:~]$
-[r1:~]$ echo $?
-0
-[r1:~]$
-[r1:~]$ xrcmd "show configuration commit changes last 1"
-Building configuration...
-!! IOS XR Configuration version = 6.4.1
-interface GigabitEthernet0/0/0/2
- ipv4 address 12.1.1.10 255.255.255.0
- no shutdown
-!
-end
-
-[r1:~]$ xrcmd "show ipv4 interface brief"
-
-Interface                      IP-Address      Status          Protocol Vrf-Name
-MgmtEth0/RP0/CPU0/0            192.168.122.21  Up              Up       default
-GigabitEthernet0/0/0/0         10.1.1.10       Up              Up       default
-GigabitEthernet0/0/0/1         11.1.1.10       Up              Up       default
-GigabitEthernet0/0/0/2         12.1.1.10       Up              Up       default
-GigabitEthernet0/0/0/3         unassigned      Shutdown        Down     default
-GigabitEthernet0/0/0/4         unassigned      Shutdown        Down     default
-[r1:~]$
-
-
-```
-
-### Using xrapply_string_with_reason to configure GigabitEthernet0/0/0/3
-
-The steps are illustrated below, think of it as a combination of the requirements for `xrapply_string` and `xrapply_with_reason`.
-
-```
-[r1:~]$
-[r1:~]$ read -r -d '' gigup3_config << EOF
-> !
-> interface GigabitEthernet0/0/0/3
->   ipv4 address 13.1.1.10/24
->   no shutdown
-> !
-> end
-> EOF
-[r1:~]$
-[r1:~]$ echo "$gigup3_config"
-!
-interface GigabitEthernet0/0/0/3
-  ipv4 address 13.1.1.10/24
-  no shutdown
-!
-end
-[r1:~]$
-[r1:~]$ xrapply_string_with_reason "Testing xrapply_string_with_reason" "$gigup3_config"
+[r1:~]$ xrapply_string_with_reason "Testing xrapply_string_with_reason" "$gigup1_config"
 [r1:~]$
 [r1:~]$
 [r1:~]$ xrcmd "show configuration commit list 1 detail"
@@ -613,8 +456,8 @@ end
 [r1:~]$ xrcmd "show configuration commit changes last 1 "
 Building configuration...
 !! IOS XR Configuration version = 6.4.1
-interface GigabitEthernet0/0/0/3
- ipv4 address 13.1.1.10 255.255.255.0
+interface GigabitEthernet0/0/0/1
+ ipv4 address 11.1.1.10 255.255.255.0
  no shutdown
 !
 end
@@ -626,8 +469,8 @@ Interface                      IP-Address      Status          Protocol Vrf-Name
 MgmtEth0/RP0/CPU0/0            192.168.122.21  Up              Up       default
 GigabitEthernet0/0/0/0         10.1.1.10       Up              Up       default
 GigabitEthernet0/0/0/1         11.1.1.10       Up              Up       default
-GigabitEthernet0/0/0/2         12.1.1.10       Up              Up       default
-GigabitEthernet0/0/0/3         13.1.1.10       Up              Up       default
+GigabitEthernet0/0/0/2         unassigned      Shutdown        Down     default
+GigabitEthernet0/0/0/3         unassigned      Shutdown        Down     default
 GigabitEthernet0/0/0/4         unassigned      Shutdown        Down     default
 [r1:~]$
 [r1:~]$
