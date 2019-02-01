@@ -1005,9 +1005,9 @@ RP/0/RP0/CPU0:r1#
 
 Before we proceed, let's actually test the sensor path to make sure we're getting the relevant data. Starting with release 6.3.1, this can be done on the router itself  by using the following CLI command:
 
-<p><pre><code>
+<div class="highlighter-rouge"><pre class="highlight"><code>
 run mdt_exec -s &lt;your_sensor_path&gt; -c &lt;cadence&gt;
-</code></pre></p>
+</code></pre></div>
 
 Trying this out on router `r1` for the sensor_path=`Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address` and cadence=`2000` (2 seconds), we get:
 
