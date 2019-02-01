@@ -499,7 +499,7 @@ Follow instructions in the "Before you Begin" section to understand the SSH port
 
 ## Connect to router r1
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Username**: admin<br/>**Password**: admin<br/>**SSH port**: 2221<br/>**IP**: 10.10.20.170
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Username</b>: admin<br/><b>Password</b>: admin<br/><b>SSH port</b>: 2221<br/><b>IP</b>: 10.10.20.170
 </p>  
 
 ```
@@ -570,7 +570,7 @@ Building configuration...
 >>>
 ```
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Great! The running-config was returned as a list of lines. Let's pretty print this configuration.
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Great! The running-config was returned as a list of lines. Let's pretty print this configuration.
 </p>  
 
 ```python
@@ -685,8 +685,8 @@ Building configuration...
 
 You can clearly see that the response  is a dictionary that contains two fields: `output` and `status`. Since the `exec_cmd` was successfull executed, `status`=`success` and `output`=`output of the exec/show command`.
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">
-**The return values using the ztp python library utilities are very useful in deterministically writing CLI automation in python.**</p>
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">
+<b>The return values using the ztp python library utilities are very useful in deterministically writing CLI automation in python.</b></p>
 
 
 ### Checking an invalid show command
@@ -773,7 +773,7 @@ Great! Now checking the output of "show logging" again:
 >>>
 ```
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">The log buffer has been cleared!</p>
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">The log buffer has been cleared!</p>
 
 ### Running admin commands
 
@@ -869,7 +869,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 We are now ready to run some admin commands through the python interpreter shell.
 We'll try to run a simple show command in the admin mode:
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Running admin commands require a root-lr user to be configured on the router and an environment variable AAA_USER is used along with ZTP bash hooks to enable privilege associated with the root-lr user to gain access to the admin mode. Since the router has `admin` configured as the root-lr user, we set `root_lr_user`=`admin`
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Running admin commands require a root-lr user to be configured on the router and an environment variable AAA_USER is used along with ZTP bash hooks to enable privilege associated with the root-lr user to gain access to the admin mode. Since the router has `admin` configured as the root-lr user, we set `root_lr_user`=`admin`
 </p>  
 
 ```python
@@ -913,7 +913,7 @@ xrapply_string()
 Let's try each one of these out. We've already seen the existing configuration, so let's use the config merge utilities one by one to bring up four GigabitEthernet Interfaces on r1.
 
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Important**: We expect the user to perform the same exact steps on r2 before we head to the next section! Remember interfaces on both the routers should be up before we try to bring up protocols on the box using a python script we will develop in the next section</p>
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Important</b>: We expect the user to perform the same exact steps on r2 before we head to the next section! Remember interfaces on both the routers should be up before we try to bring up protocols on the box using a python script we will develop in the next section</p>
 
 
 ### Using xrapply() to bring up GigabitEthernet0/0/0/0
