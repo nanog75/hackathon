@@ -735,6 +735,7 @@ admin@devbox:641$
 
 
 Dump the `Cisco-IOS-XR-ipv6-nd-oper.yang` model in a tree format:
+  
 
 ```
 admin@devbox:641$ pyang -f tree Cisco-IOS-XR-ipv6-nd-oper.yang
