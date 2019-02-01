@@ -1,6 +1,6 @@
 ---
 published: true
-date: '2019-02-01 03:18 +0100'
+date: '2019-02-01 03:18 -0400'
 title: 'Step 1: Understanding ZTP Libraries on IOS-XR'
 author: Akshat Sharma
 excerpt: >-
