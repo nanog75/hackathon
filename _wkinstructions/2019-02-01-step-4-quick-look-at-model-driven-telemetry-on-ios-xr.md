@@ -1,6 +1,6 @@
 ---
 published: true
-date: '2019-02-01 05:03 +0100'
+date: '2019-02-01 05:03 -0400'
 title: 'Step 4: Quick look at Model Driven Telemetry on IOS-XR'
 author: Akshat Sharma
 excerpt: >-
