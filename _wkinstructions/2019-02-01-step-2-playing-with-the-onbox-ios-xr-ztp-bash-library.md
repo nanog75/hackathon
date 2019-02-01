@@ -20,6 +20,56 @@ tags:
 Time to play around with the ZTP Bash hooks! Let's try out a few use cases.
 We'll choose router r1 as our test platform.
 
+
+
+>Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active. 
+>
+> If you haven't connected yet, check out the instructions to do so here: 
+><https://iosxr-lab-ciscolive.github.io/LTRSPG-2414-cleur2019/assets/CLEUR19-AkshatSharma-IOS-XR-Programmability-Session-1-Friday.pdf>
+>
+>
+> Once you're connected, use the following instructions to connect to the individual nodes.
+> The instructions in the workshop will simply refer to the Name of the box to connect without
+> repeating the connection details and credentials. So refer back to this list when you need it.
+>  
+>
+> The 3 nodes in the topology are: 
+> 
+><p style="font-size: 16px;"><b>Development Linux System (DevBox)</b></p> 
+>      IP Address: 10.10.20.170
+>      Username/Password: [admin/admin]
+>      SSH Port: 2211
+> 
+>
+><p style="font-size: 16px;"><b>IOS-XRv9000 R1: (Router r1)</b></p> 
+>
+>     IP Address: 10.10.20.170  
+>     Username/Password: [admin/admin]   
+>     Management IP: 10.10.20.170  
+>     XR SSH Port: 2221    
+>     NETCONF Port: 8321   
+>     gRPC Port: 57021  
+>     XR-Bash SSH Port: 2222    
+>
+>
+><p style="font-size: 16px;"><b>IOS-XRv9000 R2:  (Router r2)</b></p> 
+>
+>     IP Address: 10.10.20.170   
+>     Username/Password: [admin/admin]   
+>     Management IP: 10.10.20.170   
+>     XR SSH Port: 2231    
+>     NETCONF Port: 8331   
+>     gRPC Port: 57031    
+>     XR-Bash SSH Port: 2232
+{: .notice--info}
+
+
+
+The Topology in use is shown below:
+![topology_devnet.png]({{site.baseurl}}/images/topology_devnet.png)  
+
+
+
 ## Connect to router r1
 
 <p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Username</b>: admin<br/><b>Password</b>: admin<br/><b>SSH port</b>: 2221<br/><b>IP</b>: 10.10.20.170
