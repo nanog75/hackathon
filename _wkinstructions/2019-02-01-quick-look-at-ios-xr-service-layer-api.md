@@ -8,4 +8,5 @@ title: Quick Look at IOS-XR Service-Layer API
 
 >Have a look at the set of Service-Layer learning labs on DevNet for more details on Service-Layer 
 >API, associated configuration, details on writing your own gRPC clients in pythonm, c++ and more. 
->https://learninglabs.cisco.com/modules/iosxr-service-layer
+><https://learninglabs.cisco.com/modules/iosxr-service-layer>
+
