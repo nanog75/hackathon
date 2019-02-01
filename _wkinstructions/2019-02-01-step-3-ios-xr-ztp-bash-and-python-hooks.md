@@ -24,16 +24,10 @@ Complete CLI support:
 *  Available in bash and python: Choose the scripting language you prefer and integrate with ztp, cronjobs, onbox-apps and more
 
 
->Check out:
->
->1) [IOS-XR Bash ZTP hooks](https://xrdocs.io/software-management/tutorials/2016-08-26-working-with-ztp/#ztp_helpersh)
->2) [IOS-XR Python ZTP library](https://xrdocs.io/software-management/tutorials/2016-08-26-working-with-ztp/#ztp_helpersh)
-
-
 >Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active. 
 >
 > If you haven't connected yet, check out the instructions to do so here: 
-><https://iosxr-devnet-ciscolive.github.io/cleur2019-workshop/assets/CLEUR19-IOS-XR-Programmability-Workshop.pdf>
+><https://iosxr-lab-ciscolive.github.io/LTRSPG-2414-cleur2019/assets/CLEUR19-AkshatSharma-IOS-XR-Programmability-Session-1-Friday.pdf>
 >
 >
 > Once you're connected, use the following instructions to connect to the individual nodes.
@@ -70,6 +64,7 @@ Complete CLI support:
 >     gRPC Port: 57031    
 >     XR-Bash SSH Port: 2232
 {: .notice--info}
+
 
 
 The Topology in use is shown below:
