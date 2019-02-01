@@ -352,7 +352,8 @@ RP/0/RP0/CPU0:r1#
 
 Finally, log back into `devbox`  and start a `tail -f` on the file `/data/dump.txt` over `docker exec` to the pipeline instance:
 
-<p><pre><code>
+
+<div class="highlighter-rouge"><p><pre class="highlight"><code>
 admin@devbox:~$ <mark>docker exec -it pipeline tail -f</mark> /data/dump.txt</mark>
                 "runt-packets-received": 0,
                 "seconds-since-last-clear-counters": 0,
@@ -428,7 +429,7 @@ Summary: GPB(common) Message [192.168.122.21:28927(r1)/Cisco-IOS-XR-infra-statsd
 
   .............................# OUTPUT SNIPPED #.........................
 
-</code></pre></p>
+</code></pre></p></div>
 
 
 
