@@ -1,6 +1,6 @@
 ---
 published: true
-date: '2019-02-01 03:24 +0100'
+date: '2019-02-01 03:24 -0400'
 title: 'Step 2: Playing with the onbox IOS-XR ZTP Bash and Python Library'
 author: Akshat Sharma
 excerpt: >-
