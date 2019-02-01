@@ -711,7 +711,7 @@ Info {
 
  The `Received HeartBeat` messages show up as the client receives heartbeats periodically from the Server.  The event `SL_INTERFACE_EVENT_TYPE_INTERFACE_INFO` gives us more information on the type of interface event received:  
  *  It is for the interface `GigabitEthernet0/0/0/0` and   
- *  It was a `DOWN` event: ` IfState: SL_IF_STATE_DOWN`
+ *  It was a `DOWN` event: `IfState: SL_IF_STATE_DOWN`
  *  The sequence number: `SeqNum: 11` illustrates the sequence number of this event message - can be used to correlate events in a sequence of interface events (for e.g. in case of flapping interfaces).
 
 Similarly, no-shut the interface `GigabitEthernet0/0/0/0` on the router and notice the `UP` event being streamed to the client:  
