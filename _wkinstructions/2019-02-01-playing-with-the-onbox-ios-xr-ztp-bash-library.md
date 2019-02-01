@@ -15,7 +15,7 @@ tags:
 
 {% include toc %}
 
-# Step 1: Playing with the onbox ZTP bash hooks
+# Playing with the onbox ZTP bash hooks
 
 Time to play around with the ZTP Bash hooks! Let's try out a few use cases.
 We'll choose router r1 as our test platform.
