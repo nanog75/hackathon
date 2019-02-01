@@ -106,3 +106,6 @@ To use this library, any Bash script (or even python scripts utilizing bash call
 |`xrapply_string`|`<config string>`|<br/>**Configuration Merge.**<br/> Apply additional configuration using a single line string (carriage returns are affected using `\n`)<br/><br/>|
 |`xrapply_string_with_reason`|**Arg1**: `<reason>`<br/>**Arg2**:`<config string>`|<br/>**Configuration Merge.**<br/>Apply additional configuration using a single line string (carriage returns are affected using `\n`)<br/> <br/> P.S. **reason** shows up as comment in `show configuration commit list detail`<br/><br/>|
 |`xrreplace`|``<local filename>``|<br/>**Configuration Replace**.<br/>Replace existing configuration with the configuration contained in the filename specified as argument.<br/><br/>|
+
+
+
