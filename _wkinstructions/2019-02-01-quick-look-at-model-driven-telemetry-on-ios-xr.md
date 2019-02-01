@@ -662,7 +662,7 @@ The IPv6 neighbors displayed using `show ipv6 neighbors` can be streamed using t
 
 In this lab we're working with IOS-XR release `6.4.1`:  
 
-<p><pre><code>
+<div class="highlighter-rouge"><pre class="highlight"><code>
 RP/0/RP0/CPU0:r1#
 RP/0/RP0/CPU0:r1#show  version
 Mon Sep  3 09:46:31.320 UTC
@@ -682,7 +682,7 @@ cisco IOS-XRv 9000 () processor
 System uptime is 2 hours, 28 minutes
 
 RP/0/RP0/CPU0:r1#
-</code></pre></p>  
+</code></pre></div>  
 
 The required Yang models for this release are thus available here:
 <blockquote>
