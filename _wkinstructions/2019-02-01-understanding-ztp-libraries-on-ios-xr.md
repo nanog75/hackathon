@@ -16,7 +16,7 @@ tags:
 
 {% include toc %} . 
 
-Introduction: Understanding ZTP and the ZTP bash helper library
+Introduction: Understanding ZTP and the ZTP bash and Python helper libraries
 
 Zero Touch Provisioning(ZTP) is a device provisioning mechanism that allows network devices running IOS-XR to be powered-on and provisioned in a completely automated fashion. The high-level workflow for ZTP is as follows:
 
@@ -109,3 +109,139 @@ To use this library, any Bash script (or even python scripts utilizing bash call
 
 
 
+
+### ZTP Helper Python Libary
+
+The ZTP helper Python library is simply a python script that creates useful wrappers out of pre-existing IOS-XR CLI interaction binaries in the IOS-XR shell.
+
+On the router, this helper script is located at `/pkg/bin/ztp_helper.sh`.
+To use this library, any Python script  must import the `ztp_helper.py` library.  Upon import, the following python hooks become available:
+
+The ZTP python library defines a single Python class called `ZtpHelpers`. This class contains all the utility methods that are described below.
+
+
+#### ZtpHelpers class Methods:   
+
+
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Object Creation:  `__init__()`</b></p></div></div>
+
+**Purpose**: This method is invoked when the `ZtpHelpers` object is created.
+
+All of the following parameters are optional. Python's default `syslog` capability is utilized for the setting below. When nothing is specified during object creation, then all logs are sent to a log rotated file `/tmp/ztp_python.log` (max size of 1MB)
+
+<b><u>Input Parameters</u></b>
+
+* `syslog_server`: IP address of reachable Syslog Server  
+     *  <u>Parameter type</u>: `string`  
+
+
+* `syslog_port`: Port for the reachable syslog server  
+     *  <u>Parameter type</u>: `int`  
+
+
+* `syslog_file`: Alternative or add-on file to store syslog
+     *  <u>Parameter type</u>: `string`
+
+
+
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Debug Logging:  `toggle_debug()`</b></p></div></div>
+
+**Purpose**: Used to Enable/disable verbose debug logging
+
+<b><u>Input Parameters</u></b>
+
+* `enable`: Enable/Disable flag
+    * Parameter Type: `int`  
+
+
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Show/Exec CLI commands:    `xrcmd()`</b></p></div></div>
+
+**Purpose**: Issue an IOS-XR show command or exec command and obtain the output.
+
+<b><u>Input Parameters</u>
+
+* `cmd`: Dictionary representing the XR exec cmd and response to potential prompts  
+  <u>Parameter Type</u>: `dict`  
+  These values are encoded in the dict as follows<br/>`{ 'exec_cmd': '', 'prompt_response': '' }`.   
+
+  In the dictionary, `prompt_response` is an optional field meant for exec commands that require the script to answer prompts offered by the IOS-XR shell in response to `exec_cmd`.  
+
+<b><u>Return Value</u></b>  
+
+<u>Return Type</u>: `dict`  
+
+Returns a dictionary with status and output in the format:  
+`{ 'status': 'error/success', 'output': '' }`  
+
+Here `status`=`error` if an invalid exec/show command is specified as input to XR CLI and `output` is the actual `show command output` or `exec command response` in case of success.  
+
+
+
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Configuration Merge using a File: `xrapply()`</b></p></div></div>
+
+**Purpose**: Apply Configuration to XR using a local file on the router. This method does a **configuration merge**.  
+
+<b><u>Input Parameters</u></b>  
+* `filename`: Filepath for a local file containing valid IOS-XR CLI configuration  
+  * <u>Parameter Type</u>: `string`  
+
+
+* `reason`: Reason for the configuration commit. Will show up in the output of: `show configuration commit list <> detail`. **This parameter is optional.**  
+  * <u>Parameter Type</u>: `string`  
+
+<b><u>Return Value</u></b>  
+
+<u>Return Type</u>: `dict`  
+
+Dictionary specifying the effect of the config change:  
+`{ 'status' : 'error/success', 'output': 'exec command based on status'}`    
+
+* Here `status`=`error` if the configuration merge was unsuccessful and the corresponding `output` is the response of the show command = `show configuration failed`.    
+
+* Similarly, `status`=`success` if the configuration merge is successful and the corresponding `output` is the response of `show configuration commit changes last 1`  
+
+
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Configuration Merge using a String: `xrapply_string()`</b></p></div></div>
+
+**Purpose**: Apply Configuration to XR using a string. This method does a **configuration merge**.  
+
+<b><u>Input Parameters</u></b>  
+* `cmd`: Single line or Multi-Line string that contains valid IOS-XR CLI configuration.  
+ * <u>Parameter Type</u>: `string`    
+
+
+* `reason`: Reason for the configuration commit. Will show up in the output of: `show configuration commit list <> detail`.**This parameter is optional.**  
+  * <u>Parameter Type</u>: `string`  
+
+<b><u>Return Value</u></b  
+
+<u>Return Type</u>: `dict`  
+
+Dictionary specifying the effect of the config change:  
+`{ 'status' : 'error/success', 'output': 'exec command based on status'}`  
+
+* Here `status`=`error` if the configuration merge was unsuccessful and the corresponding `output` is the response of `show configuration failed`.    
+
+* Similarly, `status`=`success` if the configuration merge is successful and the corresponding `output` is the response of `show configuration commit changes last 1`  
+
+
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Configuration Replace using a file: `xrreplace()`</b></p></div></div>
+
+**Purpose**: Completely Replace existing Router configuration with the configuration specified in a file.
+
+<b><u>Input Parameters</u></b>
+
+* `filename`: Filepath for a local file containing valid IOS-XR CLI configuration  
+  * <u>Parameter Type</u>: `string`
+
+<b><u>Return Value</u></b><br/>  
+
+<u>Return Type</u>: `dict`  
+
+Dictionary specifying the effect of the config change:  
+
+`{ 'status' : 'error/success', 'output': 'exec command based on status'}`  
+
+* Here `status`=`error` if the configuration merge was unsuccessful and the corresponding `output` is the response of `show configuration failed`.  
+
+* Similarly, `status`=`success` if the configuration merge is successful and the corresponding `output` is the response of `show configuration commit changes last 1`.
