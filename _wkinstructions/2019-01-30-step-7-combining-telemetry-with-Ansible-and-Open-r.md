@@ -1,6 +1,6 @@
 ---
 published: true
-date: '2019-02-01 10:13 -0400'
+date: '2019-02-01 11:30 -0400'
 title: 'Step 7:  Combining Telemetry with Ansible and Open/R '
 author: Akshat Sharma
 tags:
