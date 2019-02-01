@@ -1,6 +1,6 @@
 ---
 published: true
-date: '2019-02-01 10:58 +0100'
+date: '2019-02-01 10:58 -0400'
 title: 'Step 6: Quick Look at IOS-XR Service-Layer API'
 author: Akshat Sharma
 excerpt: >-
