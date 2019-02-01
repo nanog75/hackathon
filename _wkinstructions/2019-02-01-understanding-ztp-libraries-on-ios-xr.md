@@ -16,7 +16,7 @@ tags:
 
 {% include toc %} . 
 
-Introduction: Understanding ZTP and the ZTP bash and Python helper libraries
+# Introduction: Understanding ZTP and the ZTP bash and Python helper libraries
 
 Zero Touch Provisioning(ZTP) is a device provisioning mechanism that allows network devices running IOS-XR to be powered-on and provisioned in a completely automated fashion. The high-level workflow for ZTP is as follows:
 
