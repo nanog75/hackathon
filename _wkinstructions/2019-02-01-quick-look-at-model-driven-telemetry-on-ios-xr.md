@@ -354,7 +354,7 @@ Finally, log back into `devbox`  and start a `tail -f` on the file `/data/dump.t
 
 
 <div class="highlighter-rouge"><p><pre class="highlight"><code>
-admin@devbox:~$ <mark>docker exec -it pipeline tail -f</mark> /data/dump.txt</mark>
+admin@devbox:~$ <mark>docker exec -it pipeline tail -f /data/dump.txt</mark>
                 "runt-packets-received": 0,
                 "seconds-since-last-clear-counters": 0,
                 "seconds-since-packet-received": 0,
