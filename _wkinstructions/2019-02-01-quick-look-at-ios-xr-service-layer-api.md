@@ -72,7 +72,7 @@ The process is depicted below:
 
 Our next set of tasks will be performed on the devbox. Connection details are explained in the beginning of this lab. SSH into devbox:  
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Username**: admin<br/>**Password**: admin<br/>**SSH port**: 2211
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Username</b>: admin<br/><b>Password</b>: admin<br/><b>SSH port</b>: 2211
 </p>  
 
 
@@ -114,7 +114,7 @@ These tools are identified in the instructions laid out on <https://grpc.io> for
 
 ><https://grpc.io/docs/tutorials/basic/python.html#generating-client-and-server-code>
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">The gRPC version that must be used for the client code is closely tied to the gRPC version used by the server code present in a given IOS-XR release.  
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">The gRPC version that must be used for the client code is closely tied to the gRPC version used by the server code present in a given IOS-XR release.  
 
 **In the IOS-XR Progammability sandbox, the routers are running IOS-XR release 6.4.1 which utilizes the gRPC version=`1.7.0`.  
 Hence `grpcio` and the `grpcio-tools` package selected for this lab will have version=`1.7.0`**
@@ -131,7 +131,7 @@ it makes sense to generate bindings using python2 and transform them to a compat
 
 Therefore, installing `grpcio-tools` and `googleapis-common-protos` first for python2 (use `pip2` to install packages for python2):  
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Ignore the warnings related to pip permissions and version. They are harmless.</p>  
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Ignore the warnings related to pip permissions and version. They are harmless.</p>  
 
 ```shell
 admin@devbox:~$ sudo pip2 install grpcio-tools==1.7.0 googleapis-common-protos
@@ -291,23 +291,23 @@ admin@devbox:genpy$
 It is important to understand what these `bindings` imply. These bindings are generated from the proto files that are described above and represent the `python` libraries that can be imported into your client code to provide the RPCs to be used to interact with the required functionality vertical.
 
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"> Perfect! We are now ready to start running existing tutorials and analyze how to write our own.</p>
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"> Perfect! We are now ready to start running existing tutorials and analyze how to write our own.</p>
 
 
 
-#  Client Code: Running existing tutorials  
+##  Client Code: Running existing tutorials  
 
 In the cloned `service-layer-objmodel` git repo, there are several python tutorials showcasing how you can connect and utilize the various RPCs defined in the proto files (and therefore in the bindings we generated in the previous section).    
 
 
-## Install grpcio and ipaddress packages
+### Install grpcio and ipaddress packages
 
 Before we try running the clients, install the necessary packages.
 The `grpcio` package is a must to actually create a channel and connect to the router over gRPC. As mentioned in the previous section, the version of gRPC used is `1.7.0`.   
 The `ipaddress` python package (or `py2-ipaddress` for python2) will be used to manage ip addresses in python for some of the client examples we intend to run.  
 
 
-### For python2
+#### For python2
 
 Version of `grpcio`=`1.7.0`. For python2, ipaddress module is actually `py2-ipaddress`. Use `pip2` to install packages for python2.
 
@@ -339,7 +339,7 @@ admin@devbox:~$
 ```
 
 
-### For Python3
+#### For Python3
 
 Version of `grpcio`=`1.7.0`. For python3, ipaddress module is just `ipaddress`. Use `pip3` to install packages for python3.
 
@@ -367,12 +367,12 @@ admin@devbox:~$
 ```
 
 
-## Running pre-packaged tutorials
+### Running pre-packaged tutorials
 
 Let's run some of the representative tutorials that are packaged along with the `service-layer-objmodel` git repo and see if things are working well. We will also run some commands on the router r1 (that we intend to connect to) in order to understand the effect of programming IOS-XR using the service-layer API.  
 
 
-### List the existing tutorials
+#### List the existing tutorials
 
 The existing tutorials are shown below in the `grpc/python/src/tutorial` directory under the git repo `service-layer-objmodel`.
 
@@ -401,10 +401,10 @@ admin@devbox:tutorial$
 
 ```
 
-<div style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><p>All the tutorials described below, expect the following environment variables to be set before running them:   
+<div style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><p>All the tutorials described below, expect the following environment variables to be set before running them:   
 <ul>
-  <li>**SERVER_IP**: IP address over which the router's gRPC server is reachable</li>
-  <li>**SERVER_PORT**: TCP port over which the router's gRPC server is reachable</li>
+  <li><b>SERVER_IP</b>: IP address over which the router's gRPC server is reachable</li>
+  <li><b>SERVER_PORT</b>: TCP port over which the router's gRPC server is reachable</li>
 </ul>  
 To set these variables, simply export them in the shell of the admin box before running the tutorials (The tutorials will ask you to if you miss this):  
 <pre><code>admin@devbox:tutorial$
@@ -427,7 +427,7 @@ Most modern programming languages (certainly python, c++, golang) have concepts 
 
 `client_init.py` will simply connect, set up a channel and disconnect. Its init code will be run inside a separate thread in the next set of tutorials that leverage it.
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Version `v0.0.1` of the Service-Layer API supports only one client connection at a time. So if another client connects to the service-layer (version `v0.0.1`), a disconnect message will be sent to the existing client over the notification channel </p>  
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Version `v0.0.1` of the Service-Layer API supports only one client connection at a time. So if another client connects to the service-layer (version `v0.0.1`), a disconnect message will be sent to the existing client over the notification channel </p>  
 
 Run `client_init.py`:  
 
@@ -461,7 +461,7 @@ Perfect, the client was able to connect to the Service-layer, set up a channel, 
 This tutorial utilizes the `client_init.py` code to maintain the notification channel for it while it proceeds to register against a particular vrf (`vrf default`). This accomplishes registration for the `Route` vertical described earlier.
 Only post registration with the Route vertical can the RIB manipulations be carried out.
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">One must register against a functionality vertical first. Only post registration, would the RPCs for that vertical work.</p>  
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">One must register against a functionality vertical first. Only post registration, would the RPCs for that vertical work.</p>  
 
 Run `vrf.py`:  
 
@@ -530,7 +530,7 @@ The `quickstart.py` tutorial uses `vrf.py` (which in turn uses `client_init.py` 
 
  To verify this, ssh into the router and do a dump of the RIB using `show route`:  
 
- <p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Username**: admin<br/>**Password**: admin<br/>**SSH port**: 2221
+ <p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Username</b>: admin<br/><b>Password</b>: admin<br/><b>SSH port</b>: 2221
  </p>  
 
  ```
@@ -583,7 +583,7 @@ The `quickstart.py` tutorial uses `vrf.py` (which in turn uses `client_init.py` 
 
  ```
 
- <p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Notice the `a` routes in the RIB. These were the routes pushed into the RIB by the `quickstart.py` client.
+ <p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Notice the `a` routes in the RIB. These were the routes pushed into the RIB by the `quickstart.py` client.
  </p>  
 
 &nbsp;<br/>
@@ -657,9 +657,9 @@ We register for the state events of three interfaces, namely:  `GigabitEthernet0
 
 You will notice that the client is still running, because it is listening for interface state events in a persistent thread. Let's trigger the shut/no-shut of interface `GigabitEthernet0/0/0/0` and see how the client reacts.
 
-Connect to the router `r1` in a separate terminal while the client is running:  
+Connect to the router `r1` in a separate terminal while the client is running and shut down interface Gig0/0/0/0:
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Username**: admin<br/>**Password**: admin<br/>**SSH port**: 2221
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Username</b>: admin<br/><b>Password</b>: admin<br/><b>SSH port</b>: 2221
 </p>  
 
 ```
@@ -671,30 +671,15 @@ Password:
 
 RP/0/RP0/CPU0:r1#
 RP/0/RP0/CPU0:r1#
-RP/0/RP0/CPU0:r1#show  ipv4 interface brief
-Sun Sep  2 01:03:17.139 UTC
-
-Interface                      IP-Address      Status          Protocol Vrf-Name
-MgmtEth0/RP0/CPU0/0            192.168.122.21  Up              Up       default
-GigabitEthernet0/0/0/0         unassigned      Shutdown        Down     default
-GigabitEthernet0/0/0/1         unassigned      Shutdown        Down     default
-GigabitEthernet0/0/0/2         unassigned      Shutdown        Down     default
-GigabitEthernet0/0/0/3         unassigned      Shutdown        Down     default
-GigabitEthernet0/0/0/4         unassigned      Shutdown        Down     default
-RP/0/RP0/CPU0:r1#
-```
-
-Notice that `GigabitEthernet0/0/0/0` is shutdown by default. Let's bring it up:
-
-```
 RP/0/RP0/CPU0:r1#
 RP/0/RP0/CPU0:r1#conf t
-Sun Sep  2 01:06:55.015 UTC
-RP/0/RP0/CPU0:r1(config)#int gigabitEthernet 0/0/0/0
-RP/0/RP0/CPU0:r1(config-if)#no shut
+Sun Sep  2 01:24:29.685 UTC
+RP/0/RP0/CPU0:r1(config)#int  gigabitEthernet 0/0/0/0
+RP/0/RP0/CPU0:r1(config-if)#shut
 RP/0/RP0/CPU0:r1(config-if)#commit
-Sun Sep  2 01:07:01.521 UTC
+Sun Sep  2 01:24:35.402 UTC
 RP/0/RP0/CPU0:r1(config-if)#
+```
 ```
 
 Hop back to the running client, and you should notice the following message show up:  
@@ -707,7 +692,7 @@ Info {
  SLIfInfo {
    Name: "GigabitEthernet0/0/0/0"
  }
- IfState: SL_IF_STATE_UP
+ IfState: SL_IF_STATE_DOWN
  SeqNum: 11
 }
 
@@ -715,10 +700,10 @@ Info {
 
  The `Received HeartBeat` messages show up as the client receives heartbeats periodically from the Server.  The event `SL_INTERFACE_EVENT_TYPE_INTERFACE_INFO` gives us more information on the type of interface event received:  
  *  It is for the interface `GigabitEthernet0/0/0/0` and   
- *  It was an `UP` event: ` IfState: SL_IF_STATE_UP`
+ *  It was a `DOWN` event: ` IfState: SL_IF_STATE_DOWN`
  *  The sequence number: `SeqNum: 11` illustrates the sequence number of this event message - can be used to correlate events in a sequence of interface events (for e.g. in case of flapping interfaces).
 
-Similarly, shut the interface `GigabitEthernet0/0/0/0` on the router and notice the `DOWN` event being streamed to the client:  
+Similarly, no-shut the interface `GigabitEthernet0/0/0/0` on the router and notice the `UP` event being streamed to the client:  
 
 **Router `r1`:**
 
@@ -727,7 +712,7 @@ RP/0/RP0/CPU0:r1#
 RP/0/RP0/CPU0:r1#conf t
 Sun Sep  2 01:24:29.685 UTC
 RP/0/RP0/CPU0:r1(config)#int  gigabitEthernet 0/0/0/0
-RP/0/RP0/CPU0:r1(config-if)#shut
+RP/0/RP0/CPU0:r1(config-if)#no shut
 RP/0/RP0/CPU0:r1(config-if)#commit
 Sun Sep  2 01:24:35.402 UTC
 RP/0/RP0/CPU0:r1(config-if)#
@@ -743,7 +728,7 @@ Info {
   SLIfInfo {
     Name: "GigabitEthernet0/0/0/0"
   }
-  IfState: SL_IF_STATE_DOWN
+  IfState: SL_IF_STATE_UP
   SeqNum: 12
 }
 
@@ -784,7 +769,7 @@ admin@devbox:tutorial$
 Hop onto router `r1` and dump the allocated label blocks:  
 
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Username**: admin<br/>**Password**: admin<br/>**SSH port**: 2221
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Username</b>: admin<br/><b>Password</b>: admin<br/><b>SSH port</b>: 2221
 </p>  
 
 ```
@@ -839,5 +824,5 @@ Of course, you get to play with the usual mpls label operations like : `PUSH`, `
 
 
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Now that we've seen the various service-layer API clients in action and their effects on the Router, let's break down the actual code in the `route.py` tutorial to learn how to write a client from scratch.
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Now that we've seen the various service-layer API clients in action and their effects on the Router, let's break down the actual code in the `route.py` tutorial to learn how to write a client from scratch.
 </p>
