@@ -95,24 +95,24 @@ admin@devbox:iosxr-devnet-cleur2019$ ls
 ansible  README.md  ztp_hooks
 admin@devbox:iosxr-devnet-cleur2019$ cd ansible/
 admin@devbox:ansible$ ls
-ansible_hosts  configure_bgp_oc_netconf.yml  docker_bringup.yml  execute_python_ztp.yml  openr  set_ipv6_route.sh  xml
+ansible_hosts  configure_bgp_netconf.yml  docker_bringup.yml  execute_python_ztp.yml  openr  set_ipv6_route.sh  xml
 admin@devbox:ansible$ 
 ```
 
-We will be using the playbook: `configure_bgp_oc_netconf.yml` which uses the netconf_config module which in turn utilizes the XML encoded data to configure BGP on routers r1 and r2:
+We will be using the playbook: `configure_bgp_netconf.yml` which uses the netconf_config module which in turn utilizes the XML encoded data to configure BGP on routers r1 and r2:
 
 The playbook is dumped below: 
 
 ```
 admin@devbox:ansible$ 
-admin@devbox:ansible$ cat configure_bgp_oc_netconf.yml 
+admin@devbox:ansible$ cat configure_bgp_netconf.yml 
 ---
 - hosts: routers_shell
   connection: local
   gather_facts: no
 
   tasks:
-  - name: set ntp server in the device
+  - name: Configure BGP on the router
     netconf_config:
       host: "{{ ansible_host }}"
       port: "{{ netconf_port }}"
@@ -285,7 +285,7 @@ With ncclient installed, execute the Ansible playbook to configure BGP on the tw
 
 
 ```
-admin@devbox:ansible$ ansible-playbook -i ansible_hosts configure_bgp_oc_netconf.yml 
+admin@devbox:ansible$ ansible-playbook -i ansible_hosts configure_bgp_netconf.yml 
 
 PLAY [routers_shell] ********************************************************************************************************************
 
