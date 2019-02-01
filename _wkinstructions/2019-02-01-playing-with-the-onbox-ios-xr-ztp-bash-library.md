@@ -1,7 +1,16 @@
 ---
-published: false
+published: true
 date: '2019-02-01 03:24 +0100'
 title: Playing with the onbox IOS-XR ZTP bash Library
+author: Akshat Sharma
+excerpt: >-
+  Play around with the onbox ZTP hooks for bash to familiarize yourself with the
+  available utilities.
+tags:
+  - iosxr
+  - cisco
+  - ztp
+  - lab
 ---
 
 # Step 1: Playing with the onbox ZTP bash hooks
