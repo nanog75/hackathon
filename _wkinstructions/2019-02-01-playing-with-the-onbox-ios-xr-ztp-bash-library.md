@@ -249,7 +249,7 @@ sysadmin-vm:0_RP0# [r1:~]$
 ```
 
 Perfect! Any admin command you would potentially want to perform (even configuration in the admin shell) can be performed using the above method - reloads, reload to ipxe, change the state of the LEDs on the box, etc. Just use a combination of `\n` to separate out individual lines meant for the admin CLI. We can now proceed with the configuration manipulation hooks.  
-
+{: .notice-success}
 
 
 ## Configuration Merge
