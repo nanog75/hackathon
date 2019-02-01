@@ -22,7 +22,7 @@ We'll choose router r1 as our test platform.
 
 ## Connect to router r1
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Username</b>: admin<br/><b>Password</b>: admin<br/><b>SSH port</b>: 2221<br/><b>IP</b>: 10.10.20.170
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Username</b>: admin<br/><b>Password</b>: admin<br/><b>SSH port</b>: 2221<br/><b>IP</b>: 10.10.20.170
 </p>  
 
 ```
@@ -229,7 +229,7 @@ Since we're on a virtual router, we can't really get environment dumps, so let's
 
 
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Running admin commands require a root-lr user to be configured on the router and an environment variable AAA_USER is used along with ZTP bash hooks to enable privilege associated with the root-lr user to gain access to the admin mode. Since the router has `admin` configured as the root-lr user, we set `AAA_USER=admin`
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Running admin commands require a root-lr user to be configured on the router and an environment variable AAA_USER is used along with ZTP bash hooks to enable privilege associated with the root-lr user to gain access to the admin mode. Since the router has `admin` configured as the root-lr user, we set `AAA_USER=admin`
 </p>  
 
 ```
@@ -266,7 +266,7 @@ xrapply_string_with_reason
 Let's try each one of these out. We've already seen the existing configuration, so let's use the config merge utilities one by one to bring up four GigabitEthernet Interfaces on r1.
 
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Important</b>: We expect the user to perform the same exact steps on r2 before we head to the next section! Remember interfaces on both the routers should be up before we try to bring up protocols on the box using a bash script we will develop in the next section</p>
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Important</b>: We expect the user to perform the same exact steps on r2 before we head to the next section! Remember interfaces on both the routers should be up before we try to bring up protocols on the box using a bash script we will develop in the next section</p>
 
 
 ### Using xrapply to bring up GigabitEthernet0/0/0/0
@@ -304,7 +304,7 @@ Now `xrapply` will add this configuration to the pre-existing configuration and 
 
 #### Source /pkg/bin/ztp_helper.sh
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">You might not need to source it if you're working in the same shell as the xrcmd command earlier.</p>
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">You might not need to source it if you're working in the same shell as the xrcmd command earlier.</p>
 
 ```
 [r1:~]$
@@ -637,7 +637,7 @@ GigabitEthernet0/0/0/4         unassigned      Shutdown        Down     default
 ## Configuration Replace
 
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Very Very Important</b>: Configuration Replace can be potentially dangerous. If you make a mistake with the type of configuration you want to enforce, you can potentially lose connectivity to the router. So make sure you take precautions to ensure the final config is what you want at the end of the process</p>
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Very Very Important</b>: Configuration Replace can be potentially dangerous. If you make a mistake with the type of configuration you want to enforce, you can potentially lose connectivity to the router. So make sure you take precautions to ensure the final config is what you want at the end of the process</p>
 
 
 We will not be attempting an xrreplace as part of this lab. But The basic workflow for using `xrreplace` is the same as `xrapply`. Provide a file containing the config to `xrreplace` and upon execution it will replace the entire configuration on the router with the configuration specified in the file. 
