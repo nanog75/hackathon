@@ -13,7 +13,7 @@ tags:
   - lab
 ---
 
-
+{% include toc %}
 
 >Have a look at the set of Service-Layer learning labs on DevNet for more details on the Service-Layer 
 >API, associated configuration, details on writing your own gRPC clients in pythonm, c++ and more. 
