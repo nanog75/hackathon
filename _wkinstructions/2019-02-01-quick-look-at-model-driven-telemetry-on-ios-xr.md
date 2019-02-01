@@ -921,7 +921,7 @@ admin@devbox:641$
 
 From the above dump, it becomes fairly clear that we intend to extract the following set of nodes from the model to match the information in the `show ipv6 neighbors` output:  
 
-<p><pre><code>
+<div class="highlighter-rouge"><pre class="highlight"><code>
 <mark>module: Cisco-IOS-XR-ipv6-nd-oper</mark>
    <mark>+--ro ipv6-node-discovery</mark>
       <mark>+--ro nodes</mark>
@@ -942,9 +942,9 @@ From the above dump, it becomes fairly clear that we intend to extract the follo
             |     |     +--ro location?                 xr:Node-id
             |     |     +--ro is-router?                boolean
             |     |     +--ro serg-flags?               uint32
-            |     |     +--ro vrfid?                    uint32</mark>
+            |     |     +--ro vrfid?                    uint32
 
-</code></pre></p>
+</code></pre></div>
 
 
 ### Setting up the Telemetry configuration  
@@ -962,7 +962,7 @@ telemetry model-driven
 
 Creating a subscription out of this path to stream the data every 15 seconds, we get the following additional configuration:
 
-<p><pre><code>
+<div class="highlighter-rouge"><pre class="highlight"><code>
 telemetry model-driven
  sensor-group IPV6Neighbor
   sensor-path Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address
@@ -971,7 +971,7 @@ telemetry model-driven
   sensor-group-id IPV6Neighbor sample-interval 15000</mark>
  !
 !
-</code></pre></p>
+</code></pre></div>
 
 
 
