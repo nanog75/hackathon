@@ -52,3 +52,243 @@ So, why do we need another API? A couple of customer(unnamed) quotes for your co
 
 >“I have my own controller/protocol, just give me complete access to the infrastructure underneath”
 
+
+
+
+## Client Code: Install gRPC and regenerate bindings
+
+We will develop and run the service-layer python clients on the `devbox`. The sl-api client will connect to the router over gRPC. So, the steps we intend to perform as part of this section are:
+
+*  **Install the protoc compiler** `python-pip` provides protoc using a `grpc-tools` package that we intend to use. Alternatively `protoc` can be built using protobuf:3.5.0 package from github.  
+
+*  Provide the model (.proto) files to the compiler and **generate bindings** (i.e. actual code in the form of .py files from the .proto files). This generated code is then used as a set of libraries to create our own client code.  
+
+The process is depicted below:  
+
+![protoc_compilation](assets/images/protoc_compilation.png)
+
+
+### Connect to the Devbox
+
+Our next set of tasks will be performed on the devbox. Connection details are explained in the beginning of this lab. SSH into devbox:  
+
+<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Username**: admin<br/>**Password**: admin<br/>**SSH port**: 2211
+</p>  
+
+
+```
+Laptop-Terminal:$ ssh -p 2211 admin@10.10.20.170
+admin@10.10.20.170's password:
+Last login: Sun Aug 26 19:18:39 2018 from 192.168.122.1
+admin@devbox:~$
+admin@devbox:~$
+
+```  
+
+
+### Clone the Service-Layer Object Model Repository  
+
+As described in the 1st lab of this module, titled: `Service-Layer APIs: Bring your own Protocol/Controller`, the Service-Layer API is model-driven and uses protobuf IDLs to represent the models. These proto definitions can be found here:    
+
+><https://github.com/Cisco-Service-Layer/service-layer-objmodel/tree/master/grpc/protos>  
+
+Clone this git repository onto the devbox. We will clone the release `v0.0.1`.
+
+```
+admin@devbox:~$ git clone https://github.com/Cisco-Service-Layer/service-layer-objmodel.git -b v0.0.1
+Cloning into 'service-layer-objmodel'...
+remote: Counting objects: 402, done.
+remote: Compressing objects: 100% (45/45), done.
+remote: Total 402 (delta 42), reused 44 (delta 25), pack-reused 332
+Receiving objects: 100% (402/402), 7.60 MiB | 3.01 MiB/s, done.
+Resolving deltas: 100% (214/214), done.
+Checking connectivity... done.
+admin@devbox:~$
+```  
+
+### Install the Protobuf compiler
+
+For `python`, the protobuf compiler (protoc) utility is packaged into the following pip-installable tool: `grpcio-tools`. We also need to install the tool `googleapis-common-protos` which contains python classes generated from protos in the [googleapis](https://github.com/googleapis/googleapis) repository.   
+
+These tools are identified in the instructions laid out on <https://grpc.io> for python client/server code generation:
+
+><https://grpc.io/docs/tutorials/basic/python.html#generating-client-and-server-code>
+
+<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">The gRPC version that must be used for the client code is closely tied to the gRPC version used by the server code present in a given IOS-XR release.  
+
+**In the IOS-XR Progammability sandbox, the routers are running IOS-XR release 6.4.1 which utilizes the gRPC version=`1.7.0`.  
+Hence `grpcio` and the `grpcio-tools` package selected for this lab will have version=`1.7.0`**
+</p>    
+
+### Install grpc tools
+
+The goal is to create bindings that are compatible for both python2 and python3 environments.  
+
+Owing to this issue:   
+ ><https://github.com/protocolbuffers/protobuf/issues/1491>
+
+it makes sense to generate bindings using python2 and transform them to a compatible state for python3 using the tool: `2to3`.  
+
+Therefore, installing `grpcio-tools` and `googleapis-common-protos` first for python2 (use `pip2` to install packages for python2):  
+
+<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Ignore the warnings related to pip permissions and version. They are harmless.</p>  
+
+```shell
+admin@devbox:~$ sudo pip2 install grpcio-tools==1.7.0 googleapis-common-protos
+The directory '/home/admin/.cache/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+The directory '/home/admin/.cache/pip' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+Collecting grpcio-tools==1.7.0
+  Downloading https://files.pythonhosted.org/packages/0e/c3/d9a9960f12e0bab789da875b1c9a3eb348b51fa3af9544c1edd1f7ef6000/grpcio_tools-1.7.0-cp27-cp27mu-manylinux1_x86_64.whl (21.3MB)
+    100% |████████████████████████████████| 21.3MB 47kB/s
+Collecting googleapis-common-protos
+  Downloading https://files.pythonhosted.org/packages/00/03/d25bed04ec8d930bcfa488ba81a2ecbf7eb36ae3ffd7e8f5be0d036a89c9/googleapis-common-protos-1.5.3.tar.gz
+Requirement already satisfied (use --upgrade to upgrade): protobuf>=3.3.0 in /usr/local/lib/python2.7/dist-packages (from grpcio-tools==1.7.0)
+Collecting grpcio>=1.7.0 (from grpcio-tools==1.7.0)
+  Downloading https://files.pythonhosted.org/packages/b5/84/c0d0a0355f2e3ea1e49fd81aa123e0bf42bfaa58be56583cc3b9baaf2837/grpcio-1.14.1-cp27-cp27mu-manylinux1_x86_64.whl (9.2MB)
+    100% |████████████████████████████████| 9.2MB 120kB/s
+Requirement already satisfied (use --upgrade to upgrade): setuptools in /usr/lib/python2.7/dist-packages (from protobuf>=3.3.0->grpcio-tools==1.7.0)
+Requirement already satisfied (use --upgrade to upgrade): six>=1.9 in /usr/lib/python2.7/dist-packages (from protobuf>=3.3.0->grpcio-tools==1.7.0)
+Requirement already satisfied (use --upgrade to upgrade): enum34>=1.0.4 in /usr/lib/python2.7/dist-packages (from grpcio>=1.7.0->grpcio-tools==1.7.0)
+Requirement already satisfied (use --upgrade to upgrade): futures>=2.2.0 in /usr/local/lib/python2.7/dist-packages (from grpcio>=1.7.0->grpcio-tools==1.7.0)
+Installing collected packages: grpcio, grpcio-tools, googleapis-common-protos
+  Running setup.py install for googleapis-common-protos ... done
+Successfully installed googleapis-common-protos-1.5.3 grpcio-1.14.1 grpcio-tools-1.7.0
+You are using pip version 8.1.1, however version 18.0 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+admin@devbox:~$
+admin@devbox:~$
+
+
+```
+
+### View .proto files (models)  
+
+Let's take a look at the `.proto` files that are packaged as part of the cloned repository:  
+
+
+```
+admin@devbox:$ cd service-layer-objmodel
+admin@devbox:service-layer-objmodel$ pwd
+/home/admin/service-layer-objmodel
+admin@devbox:service-layer-objmodel$ cd grpc/protos/
+admin@devbox:protos$ ls -l
+total 116
+-rw-rw-r-- 1 admin admin  4810 Aug 27 04:40 sl_bfd_common.proto
+-rw-rw-r-- 1 admin admin  6918 Aug 27 04:40 sl_bfd_ipv4.proto
+-rw-rw-r-- 1 admin admin  6916 Aug 27 04:40 sl_bfd_ipv6.proto
+-rw-rw-r-- 1 admin admin 23285 Aug 27 04:40 sl_common_types.proto
+-rw-rw-r-- 1 admin admin  6150 Aug 27 04:40 sl_global.proto
+-rw-rw-r-- 1 admin admin  8068 Aug 27 04:40 sl_interface.proto
+-rw-rw-r-- 1 admin admin 17521 Aug 27 04:40 sl_mpls.proto
+-rw-rw-r-- 1 admin admin  9912 Aug 27 04:40 sl_route_common.proto
+-rw-rw-r-- 1 admin admin  7203 Aug 27 04:40 sl_route_ipv4.proto
+-rw-rw-r-- 1 admin admin  7165 Aug 27 04:40 sl_route_ipv6.proto
+-rw-rw-r-- 1 admin admin   713 Aug 27 04:40 sl_version.proto
+admin@devbox:protos$ ls
+```
+
+Briefly, these protobuf models cover the following capabilities:  
+
+
+|Functionality Vertical|Proto File|Supported RPCs|
+|:---------------------|:---------|:-------------|
+|Common across Verticals|`sl_common_types.proto`|<br/>Defines common data structures for all verticals, such as Error codes, Operation codes (registration, notification etc.), and structures for XR interfaces and ip-addresses.<br/><br/>|
+|Common across Verticals|`sl_version.proto`|<br/>Contains an enum specifying the current Version of SL-API. <br/>Current Version=`v0.0.1`<br/><br/>|
+|Initialization|`sl_global.proto`|<br/>RPCs to fetch global information related to different functionality verticals and global limits and to create and mantain an initialization channel with IOS-XR service-layer over gRPC<br/><br/>|
+|Interface|`sl_interface.proto`|<br/>RPCs and data structures(messages) to get global and specific interface states, to enable/disable event notifications for specific interfaces and to register for interface state events<br/><br/> |
+|MPLS|`sl_mpls.proto`|<br/>RPCs to register against the MPLS vertical, allocate or delete label blocks and manipulate ILM (incoming Label Map) to forwarding function entries. It also defines all the data structures used by the MPLS vertical's RPCs<br/><br/>|
+|Route|`sl_route_common.proto`|<br/>Defines data structures (messages) that are used by the Route vertical's RPCs. These data structures include Registration objects (to register against the route vertical for a given VRF), VRF objects, and common Router and Path objects utilized by both IPv4 and IPv6 Route proto files.<br/><br/>  |
+|Route|`sl_route_ipv4.proto`|<br/>Defines the RPC calls for IPv4 route changes (adding, deleting and getting IPv4 routes) and VRF registration - essential before one can manipulate routes in the IOS-XR RIB.<br/><br/>|
+|Route|`sl_route_ipv6.proto`|<br/>Defines the RPC calls for IPv6 route changes (adding, deleting and getting IPv6 routes) and VRF registration - essential before one can manipulate routes in the IOS-XR RIB.<br/><br/>|
+|BFD|`sl_bfd_common.proto`|<br/>Defines data structures (messages) that are used by the BFD vertical's RPCs. These data structures include Registration objects (to register against the BFD vertical), State Objects (to identify a BFD event), Get objects and Set(Tx Interval Manipulation) Objects.<br/><br/>|
+|BFD |`sl_bfd_ipv4.proto`|<br/>Defines the RPCs for adding, deleting, updating, and retrieving BFD sessions: used for IPv4 BFD registrations, and BFD session operations and notifications.<br/><br/>|
+|BFD|`sl_bfd_ipv6.proto`|<br/>Defines the RPCs for adding, deleting, updating, and retrieving BFD sessions: used for IPv6 BFD registrations, and BFD session operations and notifications.<br/><br/>|
+
+### Generate Python bindings
+
+Hop into the `grpc/python` directory under the cloned git repo. You will find the `gen-bindings.sh` script.  
+
+The contents of this script are dumped below:  
+
+```
+admin@devbox:python$ pwd
+/home/admin/service-layer-objmodel/grpc/python
+admin@devbox:python$
+admin@devbox:python$ cat gen-bindings.sh
+#!/bin/bash
+#
+# Copyright (c) 2016 by cisco Systems, Inc.
+# All rights reserved.
+#
+
+#Clean up the Bindings first
+rm -rf ./src/genpy/*
+touch ./src/genpy/__init__.py
+
+cd ../protos
+printf "Generating Python bindings..."
+
+for proto_file in *.proto
+do
+  python -m grpc_tools.protoc -I ./ --python_out=../python/src/genpy/ --grpc_python_out=../python/src/genpy/ $proto_file
+done
+cd ../python/src/genpy
+2to3 -w * >/dev/null 2>&1
+echo "Done"
+admin@devbox:python$
+
+```
+
+It can be seen that the `gen-bindings.sh` script first cleans up the existing `genpy/` directory where the bindings will be created and then proceeds to loop through the proto files running the `protoc` utility from the `grpc_tools` package.   
+Once done, the `2to3` tool is run to convert all the generated bindings under `genpy/` from `only-python2` to `python2-and-python3` compatible.    
+
+```
+admin@devbox:python$
+admin@devbox:python$ ./gen-bindings.sh
+Generating Python bindings...Done
+admin@devbox:python$
+
+```  
+
+Once the `gen-bindings.sh` script has been run, jump to the `genpy` folder and you should see the generated bindings:  
+
+```
+admin@devbox:python$
+admin@devbox:python$ pwd
+/home/admin/service-layer-objmodel/grpc/python
+admin@devbox:python$
+admin@devbox:python$ cd src/genpy/
+admin@devbox:genpy$
+admin@devbox:genpy$ ls -l
+total 384
+-rw-rw-r-- 1 admin admin     0 Aug 27 03:30 __init__.py
+-rw-rw-r-- 1 admin admin    83 Aug 27 03:30 sl_bfd_common_pb2_grpc.py
+-rw-rw-r-- 1 admin admin 19890 Aug 27 03:30 sl_bfd_common_pb2.py
+-rw-rw-r-- 1 admin admin  7457 Aug 27 03:30 sl_bfd_ipv4_pb2_grpc.py
+-rw-rw-r-- 1 admin admin 25091 Aug 27 03:30 sl_bfd_ipv4_pb2.py
+-rw-rw-r-- 1 admin admin  7457 Aug 27 03:30 sl_bfd_ipv6_pb2_grpc.py
+-rw-rw-r-- 1 admin admin 25105 Aug 27 03:30 sl_bfd_ipv6_pb2.py
+-rw-rw-r-- 1 admin admin    83 Aug 27 03:30 sl_common_types_pb2_grpc.py
+-rw-rw-r-- 1 admin admin 44543 Aug 27 03:30 sl_common_types_pb2.py
+-rw-rw-r-- 1 admin admin  3398 Aug 27 03:30 sl_global_pb2_grpc.py
+-rw-rw-r-- 1 admin admin 16448 Aug 27 03:30 sl_global_pb2.py
+-rw-rw-r-- 1 admin admin  7477 Aug 27 03:30 sl_interface_pb2_grpc.py
+-rw-rw-r-- 1 admin admin 30041 Aug 27 03:30 sl_interface_pb2.py
+-rw-rw-r-- 1 admin admin 10917 Aug 27 03:30 sl_mpls_pb2_grpc.py
+-rw-rw-r-- 1 admin admin 45631 Aug 27 03:30 sl_mpls_pb2.py
+-rw-rw-r-- 1 admin admin    83 Aug 27 03:30 sl_route_common_pb2_grpc.py
+-rw-rw-r-- 1 admin admin 28853 Aug 27 03:30 sl_route_common_pb2.py
+-rw-rw-r-- 1 admin admin 10197 Aug 27 03:30 sl_route_ipv4_pb2_grpc.py
+-rw-rw-r-- 1 admin admin 20694 Aug 27 03:30 sl_route_ipv4_pb2.py
+-rw-rw-r-- 1 admin admin 10197 Aug 27 03:30 sl_route_ipv6_pb2_grpc.py
+-rw-rw-r-- 1 admin admin 20715 Aug 27 03:30 sl_route_ipv6_pb2.py
+-rw-rw-r-- 1 admin admin    83 Aug 27 03:30 sl_version_pb2_grpc.py
+-rw-rw-r-- 1 admin admin  2204 Aug 27 03:30 sl_version_pb2.py
+admin@devbox:genpy$
+
+```    
+
+It is important to understand what these `bindings` imply. These bindings are generated from the proto files that are described above and represent the `python` libraries that can be imported into your client code to provide the RPCs to be used to interact with the required functionality vertical.
+
+
+<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"> Perfect! We are now ready to start running existing tutorials and analyze how to write our own.</p>
