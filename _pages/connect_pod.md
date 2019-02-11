@@ -10,12 +10,14 @@ author_profile: true
 
 ### Reserve the IOS-XR Programmability sandbox
 
-Take some time to reserve and familiarize yourself with the [IOS-XR programmability Sandbox on Devnet](https://devnetsandbox.cisco.com/RM/Diagram/Index/883f8ea6-54a1-453e-98f5-fc175a2a90de?diagramType=Topology).
+Take some time to reserve and familiarize yourself with the  
+>[**IOS-XR programmability Sandbox on Devnet**](https://devnetsandbox.cisco.com/RM/Diagram/Index/883f8ea6-54a1-453e-98f5-fc175a2a90de?diagramType=Topology).  
+
 Getting started is pretty straightforward - once you hit the above URL, click on the `Reserve` button on the top right:
 
 <img src="{{ base_path }}/images/reserve_button.png" alt="reserve_button" width="250px"/>
-<p style="margin: 2em 0 !important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"> You will need to be logged in to <https://devnetsandbox.cisco.com/> before you can reserve.
-</p>
+You will need to be logged in to <https://devnetsandbox.cisco.com/> before you can reserve.
+{: .notice--warning}
 
 As part of the reservation, select the duration for which you'd like to reserve the sandbox (maximum duration = 1 week).
 
@@ -97,9 +99,9 @@ Just hover over a node in the topology and hit `SSH` from the dropdown menu. Thi
 
 <img src="{{ base_path }}/images/sandbox_connect-compressor.gif" alt="reserve_button" width="800px"/>
 
-<p style="margin: 2em 0 !important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Pro Tip**: This browser based session uses [Guacamole](https://guacamole.apache.org/) on the server side to serve up the SSH connection. If you'd like to enable easy copy-paste from your laptop/machine into the session in the browser, then use `Chrome` as your browser and install the following [plugin](https://chrome.google.com/webstore/detail/clipboard-permission-mana/ipbhneeanpgkaleihlknhjiaamobkceh?hl=en). Once installed, then within the browser tab that has the SSH session open, enable clipboard copying by clicking the plugin icon on the top right and allowing clipboard permissions for the particular host/IP as shown below:
-<br/><img src="{{ base_path }}/images/enable_clipboard.png" alt="reserve_button" width="300px"/>
-</p>
+**Pro Tip**: This browser based session uses [Guacamole](https://guacamole.apache.org/) on the server side to serve up the SSH connection. If you'd like to enable easy copy-paste from your laptop/machine into the session in the browser, then use `Chrome` as your browser and install the following [plugin](https://chrome.google.com/webstore/detail/clipboard-permission-mana/ipbhneeanpgkaleihlknhjiaamobkceh?hl=en). Once installed, then within the browser tab that has the SSH session open, enable clipboard copying by clicking the plugin icon on the top right and allowing clipboard permissions for the particular host/IP as shown below:    
+<img src="{{ base_path }}/images/enable_clipboard.png" alt="reserve_button" width="300px"/>
+{: .notice--info}
 
 &nbsp;  
 
@@ -110,8 +112,10 @@ If you have a 3rd party SSH client, use the SSH ports as described in the previo
 
 #### Terminal:  
 If you have a Terminal to work with (with an SSH client utility), then to connect to the **devbox**, run:
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Username**: admin<br/>**Password**: admin<br/>**SSH port**: 2211
-</p>  
+**Username**: admin   
+**Password**: admin  
+**SSH port**: 2211  
+{: .notice--info}
 
 ```
 Laptop-terminal:$ ssh -p 2211 admin@10.10.20.170
@@ -124,8 +128,10 @@ admin@devbox:~$
 
 Or to connect to **router r1**:  
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Username**: admin<br/>**Password**: admin<br/>**SSH port**: 2221
-</p>  
+**Username**: admin  
+**Password**: admin   
+**SSH port**: 2221 
+{: .notice--info}
 
 ```
 Laptop-terminal:$ ssh -p 2221 admin@10.10.20.170
@@ -165,5 +171,5 @@ RP/0/RP0/CPU0:r1#
 ```
 
 
-<p style="margin: 2em 0!important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Perfect! You are now all set to start this lab.
-</p>  
+Perfect! You are now all set to start this lab.
+{: .notice--success} 
