@@ -33,7 +33,7 @@ In this lab we will look at a few of them:
 >Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active. 
 >
 > If you haven't connected yet, check out the instructions to do so here: 
-><https://iosxr-lab-ciscolive.github.io/LTRSPG-2414-cleur2019/assets/CLEUR19-AkshatSharma-IOS-XR-Programmability-Session-1-Friday.pdf>
+><https://sevt-sp.github.io/xr-programmability-lab/connect-to-pods/>
 >
 >
 > Once you're connected, use the following instructions to connect to the individual nodes.
@@ -90,10 +90,10 @@ admin@10.10.20.170's password:
 Last login: Tue Jan 29 18:35:38 2019 from 192.168.122.1
 admin@devbox:~$ 
 admin@devbox:~$ 
-admin@devbox:~$ cd iosxr-LTRSPG-2414-cleur2019/
-admin@devbox:iosxr-LTRSPG-2414-cleur2019$ ls
+admin@devbox:~$ cd xr-programmability-lab-code/
+admin@devbox:xr-programmability-lab-code$ ls
 ansible  README.md  ztp_hooks
-admin@devbox:iosxr-LTRSPG-2414-cleur2019$ cd ansible/
+admin@devbox:xr-programmability-lab-code$ cd ansible/
 admin@devbox:ansible$ ls
 ansible_hosts  configure_bgp_netconf.yml  docker_bringup.yml  execute_python_ztp.yml  openr  set_ipv6_route.sh  xml
 admin@devbox:ansible$ 
@@ -379,8 +379,8 @@ Jump into the `ydk` directory in the clone github repository:
 
 
 ```
-admin@devbox:~$ cd ~/iosxr-LTRSPG-2414-cleur2019/
-admin@devbox:iosxr-LTRSPG-2414-cleur2019$ cd ydk/
+admin@devbox:~$ cd ~/xr-programmability-lab-code/
+admin@devbox:xr-programmability-lab-code$ cd ydk/
 admin@devbox:ydk$ 
 ```
 
