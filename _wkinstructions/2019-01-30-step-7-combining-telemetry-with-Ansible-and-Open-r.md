@@ -31,7 +31,7 @@ In this workshop we will look at a few of them:
 >Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active. 
 >
 > If you haven't connected yet, check out the instructions to do so here: 
-><https://iosxr-lab-ciscolive.github.io/LTRSPG-2414-cleur2019/assets/CLEUR19-AkshatSharma-IOS-XR-Programmability-Session-1-Friday.pdf>
+><https://sevt-sp.github.io/xr-programmability-lab/connect-to-pods/>
 >
 >
 > Once you're connected, use the following instructions to connect to the individual nodes.
@@ -153,16 +153,16 @@ We will use Ansible to deploy Open/R as docker instances to the routers r1 and r
 
 To view the relevant config files, **open a new shell** on the devbox with the telemetry client running in the earlier shell. 
 
-Drop into the `ansible/openr` folder in the original `iosxr-LTRSPG-2414-cleur2019` git repository you cloned earlier: 
+Drop into the `ansible/openr` folder in the original `xr-programmability-lab-code` git repository you cloned earlier: 
 
 
 ```
-admin@devbox:~$ cd iosxr-LTRSPG-2414-cleur2019/
-admin@devbox:iosxr-LTRSPG-2414-cleur2019$ ls
+admin@devbox:~$ cd xr-programmability-lab-code/
+admin@devbox:xr-programmability-lab-code$ ls
 ansible  README.md  ydk  ztp_hooks
-admin@devbox:iosxr-LTRSPG-2414-cleur2019$ 
-admin@devbox:iosxr-LTRSPG-2414-cleur2019$ 
-admin@devbox:iosxr-LTRSPG-2414-cleur2019$ cd ansible/openr/
+admin@devbox:xr-programmability-lab-code$ 
+admin@devbox:xr-programmability-lab-code$ 
+admin@devbox:xr-programmability-lab-code$ cd ansible/openr/
 admin@devbox:openr$ 
 admin@devbox:openr$ ls
 hosts_r1  increment_ipv4_prefix1.py  launch_openr_r1.sh  run_openr_r1.sh
@@ -189,13 +189,13 @@ admin@devbox:openr$
 ### Ansible Playbook to deploy Open/R
 
 
-The Ansible playbook we intend to use can be found in the `ansible` directory  of the `iosxr-LTRSPG-2414-cleur2019` git repository:  
+The Ansible playbook we intend to use can be found in the `ansible` directory  of the `xr-programmability-lab-code` git repository:  
 
 
 ```
 admin@devbox:~$ 
-admin@devbox:~$ cd ~/iosxr-LTRSPG-2414-cleur2019/
-admin@devbox:iosxr-LTRSPG-2414-cleur2019$ cd ansible/
+admin@devbox:~$ cd ~/xr-programmability-lab-code/
+admin@devbox:xr-programmability-lab-code$ cd ansible/
 admin@devbox:ansible$ 
 admin@devbox:ansible$ cat docker_bringup.yml 
 ---
