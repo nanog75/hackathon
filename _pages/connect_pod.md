@@ -1,15 +1,17 @@
+{% include base_path %}
+
 ### Reserve the IOS-XR Programmability sandbox
 
 Take some time to reserve and familiarize yourself with the [IOS-XR programmability Sandbox on Devnet](https://devnetsandbox.cisco.com/RM/Diagram/Index/883f8ea6-54a1-453e-98f5-fc175a2a90de?diagramType=Topology).
 Getting started is pretty straightforward - once you hit the above URL, click on the `Reserve` button on the top right:
 
-<img src="assets/images/reserve_button.png" alt="reserve_button" width="250px"/>
+<img src="{{ base_path }}/images/reserve_button.png" alt="reserve_button" width="250px"/>
 <p style="margin: 2em 0 !important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"> You will need to be logged in to <https://devnetsandbox.cisco.com/> before you can reserve.
 </p>
 
 As part of the reservation, select the duration for which you'd like to reserve the sandbox (maximum duration = 1 week).
 
-<img src="assets/images/reserve_duration.png" alt="reserve_button" width="400px"/>.
+<img src="{{ base_path }}/images/reserve_duration.png" alt="reserve_button" width="400px"/>.
 
 <p style="margin: 2em 0 !important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"> To view the dropdown menu with variable reservation options, hit the edit button (pencil icon) next to schedule. Once your reservation is active, you can keep extending the duration if you start running out of time (with the maximum limit set to a total time of 1 week)</p>
 
@@ -22,7 +24,7 @@ These instructions and more are detailed here: [Reserving and Connecting to a De
 
 Once you're connected to the Anyconnect server:
 
-<br/><img src="assets/images/anyconnect.png" alt="reserve_button" width="300px"/><br/>
+<br/><img src="{{ base_path }}/images/anyconnect.png" alt="reserve_button" width="300px"/><br/>
 
 You should be able to ping the address: `10.10.20.170` which represents the External NAT address of the virtualization host on which the IOS-XRv9000 instances and the development environment (devbox) are running.  
 
@@ -31,7 +33,7 @@ More details can be found at the [IOS-XR programmability Sandbox](https://devnet
 
 The topology that you will have access to is shown below:    
 
-<br/><img src="assets/images/iosxr-programmability-sandbox-topo.png" alt="reserve_button" width="800px"/><br/><br/>
+<br/><img src="{{ base_path }}/images/iosxr-programmability-sandbox-topo.png" alt="reserve_button" width="800px"/><br/><br/>
 
 You have SSH access to each of the virtual machines - the two IOS-XRv9000 instances (r1 and r2) and the devbox (an Ubuntu 16.04 instance for access to a development environment).
 
@@ -85,10 +87,10 @@ If you don't have an SSH Client or Terminal available on your Laptop/Machine tha
 Just hover over a node in the topology and hit `SSH` from the dropdown menu. This is shown below for the `devbox`:
 
 
-<img src="assets/images/sandbox_connect-compressor.gif" alt="reserve_button" width="800px"/>
+<img src="{{ base_path }}/images/sandbox_connect-compressor.gif" alt="reserve_button" width="800px"/>
 
 <p style="margin: 2em 0 !important;padding: 1em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 1em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">**Pro Tip**: This browser based session uses [Guacamole](https://guacamole.apache.org/) on the server side to serve up the SSH connection. If you'd like to enable easy copy-paste from your laptop/machine into the session in the browser, then use `Chrome` as your browser and install the following [plugin](https://chrome.google.com/webstore/detail/clipboard-permission-mana/ipbhneeanpgkaleihlknhjiaamobkceh?hl=en). Once installed, then within the browser tab that has the SSH session open, enable clipboard copying by clicking the plugin icon on the top right and allowing clipboard permissions for the particular host/IP as shown below:
-<br/><img src="assets/images/enable_clipboard.png" alt="reserve_button" width="300px"/>
+<br/><img src="{{ base_path }}/images/enable_clipboard.png" alt="reserve_button" width="300px"/>
 </p>
 
 &nbsp;  
