@@ -10,7 +10,7 @@ author_profile: true
 
 ### Reserve the IOS-XR Programmability sandbox
 
-Take some time to reserve and familiarize yourself with the  
+Take some time to reserve and familiarize yourself with: 
 >[**IOS-XR programmability Sandbox on Devnet**](https://devnetsandbox.cisco.com/RM/Diagram/Index/883f8ea6-54a1-453e-98f5-fc175a2a90de?diagramType=Topology).  
 
 Getting started is pretty straightforward - once you hit the above URL, click on the `Reserve` button on the top right:
