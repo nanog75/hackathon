@@ -1,3 +1,10 @@
+---
+layout: archive
+title: "Collections"
+permalink: /connect-to-pods/
+author_profile: true 
+---
+
 {% include base_path %}
 
 ### Reserve the IOS-XR Programmability sandbox
