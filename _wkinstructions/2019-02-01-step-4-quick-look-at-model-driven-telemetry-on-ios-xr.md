@@ -63,7 +63,7 @@ Pipeline can stream data to several different consumers. Supported downstream co
 >Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active. 
 >
 > If you haven't connected yet, check out the instructions to do so here: 
-><https://iosxr-lab-ciscolive.github.io/LTRSPG-2414-cleur2019/assets/CLEUR19-AkshatSharma-IOS-XR-Programmability-Session-1-Friday.pdf>
+><https://sevt-sp.github.io/xr-programmability-lab/connect-to-pods/>
 >
 >
 > Once you're connected, use the following instructions to connect to the individual nodes.
