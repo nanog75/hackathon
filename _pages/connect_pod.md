@@ -1,11 +1,12 @@
 ---
 layout: single
-title: "Collections"
+title: "Reserving and Connecting to Devnet Pods"
 permalink: /connect-to-pods/
 author_profile: true 
 ---
 
 {% include base_path %}
+{% include toc %}
 
 ### Reserve the IOS-XR Programmability sandbox
 
