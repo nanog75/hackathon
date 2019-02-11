@@ -8,7 +8,7 @@
 # Site Settings
 locale                   : "en-US"
 title                    : "IOS-XR Programmability Lab SP SEVT Feb-2019"
-title_short              : "IOSXR-LTRSPG2414-CLEUR2019"
+title_short              : "IOSXR-SEVT-FEB19"
 title_separator          : "|"
 name                     : &name "Cisco Systems Inc"
 description              : &description "Welcome to the Feb 2019 SEVT Lab for IOS-XR programmability!"
