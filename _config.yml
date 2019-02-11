@@ -7,14 +7,14 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "IOS-XR Programmability Lab LTRSPG-2414 CLEUR-2019"
+title                    : "IOS-XR Programmability Lab SP SEVT Feb-2019"
 title_short              : "IOSXR-LTRSPG2414-CLEUR2019"
 title_separator          : "|"
 name                     : &name "Cisco Systems Inc"
-description              : &description "Welcome to the Cisco Live Europe 2019 Lab (LTRSPG-2414) for IOS-XR programmability!"
-url                      : "https://iosxr-lab-ciscolive.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
-baseurl                  : "/LTRSPG-2414-cleur2019" # the subpath of your site, e.g. "/blog"
-gh_repo                  : "https://github.com/iosxr-lab-ciscolive/LTRSPG-2414-cleur2019"
+description              : &description "Welcome to the Feb 2019 SEVT Lab for IOS-XR programmability!"
+url                      : "https://sevt-sp.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+baseurl                  : "/xr-programmability-lab" # the subpath of your site, e.g. "/blog"
+gh_repo                  : "https://github.com/sevt-sp/xr-programmability-lab"
 teaser                   : # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
 breadcrumbs              : true # true, false (default)
 words_per_minute         : 200
