@@ -27,7 +27,7 @@ Complete CLI support:
 >Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active. 
 >
 > If you haven't connected yet, check out the instructions to do so here: 
-><https://iosxr-lab-ciscolive.github.io/LTRSPG-2414-cleur2019/assets/CLEUR19-AkshatSharma-IOS-XR-Programmability-Session-1-Friday.pdf>
+><https://sevt-sp.github.io/xr-programmability-lab/connect-to-pods/>
 >
 >
 > Once you're connected, use the following instructions to connect to the individual nodes.
@@ -76,7 +76,7 @@ The Topology in use is shown below:
 ## SSH into the devbox 
 
 Drop into the devbox using the credentials above and clone the following git repository:
-><https://github.com/iosxr-lab-ciscolive/iosxr-LTRSPG-2414-cleur2019> 
+><https://github.com/sevt-sp/xr-programmability-lab-code> 
 
 
 
@@ -89,8 +89,8 @@ Last login: Tue Jan 29 18:33:43 2019 from 192.168.122.1
 admin@devbox:~$ 
 admin@devbox:~$ 
 admin@devbox:~$ 
-admin@devbox:~$ git clone https://github.com/iosxr-lab-ciscolive/iosxr-LTRSPG-2414-cleur2019.git
-Cloning into 'iosxr-LTRSPG-2414-cleur2019'...
+admin@devbox:~$ git clone https://github.com/sevt-sp/xr-programmability-lab-code.git
+Cloning into 'xr-programmability-lab-code'...
 remote: Enumerating objects: 33, done.
 remote: Counting objects: 100% (33/33), done.
 remote: Compressing objects: 100% (23/23), done.
@@ -105,14 +105,12 @@ admin@devbox:~$
 You should see the following files:
 
 ```
-admin@devbox:~$ cd iosxr-LTRSPG-2414-cleur2019/
-admin@devbox:iosxr-LTRSPG-2414-cleur2019$ 
-admin@devbox:iosxr-LTRSPG-2414-cleur2019$ tree .
+admin@devbox:~$ cd xr-programmability-lab-code/
+admin@devbox:xr-programmability-lab-code$ tree .
 .
 ├── ansible
 │   ├── ansible_hosts
-│   ├── configure_bgp_oc_netconf.yml
-│   ├── docker_bringup.retry
+│   ├── configure_bgp_netconf.yml
 │   ├── docker_bringup.yml
 │   ├── execute_python_ztp.yml
 │   ├── openr
@@ -129,12 +127,16 @@ admin@devbox:iosxr-LTRSPG-2414-cleur2019$ tree .
 │       ├── r1-bgp.xml
 │       └── r2-bgp.xml
 ├── README.md
+├── ydk
+│   ├── configure_telemetry_openconfig.py
+│   ├── nc-create-xr-ipv4-ospf-cfg-rtr1-ydk.py
+│   └── nc-create-xr-ipv4-ospf-cfg-rtr2-ydk.py
 └── ztp_hooks
     ├── automate_cli_bash.sh
     └── automate_cli_python.py
 
-4 directories, 19 files
-admin@devbox:iosxr-LTRSPG-2414-cleur2019$ 
+5 directories, 21 files
+admin@devbox:xr-programmability-lab-code$ 
 ```
 
 
