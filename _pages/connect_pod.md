@@ -113,9 +113,9 @@ If you have a 3rd party SSH client, use the SSH ports as described in the previo
 #### Terminal
 If you have a Terminal to work with (with an SSH client utility), then to connect to the **devbox**, run:
 
-If you’re using Windows, you have two options:  
-  *  Install Ubuntu on Windows 10 through WSL (<https://linoxide.com/distros/how-install-ubuntu-windows-10/>)
-  *  download a utility like [Git Bash](https://git-scm.com/download/win) so that all the commands provided below work as advertised.
+>If you’re using Windows, you have two options:    
+>  *  Install Ubuntu on Windows 10 through WSL (<https://linoxide.com/distros/how-install-ubuntu-windows-10/>)
+>  *  download a utility like [Git Bash](https://git-scm.com/download/win) so that all the commands provided below work as advertised.
 {: .notice--danger}
 
 
