@@ -1,5 +1,5 @@
 ---
-layout: archive
+layout: single
 title: "Collections"
 permalink: /connect-to-pods/
 author_profile: true 
