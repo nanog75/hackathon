@@ -620,7 +620,7 @@ The `"connection-state": "bgp-st-estab"` in the output above has changed from `"
 
 ## Conclusion
 
-To wrap up, this is what we achieved as part of this workshop:
+To wrap up, this is what we achieved as part of this lab:
 
 * Used ZTP CLI hooks in bash to configure grpc, interfaces and loopbacks on each router
 * Scaled up the setup by switching to ansible to execute the python ZTP CLI script to configure a new user and configure routes required to allow the docker daemon to download an Open/R image subsequently
