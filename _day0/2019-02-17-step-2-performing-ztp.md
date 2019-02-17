@@ -83,7 +83,9 @@ RP/0/RP0/CPU0:ios#
 
 ## Testing your ZTP script
 
-You don't need to actually perform ZTP to test your ZTP script. To do this, ssh into your ZTP box:  
+You don't need to actually perform ZTP to test your ZTP script. 
+To accomplish this, first ssh into your ZTP box:  
+
 ```
 AKSHSHAR-M-33WP:~ akshshar$ ssh -i ~/nanog75.key tesuto@ztp.hackathon.pod0.cloud.tesuto.com
 Warning: the ECDSA host key for 'ztp.hackathon.pod0.cloud.tesuto.com' differs from the key for the IP address '35.197.94.94'
@@ -126,8 +128,54 @@ tesuto@ztp:~$
 
 ```
 
-Simply console into the router, drop into bash, down
+Start editing the script in the location: `/var/www/html/scripts/ztp_ncclient.py`
+(you will need to become sudo).
 
+
+```
+tesuto@ztp:~$ sudo vi /var/www/html/scripts/ztp_ncclient.py
+```
+
+Once changed, then console into the router as explained earlier above and drop into the router bash shell:
+
+```
+RP/0/RP0/CPU0:ios#
+RP/0/RP0/CPU0:ios#
+RP/0/RP0/CPU0:ios#bash
+Sun Feb 17 09:42:58.139 UTC
+
+
+[host:~]$ 
+[host:~]$ 
+```
+
+Now download the ZTP script you just edited/modified into the router bash, make it executable and run it:
+
+
+```
+[host:~]$ wget http://100.96.0.20/scripts/ztp_ncclient.py
+--2019-02-17 09:43:19--  http://100.96.0.20/scripts/ztp_ncclient.py
+Connecting to 100.96.0.20:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 10733 (10K) [text/x-python]
+Saving to: 'ztp_ncclient.py'
+
+100%[======================================>] 10,733      --.-K/s   in 0s      
+
+2019-02-17 09:43:19 (217 MB/s) - 'ztp_ncclient.py' saved [10733/10733]
+
+[host:~]$ 
+[host:~]$ 
+[host:~]$ chmod +x ztp_ncclient.py 
+[host:~]$ 
+[host:~]$ 
+[host:~]$ ./ztp_ncclient.py 
+
+
+
+```
+
+This becomes a quick way to test your ZTP script and the router bash shell allows you to use all typical python interpreter capabilities to ease the process.
 
 
 ## Testing the ZTP process
