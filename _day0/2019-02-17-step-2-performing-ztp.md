@@ -168,6 +168,8 @@ Killed
 
 ### Initiating a wipe and reset (Repair)
 
+**Note**:  You only need to do this to test your ZTP script once it is ready. Repair takes a long time (10+ minutes). Use the manual ZTP trigger process shown above to initiate the ZTP process while coding the script.
+
 The other option is to perform a repair on the node from the Tesuto UI.
 
 For this purpose login to the Tesuto UI at :   
@@ -180,4 +182,19 @@ with the following credentials:
 **Password**: nanog75sf
 {: .notice--info}
 
+
+
+![tesuto_repair_1.png]({{site.baseurl}}/images/tesuto_repair_1.png)
+
+
+Now click on `hackathon` and it will open up the devices page for you. Hover to the button on right of the name `rtr2`, click and select `repair`.
+
+
+![tesuto_repair2.png]({{site.baseurl}}/images/tesuto_repair2.png)
+
+
+You will get a prompt, select `yes` and this will wipe out the rtr2 disk and boot from scratch.
+This process is equivalent 
+
+![tesuto_repair3.png]({{site.baseurl}}/images/tesuto_repair3.png)
 
