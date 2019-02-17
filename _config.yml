@@ -159,7 +159,7 @@ defaults:
 # _lab-instructions
   - scope:
       path: ""
-      type: wkinstructions
+      type: day0
     values:
       layout: single
       author_profile: true
@@ -168,7 +168,30 @@ defaults:
       share: true
       related: true
       position: "top"
-
+      
+  - scope:
+      path: ""
+      type: day1
+    values:
+      layout: single
+      author_profile: true
+      read_time: true
+      comments: true
+      share: true
+      related: true
+      position: "top"
+      
+  - scope:
+      path: ""
+      type: day2
+    values:
+      layout: single
+      author_profile: true
+      read_time: true
+      comments: true
+      share: true
+      related: true
+      position: "top" 
 
 # Outputting
 permalink: /:categories/:title/
