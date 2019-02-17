@@ -1011,7 +1011,7 @@ tesuto@dev1:~/code-samples/ansible$
 
 ```
 
-This is using the exact same code as the earlier YDK script in the `config_bgp_ipv4()` function above. So deconstruct the fields from openconfig-bgp.yang model you need to fill out for YDK to generate the required RPC call for you and complete the code in the above library file.
+This is using the exact same code as the earlier YDK script in the `config_bgp_ipv4()` function above. So deconstruct the fields from `openconfig-bgp.yang model` you need to fill out for YDK to generate the required RPC call for you and complete the code in the above library file.
 
 No need to touch any part of the code other than  config_bgp_ipv4() (look for the comment in the code) and you should be then able to run the ansible-playbook to configure BGP for you. It will eventually look something like this (verbose output with ansible):
 
