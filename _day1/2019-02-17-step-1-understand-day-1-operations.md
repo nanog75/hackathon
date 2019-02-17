@@ -90,7 +90,7 @@ Based on the pod number (assuming `x`), connect to your dev1 box:
 
 ```
 AKSHSHAR-M-33WP:~ akshshar$ 
-AKSHSHAR-M-33WP:~ akshshar$ ssh -i ~/nanog75.key tesuto@dev1.hackathon.pod0.cloud.tesuto.com
+AKSHSHAR-M-33WP:~ akshshar$ ssh -i ~/nanog75.key tesuto@dev1.hackathon.podx.cloud.tesuto.com
 Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-45-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com
@@ -132,7 +132,7 @@ tesuto@dev1:~$
 
 ## Basic Components
 
-In the current topology for Day 1 (rtr2 is not available for Day1 and Day2 operations),  the components we intend to use are:
+In the current topology for Day 1 (rtr2 is not available for Day1 and Day2 operations, not until Day0 group successfully bootstraps it),  the components we intend to use are:
 
 1. Ansible to orchestrate all the configurations and applications on the network and on all routers.
 
