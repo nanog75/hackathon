@@ -622,6 +622,31 @@ Do the same on `openconfig-interfaces.yang` and create the last XML snippet requ
 {: .notice--success}
 
 
+
+
+## Setting up the infra
+
+So we have the following XML files, potentially for rtr2:
+
+```
+lldp_oc.xml, 
+interfaces_oc.xml, 
+mpls_static.xml, 
+hostname.xml, 
+grpc_config.xml
+```
+
+Store these files on the web server at `/var/www/html/xml/rtr2`
+
+If you take a look at the existing script at `/var/www/html/scripts/ztp_ncclient.py`, there is already a Serial-Number to router name Map in each script.  
+
+Use the map to determine unique urls per router. 
+
+
+
+
+
+
    
    
 
