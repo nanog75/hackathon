@@ -401,15 +401,561 @@ tesuto@dev2:~/code-samples/gribi/src/gribi_client/path3$ cat r1.gribi.json
 
 The way to read this is as follows:
 
-1. First consider the `gribi_routes` entry. This always corresponds to the label imposition entry that also pushes a route to our destination (rtr4-dev2 subnet) into the rib of r1.   
-So the `gribi_routes` entry with `id:1200` will create prefix "10.8.1.0/24" in the r1 rib with `next_hop_group: 1`.  
+1. First consider the `gribi_routes` entry. This always corresponds to the label imposition entry that also pushes a route to our destination (rtr4-dev2 subnet) into the rib of rtr1.   
+So the `gribi_routes` entry with `id:1200` will create prefix "10.8.1.0/24" in the rtr1 rib with `next_hop_group: 1`.  
 If you browse up, `next_hop_group: 1` corresponds to the next_hop_group with `key_id : 1` in `gribi_nh_groups` structure.   
 Further this `next_hop_group: 1` then points to a single next hop (`nh_keys`) with `key_index: 1`.  
 Lastly, this `key_index: 1` corresponds to next hop with `key_id: 1` in the `gribi_nhs` data structure.  
-In other words, a route to `10.8.1.0/24` via next_hop 10.3.1.20 and Gig0/0/0/2 will be pushed into the RIB of router r1. Further this route will push a single label = 17010 on the packets using this route as evidenced by the `pushed_mpls_label_stack` entry in the `gribi_nhs` structure for `key_index: 1`
+In other words, a route to `10.8.1.0/24` via next_hop 10.3.1.20 and Gig0/0/0/2 will be pushed into the RIB of router rtr1. Further this route will push a single label = 17010 on the packets using this route as evidenced by the `pushed_mpls_label_stack` entry in the `gribi_nhs` structure for `key_index: 1`
 
 
 
+2. Now consider the `gribi_mpls` entries and follow the same pattern. In this case an entry will be created in Label Switch Database (seen through `show mpls forwarding`) on XR to pop an incoming 17010 label and forward the packet for an IPv4 lookup.
+
+
+
+In this way, try to write down the label entries and route entries that will created by r2.gribi.json and r3.gribi.json.
+
+Effectively, these input json files will help create an LSP path from rtr1 to rtr4 via rtr3 such that packets entering rtr1 from dev1, destined towards 10.8.1.0/24 via rtr1 will follow this path and packets entering rtr4 from dev2, destined towards 10.1.1.0/24 will follow the reverse path.
+
+
+
+
+### Test the gribi client
+
+To test this client, start a ping on dev2 towards 10.1.1.10 (ens4 interface of dev1 connected to rtr1 Gig0/0/0/0). Initially the pings will not go through:
+
+
+```
+tesuto@dev2:~$ 
+tesuto@dev2:~$ ping 10.1.1.10
+PING 10.1.1.10 (10.1.1.10) 56(84) bytes of data.
+
+
+
+
+
+
+```
+
+
+
+Now, dump the contents of the `path3_add_lsp.sh` script provided as part of the code samples: 
+
+
+```
+tesuto@dev2:~$ cd code-samples/gribi/src/gribi_client/
+tesuto@dev2:~/code-samples/gribi/src/gribi_client$ 
+tesuto@dev2:~/code-samples/gribi/src/gribi_client$ 
+tesuto@dev2:~/code-samples/gribi/src/gribi_client$ cat path3_add_lsp.sh 
+#!/bin/bash
+
+python3 gribi_client.py -j path3/r1.gribi.json -ip 100.96.0.14 -port 57777 -p 
+python3 gribi_client.py -j path3/r3.gribi.json -ip 100.96.0.18 -port 57777 -p
+python3 gribi_client.py -j path3/r4.gribi.json -ip 100.96.0.26 -port 57777 -p
+tesuto@dev2:~/code-samples/gribi/src/gribi_client$ 
+tesuto@dev2:~/code-samples/gribi/src/gribi_client$ 
+
+```
+
+
+Finally, let's run this script:
+
+```
+tesuto@dev2:~/code-samples/gribi/src/gribi_client$ 
+tesuto@dev2:~/code-samples/gribi/src/gribi_client$ ./path3_add_lsp.sh 
+Next Hop
+operation {
+  id: 1000
+  network_instance: "default"
+  op: ADD
+  next_hop {
+    index: 1
+    next_hop {
+      encapsulate_header: OPENCONFIGAFTENCAPSULATIONHEADERTYPE_MPLS
+      origin_protocol: OPENCONFIGPOLICYTYPESINSTALLPROTOCOLTYPE_STATIC
+      ip_address {
+        value: "10.3.1.20"
+      }
+      interface_ref {
+        interface {
+          value: "GigabitEthernet0/0/0/2"
+        }
+        subinterface {
+        }
+      }
+      mac_address {
+      }
+      pushed_mpls_label_stack {
+        pushed_mpls_label_stack_uint64: 17010
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Next Hop
+operation {
+  id: 1001
+  network_instance: "default"
+  op: ADD
+  next_hop {
+    index: 2
+    next_hop {
+      encapsulate_header: OPENCONFIGAFTENCAPSULATIONHEADERTYPE_IPV4
+      origin_protocol: OPENCONFIGPOLICYTYPESINSTALLPROTOCOLTYPE_STATIC
+      ip_address {
+        value: "10.1.1.10"
+      }
+      interface_ref {
+        interface {
+          value: "GigabitEthernet0/0/0/0"
+        }
+        subinterface {
+        }
+      }
+      mac_address {
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Next Hop Group
+operation {
+  id: 1100
+  network_instance: "default"
+  op: ADD
+  next_hop_group {
+    id: 1
+    next_hop_group {
+      next_hop {
+        index: 1
+        next_hop {
+        }
+      }
+      color {
+      }
+      backup_next_hop_group {
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Next Hop Group
+operation {
+  id: 1101
+  network_instance: "default"
+  op: ADD
+  next_hop_group {
+    id: 2
+    next_hop_group {
+      next_hop {
+        index: 2
+        next_hop {
+        }
+      }
+      color {
+      }
+      backup_next_hop_group {
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Route
+operation {
+  id: 1200
+  network_instance: "default"
+  op: ADD
+  ipv4 {
+    prefix: "10.8.1.0/24"
+    ipv4_entry {
+      packets_forwarded {
+      }
+      octets_forwarded {
+      }
+      decapsulate_header: OPENCONFIGAFTENCAPSULATIONHEADERTYPE_IPV4
+      next_hop_group {
+        value: 1
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Mpls
+operation {
+  id: 1301
+  network_instance: "default"
+  op: ADD
+  mpls {
+    label_entry {
+      popped_mpls_label_stack {
+        popped_mpls_label_stack_uint64: 17010
+      }
+      next_hop_group {
+        value: 2
+      }
+      packets_forwarded {
+        value: 1
+      }
+      octets_forwarded {
+        value: 1
+      }
+    }
+    label_uint64: 17010
+  }
+}
+
+Got a response!
+result {
+  id: 1301
+  status: OK
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Next Hop
+operation {
+  id: 2000
+  network_instance: "default"
+  op: ADD
+  next_hop {
+    index: 1
+    next_hop {
+      encapsulate_header: OPENCONFIGAFTENCAPSULATIONHEADERTYPE_MPLS
+      origin_protocol: OPENCONFIGPOLICYTYPESINSTALLPROTOCOLTYPE_STATIC
+      ip_address {
+        value: "10.6.1.20"
+      }
+      interface_ref {
+        interface {
+          value: "GigabitEthernet0/0/0/2"
+        }
+        subinterface {
+        }
+      }
+      mac_address {
+      }
+      pushed_mpls_label_stack {
+        pushed_mpls_label_stack_uint64: 16030
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Next Hop
+operation {
+  id: 2001
+  network_instance: "default"
+  op: ADD
+  next_hop {
+    index: 2
+    next_hop {
+      encapsulate_header: OPENCONFIGAFTENCAPSULATIONHEADERTYPE_MPLS
+      origin_protocol: OPENCONFIGPOLICYTYPESINSTALLPROTOCOLTYPE_STATIC
+      ip_address {
+        value: "10.3.1.10"
+      }
+      interface_ref {
+        interface {
+          value: "GigabitEthernet0/0/0/0"
+        }
+        subinterface {
+        }
+      }
+      mac_address {
+      }
+      pushed_mpls_label_stack {
+        pushed_mpls_label_stack_uint64: 17010
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Next Hop Group
+operation {
+  id: 2100
+  network_instance: "default"
+  op: ADD
+  next_hop_group {
+    id: 1
+    next_hop_group {
+      next_hop {
+        index: 1
+        next_hop {
+        }
+      }
+      color {
+      }
+      backup_next_hop_group {
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Next Hop Group
+operation {
+  id: 2101
+  network_instance: "default"
+  op: ADD
+  next_hop_group {
+    id: 2
+    next_hop_group {
+      next_hop {
+        index: 2
+        next_hop {
+        }
+      }
+      color {
+      }
+      backup_next_hop_group {
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Mpls
+operation {
+  id: 2300
+  network_instance: "default"
+  op: ADD
+  mpls {
+    label_entry {
+      popped_mpls_label_stack {
+        popped_mpls_label_stack_uint64: 17010
+      }
+      next_hop_group {
+        value: 1
+      }
+      packets_forwarded {
+        value: 1
+      }
+      octets_forwarded {
+        value: 1
+      }
+    }
+    label_uint64: 17010
+  }
+}
+
+Got a response!
+result {
+  id: 2300
+  status: OK
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Mpls
+operation {
+  id: 2302
+  network_instance: "default"
+  op: ADD
+  mpls {
+    label_entry {
+      popped_mpls_label_stack {
+        popped_mpls_label_stack_uint64: 16030
+      }
+      next_hop_group {
+        value: 2
+      }
+      packets_forwarded {
+        value: 1
+      }
+      octets_forwarded {
+        value: 1
+      }
+    }
+    label_uint64: 16030
+  }
+}
+
+Got a response!
+result {
+  id: 2302
+  status: OK
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Next Hop
+operation {
+  id: 3000
+  network_instance: "default"
+  op: ADD
+  next_hop {
+    index: 1
+    next_hop {
+      encapsulate_header: OPENCONFIGAFTENCAPSULATIONHEADERTYPE_IPV4
+      origin_protocol: OPENCONFIGPOLICYTYPESINSTALLPROTOCOLTYPE_STATIC
+      ip_address {
+        value: "10.6.1.10"
+      }
+      interface_ref {
+        interface {
+          value: "GigabitEthernet0/0/0/2"
+        }
+        subinterface {
+        }
+      }
+      mac_address {
+      }
+      pushed_mpls_label_stack {
+        pushed_mpls_label_stack_uint64: 16030
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Next Hop
+operation {
+  id: 3001
+  network_instance: "default"
+  op: ADD
+  next_hop {
+    index: 2
+    next_hop {
+      encapsulate_header: OPENCONFIGAFTENCAPSULATIONHEADERTYPE_IPV4
+      origin_protocol: OPENCONFIGPOLICYTYPESINSTALLPROTOCOLTYPE_STATIC
+      ip_address {
+        value: "10.8.1.20"
+      }
+      interface_ref {
+        interface {
+          value: "GigabitEthernet0/0/0/0"
+        }
+        subinterface {
+        }
+      }
+      mac_address {
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Next Hop Group
+operation {
+  id: 3100
+  network_instance: "default"
+  op: ADD
+  next_hop_group {
+    id: 1
+    next_hop_group {
+      next_hop {
+        index: 1
+        next_hop {
+        }
+      }
+      color {
+      }
+      backup_next_hop_group {
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Next Hop Group
+operation {
+  id: 3101
+  network_instance: "default"
+  op: ADD
+  next_hop_group {
+    id: 2
+    next_hop_group {
+      next_hop {
+        index: 2
+        next_hop {
+        }
+      }
+      color {
+      }
+      backup_next_hop_group {
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Route
+operation {
+  id: 3200
+  network_instance: "default"
+  op: ADD
+  ipv4 {
+    prefix: "10.1.1.0/24"
+    ipv4_entry {
+      packets_forwarded {
+      }
+      octets_forwarded {
+      }
+      decapsulate_header: OPENCONFIGAFTENCAPSULATIONHEADERTYPE_IPV4
+      next_hop_group {
+        value: 1
+      }
+    }
+  }
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+Mpls
+operation {
+  id: 3300
+  network_instance: "default"
+  op: ADD
+  mpls {
+    label_entry {
+      popped_mpls_label_stack {
+        popped_mpls_label_stack_uint64: 16030
+      }
+      next_hop_group {
+        value: 2
+      }
+      packets_forwarded {
+        value: 1
+      }
+      octets_forwarded {
+        value: 1
+      }
+    }
+    label_uint64: 16030
+  }
+}
+
+Got a response!
+result {
+  id: 3300
+  status: OK
+}
+
+<_Rendezvous of RPC that terminated with (StatusCode.OK, )>
+True
+
+```
 
 
 
