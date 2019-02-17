@@ -227,8 +227,8 @@ tesuto@dev1:~/code-samples/ydk$
 
 Now connect to router `rtr1` over SSH to see the effect of this YDK script:
 
-Username: rtrdev
-Password: nanog75sf
+**Username**: rtrdev
+**Password**: nanog75sf
 {: .notice--info}
 
 ```
