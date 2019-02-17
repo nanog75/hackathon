@@ -618,7 +618,8 @@ So this gets converted into:
 
 with `xmlns="http://openconfig.net/yang/` being the generic openconfig namespace denotion.
 
-
+Do the same on `openconfig-interfaces.yang` and create the last XML snippet required.
+{: .notice--success}
 
 
    
