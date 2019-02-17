@@ -797,7 +797,7 @@ It shows 4 important steps:
 
 
 
-You job is to focus only on the above portion of code to add ncclient operations to `edit_config` using XML files that the script will download during its operation.
+You job is to focus only on the above highlighted portion of code to add ncclient operations such as `edit_config` using XML files from appropriate Yang models that the script will download during its operation.
 {: .notice--success}
 
 
