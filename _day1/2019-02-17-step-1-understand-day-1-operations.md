@@ -332,11 +332,10 @@ You will eventually need to have a playbook for each of the following operations
 
 
 
-```
+
+Proceed to [Step 2]({{ base_path }}) to start understanding the provided code and building the ansible playbooks together.
 
 
-
-```
 
 
 
