@@ -260,6 +260,153 @@ tesuto@dev2:~/code-samples/gribi$ tree .
 tesuto@dev2:~/code-samples/gribi$ 
 ```
 
+The `protos` directory contains the protofiles (models) for gribi. The generated python bindings for these models is located in `src/genpy`. 
+The base library created for the client is under `gribi_api/`.
+The gribi_client that accepts a json based input is in the `gribi_client` directory.
+
+
+### View pre-created LSP json
+
+
+Let's the view the json files that are pre-created for path2 as shown in the figure above (green from rtr1 to rtr3 to rtr4). 
+
+Drop into the directory `gribi_client/path3` directory:
+
+```
+tesuto@dev2:~$ cd code-samples/gribi/src/gribi_client/path3/
+tesuto@dev2:~/code-samples/gribi/src/gribi_client/path3$ ls
+r1.gribi.json  r3.gribi.json  r4.gribi.json
+tesuto@dev2:~/code-samples/gribi/src/gribi_client/path3$ 
+
+```
+
+
+Let's look at `r1.gribi.json`:
+
+
+```
+tesuto@dev2:~/code-samples/gribi/src/gribi_client/path3$ cat r1.gribi.json 
+{
+    "_copyright_": "All rights reserved. Copyright (c) 2018 by Cisco Systems, Inc.",
+    "global_init": {
+        "major": 0,
+        "minor": 0,
+        "sub_ver": 0
+    },
+    "oc_aft_encap_type" : [
+        "OPENCONFIGAFTENCAPSULATIONHEADERTYPE_UNSET",
+        "OPENCONFIGAFTENCAPSULATIONHEADERTYPE_GRE",
+        "OPENCONFIGAFTENCAPSULATIONHEADERTYPE_IPV4",
+        "OPENCONFIGAFTENCAPSULATIONHEADERTYPE_IPV6",
+        "OPENCONFIGAFTENCAPSULATIONHEADERTYPE_MPLS"
+    ],
+    "gribi_nhs" : [
+        {
+            "id" : 1000,
+            "inst_name" : "default",
+            "key_index" : 1,
+            "entry" : {
+                "encap_header_type" : "OPENCONFIGAFTENCAPSULATIONHEADERTYPE_MPLS",
+                "int" : "GigabitEthernet0/0/0/2",
+                "subint" : 0,
+                "ip_address": "10.3.1.20",
+                "mac_address" : "",
+                "origin_protocol": "OPENCONFIGPOLICYTYPESINSTALLPROTOCOLTYPE_STATIC",
+                "pushed_mpls_label_stack" : [
+                    17010
+                ]
+            }
+        },
+        {
+            "id" : 1001,
+            "inst_name" : "default",
+            "key_index" : 2,
+            "entry" : {
+                "encap_header_type" : "OPENCONFIGAFTENCAPSULATIONHEADERTYPE_IPV4",
+                "int" : "GigabitEthernet0/0/0/0",
+                "subint" : 0,
+                "ip_address": "10.1.1.10",
+                "mac_address" : "",
+                "origin_protocol": "OPENCONFIGPOLICYTYPESINSTALLPROTOCOLTYPE_STATIC",
+                "pushed_mpls_label_stack" : [
+                ]
+            }
+        }
+    ],
+    "gribi_nh_groups" : [
+        {
+            "id" : 1100,
+            "inst_name" : "default",
+            "key_id" : 1,
+            "entry" : {
+                "backup_nh_group" : 0,
+                "color" : 0,
+                "nh_keys" : [
+                    {
+                        "key_index" : 1,
+                        "nh_weight" : 100
+                    }
+                ]
+            }
+        },
+        {   
+            "id" : 1101,
+            "inst_name" : "default",
+            "key_id" : 2,
+            "entry" : {
+                "backup_nh_group" : 0,
+                "color" : 0,
+                "nh_keys" : [
+                    {   
+                        "key_index" : 2,
+                        "nh_weight" : 100
+                    }  
+                ]
+            }
+        }
+    ],
+    "gribi_routes" : [
+        {
+            "id" : 1200,
+            "inst_name" : "default",
+            "entry" : {
+                "prefix" : "10.8.1.0/24",
+                "type" : "v4",
+                "encap_header_type" :"OPENCONFIGAFTENCAPSULATIONHEADERTYPE_IPV4",
+                "next_hop_group" : 1,
+                "octets_forwarded" : 0,
+                "packets_forwarded" : 0
+            }
+        }
+    ],
+    "gribi_mpls" : [
+        {
+            "id" : 1301,
+            "inst_name" : "default",
+            "label" : 17010,
+            "entry" : {
+                "nh_group" : 2,
+                "octets_forwarded" : 1,
+                "packets_forwarded" : 1,
+                "popped_mpls_label_stack" : [
+                    17010
+                ]
+            }
+        }
+    ]
+}
+
+
+```
+
+The way to read this is as follows:
+
+1. First consider the `gribi_routes` entry. This always corresponds to the label imposition entry that also pushes a route to our destination (rtr4-dev2 subnet) into the rib of r1.   
+So the `gribi_routes` entry with `id:1200` will create prefix "10.8.1.0/24" in the r1 rib with `next_hop_group: 1`.  
+If you browse up, `next_hop_group: 1` corresponds to the next_hop_group with `key_id : 1` in `gribi_nh_groups` structure.   
+Further this `next_hop_group: 1` then points to a single next hop (`nh_keys`) with `key_index: 1`.  
+Lastly, this `key_index: 1` corresponds to next hop with `key_id: 1` in the `gribi_nhs` data structure.  
+In other words, a route to `10.8.1.0/24` via next_hop 10.3.1.20 and Gig0/0/0/2 will be pushed into the RIB of router r1. Further this route will push a single label = 17010 on the packets going through this route.
 
 
 
