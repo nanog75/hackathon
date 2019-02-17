@@ -82,7 +82,7 @@ ssh -i ~/nanog75.key tesuto@ztp.hackathon.podx.cloud.tesuto.com
 
 For the Day1 group, all of the operations will be performed on the dev1 box.
 
-Based on the pod number (assuming `x`), connect to your dev1 box first:
+Based on the pod number (assuming `x`), connect to your dev1 box:
 
 
 ```
