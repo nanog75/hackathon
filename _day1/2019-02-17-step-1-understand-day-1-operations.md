@@ -193,7 +193,8 @@ Receiving objects: 100% (1594/1594), 12.74 MiB | 7.12 MiB/s, done.
 Resolving deltas: 100% (996/996), done.
 Checking out files: 100% (1360/1360), done.
 tesuto@dev1:~$ 
-
+``` 
+  
 Drop into the code-samples directory:  
 
 ```
