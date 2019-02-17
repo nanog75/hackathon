@@ -957,6 +957,34 @@ True
 
 ```
 
+As soon as the script finishes, we'll notice that the pings start succeeding:  
+
+
+
+```
+
+tesuto@dev2:~$ ping 10.1.1.10
+PING 10.1.1.10 (10.1.1.10) 56(84) bytes of data.
+
+
+
+
+
+
+
+
+64 bytes from 10.1.1.10: icmp_seq=1 ttl=61 time=6.32 ms
+64 bytes from 10.1.1.10: icmp_seq=2 ttl=61 time=4.89 ms
+64 bytes from 10.1.1.10: icmp_seq=3 ttl=61 time=5.54 ms
+64 bytes from 10.1.1.10: icmp_seq=4 ttl=61 time=4.99 ms
+64 bytes from 10.1.1.10: icmp_seq=5 ttl=61 time=5.30 ms
+64 bytes from 10.1.1.10: icmp_seq=6 ttl=61 time=5.44 ms
+64 bytes from 10.1.1.10: icmp_seq=7 ttl=61 time=5.28 ms
+64 bytes from 10.1.1.10: icmp_seq=8 ttl=61 time=5.52 ms
+
+
+
+```
 
 
 
