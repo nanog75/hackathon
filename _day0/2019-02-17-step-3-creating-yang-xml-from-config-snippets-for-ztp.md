@@ -22,7 +22,7 @@ tags:
 
 The final configuration required for each of the routers post ZTP is already present on the ZTP node.
 
-Ssh to the ZTP node and drop into the `/var/www/html/configs/` directory:
+SSH to the ZTP node and drop into the `/var/www/html/configs/` directory:
 
 
 ```
@@ -39,7 +39,7 @@ tesuto@ztp:/var/www/html/configs$
 
 ```
 
-Since Day0 group is only dealing with rtr2 initially, let's look at rtr2 configuration:
+Since Day0 group is only dealing with rtr2 initially, let's look at the rtr2 configuration:
 
 ```
 tesuto@ztp:/var/www/html/configs$ cat rtr2.config 
@@ -616,7 +616,7 @@ So this gets converted into:
 
 ```
 
-with `xmlns="http://openconfig.net/yang/` being the generic openconfig namespace denotion.
+with `xmlns="http://openconfig.net/yang/"` being the generic openconfig namespace denotion.
 
 Do the same on `openconfig-interfaces.yang` and create the last XML snippet required.
 {: .notice--success}
