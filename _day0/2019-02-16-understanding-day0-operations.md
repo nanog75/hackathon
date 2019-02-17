@@ -30,7 +30,7 @@ The topology for the hack is shown below:
 ![]({{ base_path }}/images/topology_nanog75.png)  
 
 
-{% connect_text %}
+{% capture connect_text %}
 ### Connecting to the nodes in the topology:
 You will need the tesuto private key to ssh to the instances in your topology.
 This key can be downloaded from here:  <https://storage.googleapis.com/tesuto-public/nanog75.key>  
