@@ -182,10 +182,9 @@ This becomes a quick way to test your ZTP script and the router bash shell allow
 
 Ok, so you've created a ZTP script that works, now what?
 
-Well, time to test the ZTP workflow, but without resetting the router. We do this as follows:  
+Well, time to test the ZTP workflow;
 
-We have already seen that the DHCP server is set up to respond with the location of the script `ztp_ncclient.py` to router `rtr2` when it sends the appropriate ZTP request. So, let's perform 
-ZTP for rtr2.
+We have already seen that the DHCP server is set up to respond with the location of the script `ztp_ncclient.py` to router `rtr2` when it sends the appropriate ZTP request. 
 
 There are two ways to perform ZTP on any router in the current topology:
 
