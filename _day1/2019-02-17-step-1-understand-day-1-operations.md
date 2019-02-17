@@ -147,7 +147,6 @@ tesuto@dev1:~$
 tesuto@dev1:~$ 
 
 
-
 ```
 
 
@@ -311,6 +310,8 @@ tesuto@dev1:~/code-samples$
 
 ```
 
+
+### 
 
 For the Day1 group the relevant top level directories are :
 
