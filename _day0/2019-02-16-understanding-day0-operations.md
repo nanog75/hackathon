@@ -431,8 +431,9 @@ The current ZTP script for rtr2 can be found on the webserver running locally on
 
 Let's dump this script. The script has appropriate comments at the different points to help a reader understand is content.
 
-
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 tesuto@ztp:~$ 
 tesuto@ztp:~$ cat /var/www/html/scripts/ztp_ncclient.py 
 #!/usr/bin/env python
@@ -667,7 +668,7 @@ if __name__ == '__main__':
     # It will be cleaned up as part of ncclient_cleanup() method
     host = "172.16.20.1"
 
-    # Initialize the basic configuration for ncclient to work
+   <mark> # Initialize the basic configuration for ncclient to work
     # Sets up local loopback as host to connect to and enable netconf on port 830.
     # Also imports the local key (/root/.ssh/id_rsa.pub) for password free operation
     result = ztp_script.ncclient_init(host_ip=host)
@@ -703,15 +704,11 @@ if __name__ == '__main__':
     result = ztp_script.ncclient_cleanup()
     if result["status"] == "error":
         ztp_script.syslogger.info("Failed to cleanup ncclient dependencies, aborting...")
-        sys.exit(1)
+        sys.exit(1)</mark>
 tesuto@ztp:~$ 
-
-
-```
-
-
-
-```
+</code>
+</pre>
+</div>
 
 
 
