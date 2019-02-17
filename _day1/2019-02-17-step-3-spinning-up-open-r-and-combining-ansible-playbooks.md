@@ -34,6 +34,94 @@ At the end of Step2, you should have:
 
 
 
+### Check if BGP neighbors are up on rtr1 and rtr4
+
+
+Now, if Step2 was successful, you should have the following configuration on rtr1 and rtr4 for BGP:
+
+
+**rtr1 BGP configuration**:
+
+```
+router bgp 65000
+ bgp router-id 172.16.1.1
+ address-family ipv4 unicast
+ !
+ neighbor-group IBGP
+  remote-as 65000
+  local address 172.16.1.1
+  address-family ipv4 unicast
+  !
+ !
+ neighbor 172.16.4.1
+  use neighbor-group IBGP
+  address-family ipv4 unicast
+  !
+ !
+!
+
+
+
+```
+
+**rtr2 BGP configuration**:
+
+```
+router bgp 65000
+ bgp router-id 172.16.4.1
+ address-family ipv4 unicast
+ !
+ neighbor-group IBGP
+  remote-as 65000
+  local address 172.16.4.1
+  address-family ipv4 unicast
+  !
+ !
+ neighbor 172.16.1.1
+  remote-as 65000
+  use neighbor-group IBGP
+  update-source Loopback0
+  address-family ipv4 unicast
+  !
+ !
+!
+
+```
+
+Let's check the BGP session state on rtr1:
+
+
+```
+RP/0/RP0/CPU0:rtr1#
+RP/0/RP0/CPU0:rtr1#show bgp summary 
+Sun Feb 17 12:55:18.724 UTC
+BGP router identifier 172.16.1.1, local AS number 65000
+BGP generic scan interval 60 secs
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0000000   RD version: 2
+BGP main routing table version 2
+BGP NSR Initial initsync version 2 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+BGP scan interval 60 secs
+
+BGP is operating in STANDALONE mode.
+
+
+Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+Speaker               2          2          2          2           2           0
+
+Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+172.16.4.1        0 65000      81      82        0    0    0 00:00:09 Idle
+
+RP/0/RP0/CPU0:rtr1#
+
+```
+
+It's idle! Well this should be obvious, we don't have an IGP running to distribute the loopbacks  (loopback 0) that are used for BGP session configuration.
+
+You could run an IGP of your choice (isis, ospf) using YDK or ncclient scripts, but let's make things interesting by using  Open/R as an IGP instead.
+
 
 ## Spinning up Open/R as an IGP on the routers
 
@@ -90,7 +178,97 @@ tesuto@dev1:~/code-samples/ansible/playbooks/openr_bringup$
 
 You'll see that there is an ansible playbook (docker_bringup.yml) along with a few scripts.
 The `automate_docker_setup.py` script is a simple python script that restarts the docker daemon on the routers and pulls the `akshshar/openr-xr` docker image onto each router.
-The remaining files under the `openr` directory are associated with the basic launch and configuration settings of open/R for each router.
+The remaining files under the `openr` directory are associated with the basic launch and configuration settings of open/R for each router.  
+
+
+The playbook is dumped below:
+
+```
+
+tesuto@dev1:~/code-samples/ansible/playbooks/openr_bringup$ 
+tesuto@dev1:~/code-samples/ansible/playbooks/openr_bringup$ cat docker_bringup.yml 
+---
+- hosts: routers_shell
+  gather_facts: no
+  become: yes
+
+  vars:
+    connect_vars:
+       host: "{{ ansible_host }}"
+       username: "{{ ansible_user }}"
+       password: "{{ ansible_ssh_pass }}"
+    up: "sudo -i /misc/app_host/launch_openr_{{ inventory_hostname }}.sh"
+    down: "sudo -i docker rm -f openr"
+
+  tasks:
+
+  - name: restart docker daemon and pull openr image
+    script: ./automate_docker_setup.py
+    register: output
+
+  - name: Copy run_openr script to rtr
+    copy:
+      src: "{{ run_openr_script }}"
+      dest: "/misc/app_host/"
+      owner: root 
+      group: root 
+      mode: a+x 
+
+
+  - name: Copy hosts_r file to rtr
+    copy:
+      src: "{{ hosts_r }}"
+      dest: "/misc/app_host/"
+      owner: root 
+      group: root 
+      mode: a+x 
+
+  - name: Copy launch_openr script to rtr
+    copy:
+      src: "{{ launch_openr_script }}"
+      dest: "/misc/app_host/"
+      owner: root 
+      group: root 
+      mode: a+x 
+
+  - name: Check docker container is running
+    shell: sudo -i docker inspect --format={{ '{{.State.Running}}' }}  openr
+    args:
+      executable: /bin/bash
+    register: status
+    ignore_errors: yes
+  - debug: var=output.stdout_lines
+
+ 
+  - name: Clean up docker container if running 
+    shell: "{{ down }}"
+    args:
+      executable: /bin/bash
+    register: output
+    when: status.stdout == "true"
+    ignore_errors: yes
+  - debug: var=output.stdout_lines
+
+
+  - name: Bring up the docker container 
+    shell: "{{ up }}"
+    args:
+      executable: /bin/bash
+    register: output
+    ignore_errors: yes
+  - debug: var=output.stdout_lines  
+
+  - name: Pause the playbook to allow routes to be distributed before running the reachability playbook
+    pause:
+       minutes: 2
+
+```
+
+*  Thus,  the playbook first executes the `automate_docker_setup.py` script on each router thereby pulling the required docker image on to each router.  
+*  Next it transfers all the required configuration files and scripts to the `/misc/app_host` directory on the routers from where it would be easy to mount these files into the final running container on each router.
+*  In the end, it checks if Open/R is already running and if so, it removes it before spinning up a new one.  
+
+
 
 
 
