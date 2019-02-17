@@ -194,7 +194,8 @@ Resolving deltas: 100% (996/996), done.
 Checking out files: 100% (1360/1360), done.
 tesuto@dev1:~$ 
 
-Drop into the code-samples directory:
+Drop into the code-samples directory:  
+
 ```
 tesuto@dev1:~$ 
 tesuto@dev1:~$ cd code-samples/
