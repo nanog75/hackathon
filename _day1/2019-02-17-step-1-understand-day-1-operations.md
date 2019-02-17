@@ -34,7 +34,8 @@ The topology for the hack is shown below:
 
 
 {% capture "connect_text" %}
-### Connecting to the nodes in the topology:
+### Connecting to the nodes in the topology:  
+
 You will need the tesuto private key to ssh to the instances in your topology.  
 
 This key can be downloaded from here:    
@@ -76,32 +77,30 @@ ssh -i ~/nanog75.key tesuto@ztp.hackathon.podx.cloud.tesuto.com
 
 
 
-## Connect to the ZTP box
+## Connect to the dev1 box
 
 
-For the Day0 group, all of the operations will be performed on the ZTP box.
+For the Day1 group, all of the operations will be performed on the dev1 box.
 
-Based on the pod number (assuming `x`), connect to your ZTP box first:
+Based on the pod number (assuming `x`), connect to your dev1 box first:
 
 
 ```
-AKSHSHAR-M-33WP:~ akshshar$ ssh -i ~/nanog75.key tesuto@ztp.hackathon.podx.cloud.tesuto.com
-Warning: the ECDSA host key for 'ztp.hackathon.podx.cloud.tesuto.com' differs from the key for the IP address '35.197.94.94'
-Offending key for IP in /Users/akshshar/.ssh/known_hosts:1
-Matching host key in /Users/akshshar/.ssh/known_hosts:5
-Are you sure you want to continue connecting (yes/no)? yes
+AKSHSHAR-M-33WP:~ akshshar$ 
+AKSHSHAR-M-33WP:~ akshshar$ ssh -i ~/Downloads/nanog75.key tesuto@dev1.hackathon.pod0.cloud.tesuto.com
 Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-45-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com
  * Management:     https://landscape.canonical.com
  * Support:        https://ubuntu.com/advantage
 
-  System information as of Sun Feb 17 07:51:27 UTC 2019
+  System information as of Sun Feb 17 10:14:22 UTC 2019
 
-  System load:  0.0               Processes:           108
-  Usage of /:   9.6% of 21.35GB   Users logged in:     0
-  Memory usage: 2%                IP address for ens3: 100.96.0.20
-  Swap usage:   0%
+  System load:  0.0                Users logged in:                0
+  Usage of /:   48.8% of 21.35GB   IP address for ens3:            100.96.0.22
+  Memory usage: 19%                IP address for ens4:            10.1.1.10
+  Swap usage:   0%                 IP address for docker0:         172.17.0.1
+  Processes:    116                IP address for br-eabb3a76ca77: 172.21.0.1
 
  * 'snap info' now shows the freshness of each channel.
    Try 'snap info microk8s' for all the latest goodness.
@@ -114,13 +113,15 @@ Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-45-generic x86_64)
    - Reduce system reboots and improve kernel security. Activate at:
      https://ubuntu.com/livepatch
 
-8 packages can be updated.
+7 packages can be updated.
 0 updates are security updates.
 
 
-Last login: Sun Feb 17 01:02:43 2019 from 128.107.241.176
-tesuto@ztp:~$ 
-tesuto@ztp:~$ 
+Last login: Sun Feb 17 10:00:46 2019 from 128.107.241.176
+
+tesuto@dev1:~$ 
+tesuto@dev1:~$ 
+
 
 
 ```
