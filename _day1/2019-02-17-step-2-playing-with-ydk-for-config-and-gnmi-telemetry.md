@@ -225,4 +225,25 @@ tesuto@dev1:~/code-samples/ydk$
 
 ```
 
-Now connect to router `rtr1`
+Now connect to router `rtr1` over SSH to see the effect of this YDK script:
+
+Username: rtrdev
+Password: nanog75sf
+{: .notice--info}
+
+```
+tesuto@dev1:~/code-samples/ydk$ ssh rtrdev@100.96.0.14
+Password: 
+
+
+RP/0/RP0/CPU0:rtr1#
+RP/0/RP0/CPU0:rtr1#
+RP/0/RP0/CPU0:rtr1#show  running-config  router bgp
+Sun Feb 17 11:15:35.385 UTC
+router bgp 65000
+!
+
+RP/0/RP0/CPU0:rtr1#
+
+
+```
