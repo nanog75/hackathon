@@ -155,9 +155,9 @@ Let us focus only on router `rtr2` for now. We intend to bootstrap it to a requi
 
 To respond to the router with the required file (script or config), the DHCP server must be suitably setup to identify the requesting router based on its Serial Number before responding with a bootfile-name (Option 67) specifying the file location.
 
-The DHCP server expects the serial number to  provided by the IOS-XR router in Option 61 (client-identifier) for DHCPv4 as well as in option 124 which contains both the Serial Number as well as the platform family and vendor code (9 for Cisco).
+The DHCP server expects the serial number to be provided by the IOS-XR router in Option 61 (client-identifier) as well as in option 124 (which contains the Serial Number, platform family and vendor code - 9 for Cisco). These are options for DHCPv4.
 
-You are NOT required to set up the DHCP server settings. This is already done for you.
+You are NOT required to set up the DHCP server. This is already done for you.
 Each router in the topology has a unique, persistent Serial-Number as well as a unique IP assigned to that Serial Number.
 
 As the file below shows, the following IP addresses are assigned based on the Serial Numbers:
