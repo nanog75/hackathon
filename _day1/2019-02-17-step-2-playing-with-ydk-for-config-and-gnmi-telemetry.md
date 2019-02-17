@@ -696,6 +696,330 @@ router bgp 65000
  !
 !
 
+```
+
+
+### Use Ansible with YDK
+
+
+Since you are going to spend time to figure out the YDK code to create the above configuration, you might as well do it as a module of Ansible!
+
+This is already set up for you.
+
+Browse into the `code-samples/ansible/playbooks/config_bgp/` directory. the structure is shown below.
+
+There are two options available;
+
+1. **The Easy route**:  Use the pre-existing `config_xr_bgp_netconf.yml` playbook with the Ansible netconf_config module to utilize the native IOS-XR BGP yang model and configure the two routers.
+This playbook utilizes `rtr1-bgp.xml` and `rtr2-bgp.xml` files shown below.  
+
+
+
+```
+tesuto@dev1:~/code-samples/ansible/playbooks/config_bgp$ 
+tesuto@dev1:~/code-samples/ansible/playbooks/config_bgp$ tree -I yang .
+.
+├── config_oc_bgp_ydk.yml
+├── config_xr_bgp_netconf.yml
+├── library
+│   └── config_bgp_oc_ydk.py
+└── xml
+    ├── rtr1-bgp.xml
+    └── rtr4-bgp.xml
+
+2 directories, 5 files
+tesuto@dev1:~/code-samples/ansible/playbooks/config_bgp$ 
+
+```
+
+2. **The Fun route**:  You've seen how the YDK script above is written. And also have seen the openconfig model to utilize to create the object to configure BGP on the two routers. There is a library file for ansible that is created already for you. Look at `~/code-samples/ansible/playbooks/config_bgp/library/config_bgp_oc_ydk.py`:
+
+```
+tesuto@dev1:~/code-samples/ansible/playbooks/config_bgp$ cat library/config_bgp_oc_ydk.py 
+#!/usr/bin/env python3
+#
+# Copyright 2019 Cisco Systems, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+ANSIBLE_METADATA = {
+    'metadata_version': '1.0',
+    'supported_by': 'community',
+    'status': ['preview']
+}
+
+DOCUMENTATION = """
+---
+module: configure_bgp_oc_ydk
+requirements:
+    - ydk 0.8.1 (python)
+    - ydk-models-cisco-ios-xr 6.5.1 (python)
+"""
+
+EXAMPLES = """
+name: configure BGP using YDK with GNMI
+      config_bgp_oc_ydk:
+        yang_repo_location: '/home/userx/yang'
+        host: "10.1.1.20"
+        grpc_port: "57777"
+        username: "rtruser"
+        password: "rtrcreds"
+        crud_op: "add"
+        bgp_params: "{{ bgp_parameters }}"
+
+where bgp_params-->
+
+bgp_parameters: {
+                       'vrf': 'default',
+                       'as': "65000",
+                       'router_id': "172.16.1.1",
+                       'peer-group-name': "IBGP",
+                       'peer-as': "65000",
+                       'peer-group-local-address': "172.16.1.1",
+                       'neighbor': "172.16.4.1"
+                      }
+
+
+"""
+
+RETURN = """
+  True or False based on the operation result from ydk
+"""
+
+
+
+from ansible.module_utils.basic import AnsibleModule
+
+from ydk.gnmi.providers import gNMIServiceProvider
+from ydk.gnmi.services import gNMIService
+from ydk.path import Repository
+from ydk.models.openconfig import openconfig_network_instance as oc_ni
+from ydk.services import CRUDService
+from ydk.models.openconfig import openconfig_policy_types as oc_policy_types
+from ydk.models.openconfig import openconfig_bgp_types as oc_bgp_types
+import sys
+
+def config_bgp_ipv4(yang_repo="",
+                    address="",
+                    grpc_port="",
+                    username="",
+                    password="",
+                    crud_op="add",
+                    bgp={}):
+
+     repository = Repository(yang_repo)
+     provider = gNMIServiceProvider(repo=repository, 
+                                    address=address, 
+                                    port=int(grpc_port), 
+                                    username=username, 
+                                    password=password)
+
+     gnmi_service = gNMIService()
+     crud = CRUDService()
+
+     ni = oc_ni.NetworkInstances.NetworkInstance()
+
+     if "vrf" in list(bgp.keys()):
+       ni.name = bgp["vrf"]
+     else:
+         print("Vrf for network Instance not specified")
+         sys.exit(1)
+
+     protocol = ni.protocols.Protocol()
+
+     protocol.identifier =  oc_policy_types.BGP()
+     protocol.name = "default"
+     protocol.config.identifier = oc_policy_types.BGP()
+     protocol.config.name = "default"
+
+     if "as" in list(bgp.keys()):
+         protocol.bgp.global_.config.as_ = int(bgp["as"])
+     else:
+         print("AS for BGP instance not specified")
+         sys.exit(1)
+
+     # Fill out your BGP object properly using the Openconfig Yang Model
+     # You will need to bring up the IBGP neighbor between rtr1 and rtr4
+
+     ni.protocols.protocol.append(protocol)
+
+
+     if crud_op == "add":
+         response = crud.create(provider, ni)
+     elif crud_op == "delete":
+         response = crud.delete(provider, ni)
+     elif crud_op is "update":
+         response = crud.update(provider, ni)
+     else:
+         print("Invalid operation requested, allowed values =  add, update, delete")
+         return False
+     return response
+
+
+def main():
+    """Ansible module to configure BGP using the Openconfig Network Instances model"""
+    module = AnsibleModule(
+        argument_spec=dict(
+            yang_repo_location=dict(type='str', required=True),
+            host=dict(type='str', required=True),
+            grpc_port=dict(type='str', required=True),
+            username=dict(type='str', required=True),
+            password=dict(type='str', required=True, no_log=True),
+            crud_op=dict(type='str', required=True),
+            bgp_params=dict(type='dict',required=True)
+        ),
+        supports_check_mode=True
+    )
+
+    if module.check_mode:
+        module.exit_json(changed=False)
+
+    try:
+        retvals = config_bgp_ipv4(module.params['yang_repo_location'],
+                                  module.params['host'],
+                                  module.params['grpc_port'],
+                                  module.params['username'],
+                                  module.params['password'],
+                                  module.params['crud_op'],
+                                  module.params['bgp_params'])
+    except Exception as exc:
+        module.fail_json(msg='Failed to configure BGP ({})'.format(exc))
+
+    if (retvals):
+        module.exit_json(changed=True)
+    else: 
+        module.exit_json(changed=False)
+
+if __name__ == '__main__':
+    """Execute main program."""
+    main()
+# End of module
+tesuto@dev1:~/code-samples/ansible/playbooks/config_bgp$ 
+
+
+
+```
+
+
+You can execute this ansible-playbook like so (verbose output):
+
+```
+tesuto@dev1:~/code-samples/ansible$ pwd
+/home/tesuto/code-samples/ansible
+tesuto@dev1:~/code-samples/ansible$ 
+tesuto@dev1:~/code-samples/ansible$ 
+tesuto@dev1:~/code-samples/ansible$ ansible-playbook -i ansible_hosts playbooks/config_bgp/config_
+config_oc_bgp_ydk.yml      config_xr_bgp_netconf.yml  
+tesuto@dev1:~/code-samples/ansible$ ansible-playbook -i ansible_hosts playbooks/config_bgp/config_oc_bgp_ydk.yml -vvv
+ansible-playbook 2.6.0
+  config file = None
+  configured module search path = [u'/home/tesuto/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/local/lib/python2.7/dist-packages/ansible
+  executable location = /usr/local/bin/ansible-playbook
+  python version = 2.7.15rc1 (default, Nov 12 2018, 14:31:15) [GCC 7.3.0]
+No config file found; using defaults
+Parsed /home/tesuto/code-samples/ansible/ansible_hosts inventory source with ini plugin
+
+PLAYBOOK: config_oc_bgp_ydk.yml ***********************************************************************************************************************
+1 plays in playbooks/config_bgp/config_oc_bgp_ydk.yml
+
+PLAY [Configure iBGP on routers using OC NetworkInstance Model with YDK] ******************************************************************************
+META: ran handlers
+
+TASK [configure BGP using YDK with GNMI] **************************************************************************************************************
+task path: /home/tesuto/code-samples/ansible/playbooks/config_bgp/config_oc_bgp_ydk.yml:19
+<100.96.0.14> ESTABLISH LOCAL CONNECTION FOR USER: tesuto
+<100.96.0.14> EXEC /bin/sh -c 'echo ~tesuto && sleep 0'
+<100.96.0.14> EXEC /bin/sh -c '( umask 77 && mkdir -p "` echo /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.7-92535267491590 `" && echo ansible-tmp-1550404266.7-92535267491590="` echo /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.7-92535267491590 `" ) && sleep 0'
+<100.96.0.26> ESTABLISH LOCAL CONNECTION FOR USER: tesuto
+<100.96.0.26> EXEC /bin/sh -c 'echo ~tesuto && sleep 0'
+<100.96.0.26> EXEC /bin/sh -c '( umask 77 && mkdir -p "` echo /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.72-154672175170133 `" && echo ansible-tmp-1550404266.72-154672175170133="` echo /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.72-154672175170133 `" ) && sleep 0'
+Using module file /home/tesuto/code-samples/ansible/playbooks/config_bgp/library/config_bgp_oc_ydk.py
+<100.96.0.14> PUT /home/tesuto/.ansible/tmp/ansible-local-8551Zl40bD/tmpCgqwow TO /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.7-92535267491590/config_bgp_oc_ydk.py
+Using module file /home/tesuto/code-samples/ansible/playbooks/config_bgp/library/config_bgp_oc_ydk.py
+<100.96.0.14> EXEC /bin/sh -c 'chmod u+x /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.7-92535267491590/ /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.7-92535267491590/config_bgp_oc_ydk.py && sleep 0'
+<100.96.0.26> PUT /home/tesuto/.ansible/tmp/ansible-local-8551Zl40bD/tmptvOvzF TO /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.72-154672175170133/config_bgp_oc_ydk.py
+<100.96.0.26> EXEC /bin/sh -c 'chmod u+x /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.72-154672175170133/ /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.72-154672175170133/config_bgp_oc_ydk.py && sleep 0'
+<100.96.0.14> EXEC /bin/sh -c '/usr/bin/python /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.7-92535267491590/config_bgp_oc_ydk.py && sleep 0'
+<100.96.0.26> EXEC /bin/sh -c '/usr/bin/python /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.72-154672175170133/config_bgp_oc_ydk.py && sleep 0'
+<100.96.0.14> EXEC /bin/sh -c 'rm -f -r /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.7-92535267491590/ > /dev/null 2>&1 && sleep 0'
+changed: [rtr1] => {
+    "changed": true, 
+    "invocation": {
+        "module_args": {
+            "bgp_params": {
+                "as": 65000, 
+                "neighbor": "172.16.4.1", 
+                "peer-as": 65000, 
+                "peer-group-local-address": "172.16.1.1", 
+                "peer-group-name": "IBGP", 
+                "router_id": "172.16.1.1", 
+                "vrf": "default"
+            }, 
+            "crud_op": "add", 
+            "grpc_port": "57777", 
+            "host": "100.96.0.14", 
+            "password": "VALUE_SPECIFIED_IN_NO_LOG_PARAMETER", 
+            "username": "rtrdev", 
+            "yang_repo_location": "./yang"
+        }
+    }
+}
+<100.96.0.26> EXEC /bin/sh -c 'rm -f -r /home/tesuto/.ansible/tmp/ansible-tmp-1550404266.72-154672175170133/ > /dev/null 2>&1 && sleep 0'
+changed: [rtr4] => {
+    "changed": true, 
+    "invocation": {
+        "module_args": {
+            "bgp_params": {
+                "as": 65000, 
+                "neighbor": "172.16.1.1", 
+                "peer-as": 65000, 
+                "peer-group-local-address": "172.16.4.1", 
+                "peer-group-name": "IBGP", 
+                "router_id": "172.16.4.1", 
+                "vrf": "default"
+            }, 
+            "crud_op": "add", 
+            "grpc_port": "57777", 
+            "host": "100.96.0.26", 
+            "password": "VALUE_SPECIFIED_IN_NO_LOG_PARAMETER", 
+            "username": "rtrdev", 
+            "yang_repo_location": "./yang"
+        }
+    }
+}
+META: ran handlers
+META: ran handlers
+
+PLAY RECAP ********************************************************************************************************************************************
+rtr1                       : ok=1    changed=1    unreachable=0    failed=0   
+rtr4                       : ok=1    changed=1    unreachable=0    failed=0   
+
+tesuto@dev1:~/code-samples/ansible$ 
+
+
+```
+
+This is using the exact same code as the earlier YDK script in the `config_bgp_ipv4()` function above. So deconstruct the fields from openconfig-bgp.yang model you need to fill out for YDK to generate the required RPC call for you and complete the code in the above library file.
+
+No need to touch any part of the code other than  config_bgp_ipv4() (look for the comment in the code) and you should be then able to run the ansible-playbook to configure BGP for you. It will eventually look something like this (verbose output with ansible):
+
+
+```
+
+
+
 
 ```
 
