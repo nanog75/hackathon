@@ -727,10 +727,21 @@ Notice the highlighted portion above. It shows 3 important steps:
     nc_mgr = ztp_script.ncclient_connect(host=host)```
 
 
-3. 
+3. Once the ncclient manager is available (nc_mgr), peform all the typical operations as you would with ncclient (<https://github.com/ncclient/ncclient>)
+
+    ```
+    # From here on, the operation is just normal ncclient usage
+        response = nc_mgr.get_config(source="running")
+        print(response)
+        response_dict=xmltodict.parse(str(response))
+        print json.dumps(response_dict, indent=4)
+    ```
 
 
 
+
+You job is to focus only on the above portion of code to add ncclient operations to `edit_config` using XML files that the script will download during its operation.
+{: .notice--success}
 
 
 
