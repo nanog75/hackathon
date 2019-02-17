@@ -987,5 +987,79 @@ PING 10.1.1.10 (10.1.1.10) 56(84) bytes of data.
 ```
 
 
+Perfect! Now the task at hand is to create corresponding scripts for each of the paths defined in the figure above. Bear in mind that rtr2 will only be available as valid node for paths once Day0 group has finished provisioning it.  
+
+
+
+
+## Task 2:  Integrating Telemetry with the gRIBI controller
+
+
+A `kafka_consumer.py` script has been provided as part of the `code-samples` repository.
+This script is set up to automatically connet to the kafka cluster running on dev1 and dump the received in a json format.
+
+If the Day1 group has managed to set up their telemetry collector to push data to kafka, then running the consumer on dev2 should start dumping the data right away:
+
+
+```
+tesuto@dev2:~$ 
+tesuto@dev2:~$ cd code-samples/telemetry/
+tesuto@dev2:~/code-samples/telemetry$ ls
+gnmi_pb2.py  kafka_consumer.py  telemetry.py
+tesuto@dev2:~/code-samples/telemetry$ python kafka_consumer.py 
+{
+  "update": {
+    "update": [
+      {
+        "path": {
+          "elem": [
+            {
+              "key": {
+                "name": "Null0"
+              },
+              "name": "interface"
+            },
+            {
+              "name": "state"
+            },
+            {
+              "name": "type"
+            }
+          ]
+        },
+        "val": {
+          "stringVal": "other"
+        }
+      },
+      {
+        "path": {
+          "elem": [
+            {
+              "key": {
+                "name": "Null0"
+              },
+              "name": "interface"
+            },
+            {
+              "name": "state"
+            },
+            {
+              "name": "mtu"
+            }
+          ]
+        },
+        "val": {
+          "uintVal": "1500"
+        }
+
+
+```
+
+
+And there you have it. Interface data streaming to dev2 from the kafka cluster running on dev1.
+Now parse this information to create a snapshot of the state of the interfaces in the network depending upon which router this was gathered for.
+Then when an interface on the router is shut down, parse the DOWN state and trigger an event for the gribi controller to change LSP paths if needed!
+{: .notice--success}
+
 
 
