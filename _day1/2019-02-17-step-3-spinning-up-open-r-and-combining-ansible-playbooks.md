@@ -64,7 +64,7 @@ router bgp 65000
 
 ```
 
-**rtr2 BGP configuration**:
+**rtr4 BGP configuration**:
 
 ```
 router bgp 65000
