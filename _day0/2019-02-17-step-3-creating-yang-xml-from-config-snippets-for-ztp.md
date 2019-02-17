@@ -230,10 +230,12 @@ end
 ## Config Snippet to be applied
 
 
-Since , the only CLI configuration that must be converted to XML is:
+The Management port configuration, default route and domain-name settings are applied by the DHCP server's response, so we ignore these as well. 
+
+Taking a diff between expected CLI and the base CLI, we get the following:
 
 
-rtr2.config.diff
+**rtr2.config.diff**
 
 
 ```
@@ -241,10 +243,6 @@ hostname rtr2
 !
 interface Loopback0
  ipv4 address 172.16.2.1 255.255.255.255
-!
-interface MgmtEth0/RP0/CPU0/0
- ipv4 address 100.96.0.16 255.240.0.0
- no shutdown
 !
 interface GigabitEthernet0/0/0/0
  ipv4 address 10.2.1.20 255.255.255.0
@@ -278,7 +276,75 @@ end
 
 ```
 
+This is the configuration that must be applied to rtr2 by the ZTP script.
 
+
+## Converting the required CLI into XML 
+
+
+Let's break down the required CLI configuration into  individual Yang models that we need to use:
+
+
+1. For the hostname CLI:
+
+   ```
+   !
+   hostname rtr2
+   ```
+
+   The yang model to be used is: `Cisco-IOS-XR-shellutil-cfg.yang`
+   
+   Since this is an XR specific model, we've already converted the CLI snippet into XML:
+   
+   ```
+   <config>
+	<host-names xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-shellutil-cfg">
+		<host-name>rtr2</host-name>
+	</host-names>
+   </config>
+   
+   ```
+   
+   This XML snippet is stored as `hostname.xml` on the webserver at `/var/www/html/xml/rtr2/`
+   
+   
+2. For the grpc CLI:
+
+   ```
+   !
+   grpc
+    port 57777
+    no-tls
+    service-layer
+    !
+   !
+   ```
+   
+   The Yang model to be used is :  `Cisco-IOS-XR-man-ems-cfg.yang`
+   
+   Again, being an XR specific model, we've converted it into XML for you:
+   
+   ```
+   <config>
+	<grpc xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-man-ems-cfg">
+		<port>57777</port>
+		<no-tls></no-tls>
+		<enable></enable>
+		<service-layer>
+			<enable></enable>
+		</service-layer>
+	</grpc>
+   </config>
+   ```
+   
+   This XML snippet is stored as `grpc_config.xml` on the webserver at `/var/www/html/xml/rtr2/`
+   
+3. For the mpls static CLI:
+
+   ```
+   
+   
+   ```
 
 
 
