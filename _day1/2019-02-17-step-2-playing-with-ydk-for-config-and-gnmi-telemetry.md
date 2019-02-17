@@ -115,6 +115,114 @@ tesuto@dev1:~/code-samples/ydk$
 tesuto@dev1:~/code-samples/ydk$ 
 ```
 
+
+
 Notice the basic structure of the YDK script:
 
-1. It has 3 major components:  Provider, ConneService and
+1. It has 3 major components:  Provider, CRUDService and the Model objects.
+
+2. The provider object is associated with the type of protocol and RPC you want to utilize for the connection with the router. In today's integration, we intend to use gNMI, hence the gNMIServiceProvider. gNMI does not implement the fetch capabilities automatically unlike netconf, therefore for validation purposes (which YDK does by default), you need to specify the location of a local directory containing the relevant yang models.
+
+3.  The CRUDService helps implement a common CRUD (Create, Read, Update, Delete) API for all providers (today Netconf and gNMI are supported).
+
+4. The Model objects are the highlight of YDK. It translates Yang models into objects in different programming languages (here we use python objects) making it very intuitive to use yang models if you know a bit of python.
+
+
+
+## Execute the YDK script
+
+Provide the relevant options to the YDK script (gRPC on all the routers will be enabled on port 57777 which we use for gNMI):
+
+
+```
+tesuto@dev1:~/code-samples/ydk$ 
+tesuto@dev1:~/code-samples/ydk$ python config_oc_bgp_ydk.py -h
+usage: config_oc_bgp_ydk.py [-h] [-v] -i GRPC_IP -g GRPC_PORT -u USERNAME -p
+                            PASSWORD -y YANG_REPO_LOCATION [-e]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         print debugging messages
+  -i GRPC_IP, --grpc-ip GRPC_IP
+                        Specify the IOS-XR GRPC server IP address
+  -g GRPC_PORT, --grpc-port GRPC_PORT
+                        Specify the IOS-XR GRPC server port
+  -u USERNAME, --username USERNAME
+                        Specify username to connect to gRPC server on XR
+  -p PASSWORD, --password PASSWORD
+                        Specify password to connect to gRPC server on XR
+  -y YANG_REPO_LOCATION, --yang-repo-path YANG_REPO_LOCATION
+                        Specify yang repo path
+  -e, --extra-verbose   Extra Verbose logs
+tesuto@dev1:~/code-samples/ydk$ 
+```
+
+We need to run this script against rtr1 (IP address `100.96.0.14`):
+
+
+```
+tesuto@dev1:~/code-samples/ydk$ 
+tesuto@dev1:~/code-samples/ydk$ python config_oc_bgp_ydk.py -i 100.96.0.14 -g 57777 -u rtrdev -p nanog75sf -y /home/tesuto/yang -v
+2019-02-17 11:12:08,173 - ydk - INFO - gNMIServiceProvider Connected to 100.96.0.14 via Insecure Channel
+2019-02-17 11:12:08,214 - ydk - INFO - Executing CRUD create operation on [network-instance[name='default']]
+2019-02-17 11:12:08,214 - ydk - INFO - Executing set gRPC operation 'update' on entity 'network-instance[name='default']'
+2019-02-17 11:12:08,227 - ydk - ERROR - Cannot find model with module name 'openconfig-bgp'
+2019-02-17 11:12:08,236 - ydk - ERROR - Cannot find model with module name 'openconfig-bgp'
+2019-02-17 11:12:08,242 - ydk - ERROR - Cannot find model with module name 'openconfig-bgp'
+2019-02-17 11:12:08,248 - ydk - ERROR - Cannot find model with module name 'openconfig-bgp'
+2019-02-17 11:12:08,254 - ydk - ERROR - Cannot find model with module name 'openconfig-bgp'
+2019-02-17 11:12:08,261 - ydk - ERROR - Cannot find model with module name 'openconfig-bgp'
+2019-02-17 11:12:08,284 - ydk - ERROR - Cannot find model with module name 'openconfig-mpls'
+2019-02-17 11:12:08,293 - ydk - ERROR - Cannot find model with module name 'openconfig-mpls'
+2019-02-17 11:12:08,298 - ydk - ERROR - Cannot find model with module name 'openconfig-mpls'
+2019-02-17 11:12:08,317 - ydk - ERROR - Cannot find model with module name 'openconfig-isis'
+2019-02-17 11:12:08,331 - ydk - ERROR - Cannot find model with module name 'openconfig-isis'
+2019-02-17 11:12:08,357 - ydk - ERROR - Cannot find model with module name 'openconfig-aft'
+2019-02-17 11:12:08,362 - ydk - ERROR - Cannot find model with module name 'openconfig-aft'
+2019-02-17 11:12:08,369 - ydk - ERROR - Cannot find model with module name 'openconfig-aft'
+2019-02-17 11:12:08,375 - ydk - ERROR - Cannot find model with module name 'openconfig-aft'
+2019-02-17 11:12:08,380 - ydk - ERROR - Cannot find model with module name 'openconfig-aft'
+2019-02-17 11:12:08,387 - ydk - ERROR - Cannot find model with module name 'openconfig-aft'
+2019-02-17 11:12:08,393 - ydk - ERROR - Cannot find model with module name 'openconfig-network-instance'
+2019-02-17 11:12:08,442 - ydk - INFO - 
+=============== Set Request Sent ================
+update {
+  path {
+    origin: "openconfig-network-instance"
+    elem {
+      name: "network-instances"
+    }
+  }
+  val {
+    json_ietf_val: "{\"openconfig-network-instance:network-instance\":[{\"name\":\"default\",\"protocols\":{\"protocol\":[{\"identifier\":\"openconfig-policy-types:BGP\",\"name\":\"default\",\"config\":{\"identifier\":\"openconfig-policy-types:BGP\",\"name\":\"default\"},\"bgp\":{\"global\":{\"config\":{\"as\":65000}}}}]}}]}"
+  }
+}
+
+
+2019-02-17 11:12:09,076 - ydk - INFO - 
+============= Set Response Received =============
+response {
+  path {
+    origin: "openconfig-network-instance"
+    elem {
+      name: "network-instances"
+    }
+  }
+  message {
+  }
+  op: UPDATE
+}
+message {
+}
+timestamp: 1550401927704781395
+
+
+2019-02-17 11:12:09,076 - ydk - INFO - Set Operation Succeeded
+2019-02-17 11:12:09,076 - ydk - INFO - Operation succeeded
+2019-02-17 11:12:09,077 - ydk - INFO - Disconnected from device
+tesuto@dev1:~/code-samples/ydk$ 
+
+
+```
+
+Now connect to router `rtr1`
