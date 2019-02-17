@@ -346,6 +346,8 @@ You're all set to execute ZTP!
 {: .notice--success}
 
 
+To understand how to modify the ZTP script provided and to use appropriate Yang Models to achieve the required configuration, move on to [Step3]({{ base_path }})
+
 
 
 
