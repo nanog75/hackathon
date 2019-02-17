@@ -162,8 +162,23 @@ Each router in the topology has a unique, persistent Serial-Number as well as a 
 
 As the file below shows, the following IP addresses are assigned based on the Serial Numbers:
 
-
-
+```
+rtr1:  
+    IP:  100.96.0.14
+    Serial Number:  FGE00080000
+    
+rtr2:
+    IP:  100.96.0.16
+    Serial Number:  FGE000e0000
+    
+rtr3:
+    IP:  100.96.0.18
+    Serial Number:  FGE00140000
+    
+rtr4:
+    IP:  100.96.0.26
+    Serial Number:  FGE002c0000
+```
 
 
 On the ZTP node, dump the `/etc/dhcp/dhcpd.conf` file:
@@ -342,6 +357,9 @@ tesuto@ztp:~$
 
 
 ```
+
+
+
 
 
 
