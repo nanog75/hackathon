@@ -745,3 +745,7 @@ You job is to focus only on the above portion of code to add ncclient operations
 
 
 
+To understand how to perform ZTP on the router rtr2, follow along to the [Step2]({{ base_path }})
+
+
+
