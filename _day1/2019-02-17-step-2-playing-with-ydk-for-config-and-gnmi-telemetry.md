@@ -1118,5 +1118,19 @@ tesuto@dev1:~/code-samples/telemetry$
 
 It can be seen from the above code YDK can be used with gNMI to set up a streaming subscriber that creates a callback to a function `push_to_kafka` in the code above. In other words, this code automatically pushes data received into the Kafka bus running on `dev1` at `100.96.0.20:9092`.
 
+As the code comments above suggest, the `telemetry.py` subscribes to the openconfig yang model `openconfig-interface.yang` by creating an object using the YDK generated bindings:
+
+```
+# The below will create a telemetry subscription path 'openconfig-interfaces:interfaces/interface'
+    interfaces = openconfig_interfaces.Interfaces()
+    interface = openconfig_interfaces.Interfaces.Interface()
+    interfaces.interface.append(interface)
+```
+
+
+Running this script directly will push data to kafka automatically. The Day2 team will be provided with a consumer for kafka that can read the same pushed data.
+
+
+
 
 
