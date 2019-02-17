@@ -1,7 +1,16 @@
 ---
-published: false
+published: true
 date: '2019-02-17 01:01 -0800'
 title: 'Step 2:  Performing ZTP'
+author: Nanog75 Hackathon Team
+excerpt: >-
+  Learn how to perform ZTP manually on the router and properly through the
+  repair process
+tags:
+  - nanog75
+  - iosxr
+  - cisco
+  - tesuto
 ---
 
 {% include toc %}
