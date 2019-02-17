@@ -990,6 +990,163 @@ PING 10.1.1.10 (10.1.1.10) 56(84) bytes of data.
 Perfect! Now the task at hand is to create corresponding scripts for each of the paths defined in the figure above. Bear in mind that rtr2 will only be available as valid node for paths once Day0 group has finished provisioning it.  
 
 
+### View State created on the routers
+
+Let's view the LSP state created on the routers. SSH'ing into rtr1:
+
+
+```
+tesuto@dev2:~/code-samples/telemetry$ 
+tesuto@dev2:~/code-samples/telemetry$ ssh rtrdev@100.96.0.14
+The authenticity of host '100.96.0.14 (100.96.0.14)' can't be established.
+RSA key fingerprint is SHA256:u5Plp7K98tQHuFSBcIl6EvJboVmSXxpyRb4DVg2qJ9o.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '100.96.0.14' (RSA) to the list of known hosts.
+Password: 
+
+
+RP/0/RP0/CPU0:rtr1#
+RP/0/RP0/CPU0:rtr1#
+RP/0/RP0/CPU0:rtr1#show  mpls  forwarding 
+Sun Feb 17 15:07:28.118 UTC
+Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes       
+Label  Label       or ID              Interface                    Switched    
+------ ----------- ------------------ ------------ --------------- ------------
+2419   17010       No ID              Gi0/0/0/2    10.3.1.20       6300        
+17010  Aggregate   SR Pfx (idx 0)     default                      6300        
+18010  Aggregate   SR Pfx (idx 0)     default                      1128        
+RP/0/RP0/CPU0:rtr1#
+RP/0/RP0/CPU0:rtr1#
+RP/0/RP0/CPU0:rtr1#show  route
+Sun Feb 17 15:07:31.240 UTC
+
+Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+       U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+       A - access/subscriber, a - Application route
+       M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+
+Gateway of last resort is 100.96.0.1 to network 0.0.0.0
+
+S*   0.0.0.0/0 [1/0] via 100.96.0.1, 14:02:27
+C    10.1.1.0/24 is directly connected, 18:14:24, GigabitEthernet0/0/0/0
+L    10.1.1.20/32 is directly connected, 18:14:24, GigabitEthernet0/0/0/0
+C    10.2.1.0/24 is directly connected, 18:14:24, GigabitEthernet0/0/0/1
+L    10.2.1.10/32 is directly connected, 18:14:24, GigabitEthernet0/0/0/1
+C    10.3.1.0/24 is directly connected, 18:14:24, GigabitEthernet0/0/0/2
+L    10.3.1.10/32 is directly connected, 18:14:24, GigabitEthernet0/0/0/2
+C    10.7.1.0/24 is directly connected, 18:14:24, GigabitEthernet0/0/0/3
+L    10.7.1.10/32 is directly connected, 18:14:24, GigabitEthernet0/0/0/3
+a    10.8.1.0/24 [1/0] via 10.3.1.20, 00:11:31, GigabitEthernet0/0/0/2
+C    100.96.0.0/12 is directly connected, 14:02:27, MgmtEth0/RP0/CPU0/0
+L    100.96.0.14/32 is directly connected, 14:02:27, MgmtEth0/RP0/CPU0/0
+L    172.16.1.1/32 is directly connected, 18:14:23, Loopback0
+a    172.16.2.1/32 [99/0] via 10.2.1.20, 00:00:09, GigabitEthernet0/0/0/1
+a    172.16.3.1/32 [99/0] via 10.3.1.20, 00:00:09, GigabitEthernet0/0/0/2
+a    172.16.4.1/32 [99/0] via 10.3.1.20, 00:00:09, GigabitEthernet0/0/0/2
+RP/0/RP0/CPU0:rtr1#
+RP/0/RP0/CPU0:rtr1#
+RP/0/RP0/CPU0:rtr1#show cef 10.8.1.10/24
+Sun Feb 17 15:08:12.828 UTC
+10.8.1.0/24, version 40124, internal 0x1000001 0x0 (ptr 0xe0b2ee0) [1], 0x0 (0xe275528), 0xa28 (0xe4dc1a8)
+ Updated Feb 17 14:56:00.300 
+ remote adjacency to GigabitEthernet0/0/0/2
+ Prefix Len 24, traffic index 0, precedence n/a, priority 3
+   via 10.3.1.20/32, GigabitEthernet0/0/0/2, 2 dependencies, weight 0, class 0 [flags 0x0]
+    path-idx 0 NHID 0x0 [0xebcd800 0x0]
+    next hop 10.3.1.20/32
+    remote adjacency
+     local label 2419      labels imposed {17010}
+RP/0/RP0/CPU0:rtr1#
+
+
+```
+Notice the application route 10.8.1.0/24 in the RIB and the associated label 17010 being imposed as indicated by the "show cef" output.
+
+Similarly on rtr3 and rtr4:
+
+**rtr3 forwarding entries**:
+
+```
+RP/0/RP0/CPU0:rtr3#show  mpls  forwarding 
+Sun Feb 17 15:09:35.471 UTC
+Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes       
+Label  Label       or ID              Interface                    Switched    
+------ ----------- ------------------ ------------ --------------- ------------
+16030  17010       SR Pfx (idx 0)     Gi0/0/0/0    10.3.1.10       6300        
+17010  16030       SR Pfx (idx 0)     Gi0/0/0/2    10.6.1.20       6300        
+RP/0/RP0/CPU0:rtr3#
+
+
+```
+
+
+**rtr4 forwarding entries**:
+
+```
+RP/0/RP0/CPU0:rtr4#
+RP/0/RP0/CPU0:rtr4#show  mpls forwarding 
+Sun Feb 17 15:10:16.426 UTC
+Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes       
+Label  Label       or ID              Interface                    Switched    
+------ ----------- ------------------ ------------ --------------- ------------
+2419   16030       No ID              Gi0/0/0/2    10.6.1.10       6300        
+16030  Aggregate   SR Pfx (idx 0)     default                      6300        
+18010  Aggregate   SR Pfx (idx 0)     default                      2232        
+RP/0/RP0/CPU0:rtr4#
+RP/0/RP0/CPU0:rtr4#show route
+Sun Feb 17 15:10:19.325 UTC
+
+Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+       U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+       A - access/subscriber, a - Application route
+       M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+
+Gateway of last resort is 100.96.0.1 to network 0.0.0.0
+
+S*   0.0.0.0/0 [1/0] via 100.96.0.1, 18:18:18
+a    10.1.1.0/24 [1/0] via 10.6.1.10, 00:14:18, GigabitEthernet0/0/0/2
+C    10.5.1.0/24 is directly connected, 18:17:16, GigabitEthernet0/0/0/1
+L    10.5.1.20/32 is directly connected, 18:17:16, GigabitEthernet0/0/0/1
+C    10.6.1.0/24 is directly connected, 11:58:19, GigabitEthernet0/0/0/2
+L    10.6.1.20/32 is directly connected, 11:58:19, GigabitEthernet0/0/0/2
+C    10.7.1.0/24 is directly connected, 11:49:28, GigabitEthernet0/0/0/3
+L    10.7.1.20/32 is directly connected, 11:49:28, GigabitEthernet0/0/0/3
+C    10.8.1.0/24 is directly connected, 18:17:16, GigabitEthernet0/0/0/0
+L    10.8.1.10/32 is directly connected, 18:17:16, GigabitEthernet0/0/0/0
+C    100.96.0.0/12 is directly connected, 18:18:35, MgmtEth0/RP0/CPU0/0
+L    100.96.0.26/32 is directly connected, 18:18:35, MgmtEth0/RP0/CPU0/0
+a    172.16.1.1/32 [99/0] via 10.6.1.10, 00:00:23, GigabitEthernet0/0/0/2
+a    172.16.2.1/32 [99/0] via 10.5.1.10, 00:00:23, GigabitEthernet0/0/0/1
+a    172.16.3.1/32 [99/0] via 10.6.1.10, 00:00:23, GigabitEthernet0/0/0/2
+L    172.16.4.1/32 is directly connected, 18:17:14, Loopback0
+RP/0/RP0/CPU0:rtr4#
+RP/0/RP0/CPU0:rtr4#
+RP/0/RP0/CPU0:rtr4#show cef 10.1.1.0/24
+Sun Feb 17 15:10:31.920 UTC
+10.1.1.0/24, version 40310, internal 0x1000001 0x0 (ptr 0xe0b32f0) [1], 0x0 (0xe275728), 0xa28 (0xe4dc1a8)
+ Updated Feb 17 14:56:00.953 
+ remote adjacency to GigabitEthernet0/0/0/2
+ Prefix Len 24, traffic index 0, precedence n/a, priority 3
+   via 10.6.1.10/32, GigabitEthernet0/0/0/2, 2 dependencies, weight 0, class 0 [flags 0x0]
+    path-idx 0 NHID 0x0 [0xebcd9b0 0x0]
+    next hop 10.6.1.10/32
+    remote adjacency
+     local label 2419      labels imposed {16030}
+RP/0/RP0/CPU0:rtr4#
+
+
+
+```
 
 
 ## Task 2:  Integrating Telemetry with the gRIBI controller
