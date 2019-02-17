@@ -319,13 +319,15 @@ This process is equivalent to provisioning a fresh router without config in your
 When ZTP is executing (whether manual or through repair), to view the ongoing logs, console into the router, drop into `bash` and do a `tail -f` on `/var/log/ztp.log`
 
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 RP/0/RP0/CPU0:ios#
-RP/0/RP0/CPU0:ios#bash
+RP/0/RP0/CPU0:ios#<mark>bash</mark>
 Sun Feb 17 09:50:47.670 UTC
 
 [host:~]$ 
-[host:~]$ tail -f /var/log/ztp.log 
+[host:~]$ <mark>tail -f /var/log/ztp.log</mark>
 Parsing.
 21 bytes parsed in 1 sec (20)bytes/sec
 Committing
@@ -334,9 +336,9 @@ Prepared commit in 0 sec
 2 items committed in 2 sec (0)items/sec
 Updating.
 Updated Commit database in 1 sec 
-
-
-```
+</code>
+</pre>
+</div>
 
 
 
