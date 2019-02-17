@@ -16,17 +16,7 @@ tags:
 {% include toc %}
 {% include base_path %}
 
-## Ways to perform ZTP
-
-We have already seen that the DHCP server is set up to respond with the location of the script `ztp_ncclient.py` to router `rtr2` when it sends the appropriate ZTP request. So, let's perform 
-ZTP for rtr2.
-
-There are two ways to perform ZTP on any router in the current topology:
-
-### Manually from console while the router is up
-
-
-To initiate ZTP on router rtr2 while it is still up, first connect to the console of router `rtr2`.   
+## Console into your router
 
 To do this, first ssh to the Base Pod VM (assuming podx):
 
@@ -87,6 +77,72 @@ RP/0/RP0/CPU0:ios#
 RP/0/RP0/CPU0:ios#
 RP/0/RP0/CPU0:ios#
 ```
+
+
+
+
+## Testing your ZTP script
+
+You don't need to actually perform ZTP to test your ZTP script. To do this, ssh into your ZTP box:  
+```
+AKSHSHAR-M-33WP:~ akshshar$ ssh -i ~/nanog75.key tesuto@ztp.hackathon.pod0.cloud.tesuto.com
+Warning: the ECDSA host key for 'ztp.hackathon.pod0.cloud.tesuto.com' differs from the key for the IP address '35.197.94.94'
+Offending key for IP in /Users/akshshar/.ssh/known_hosts:1
+Matching host key in /Users/akshshar/.ssh/known_hosts:5
+Are you sure you want to continue connecting (yes/no)? yes
+Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-45-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sun Feb 17 09:38:59 UTC 2019
+
+  System load:  0.0               Processes:           110
+  Usage of /:   9.6% of 21.35GB   Users logged in:     0
+  Memory usage: 2%                IP address for ens3: 100.96.0.20
+  Swap usage:   0%
+
+ * 'snap info' now shows the freshness of each channel.
+   Try 'snap info microk8s' for all the latest goodness.
+
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+ * Canonical Livepatch is available for installation.
+   - Reduce system reboots and improve kernel security. Activate at:
+     https://ubuntu.com/livepatch
+
+8 packages can be updated.
+0 updates are security updates.
+
+
+Last login: Sun Feb 17 07:51:28 2019 from 128.107.241.176
+tesuto@ztp:~$ 
+tesuto@ztp:~$ 
+tesuto@ztp:~$ 
+tesuto@ztp:~$ 
+
+```
+
+Simply console into the router, drop into bash, down
+
+
+
+## Testing the ZTP process
+
+We have already seen that the DHCP server is set up to respond with the location of the script `ztp_ncclient.py` to router `rtr2` when it sends the appropriate ZTP request. So, let's perform 
+ZTP for rtr2.
+
+There are two ways to perform ZTP on any router in the current topology:
+
+### Manually from console while the router is up
+
+
+To initiate ZTP on router rtr2 while it is still up, first connect to the console of router `rtr2`.   
+
+
 
 Now to initiate ZTP manually, we basically need to execute the CLI `ztp initiate noprompt` in the router CLI shell.
 However, since this setup reserves a single IP address from the DHCP server for each router, executing ZTP manually from an already provisioned box (rtr2) will fail since the ISC-DHCP server will not reissue an IP to the router that already has the IP present.
@@ -207,9 +263,8 @@ This process is equivalent to provisioning a fresh router without config in your
 
 ### Logs During Execution.
 
-When ZXT
+When ZTP is executing, to view the ongoing logs, console into the router, drop into `bash` and do a `tail -f` on `/var/log/ztp.log`
 
 
-## Testing your ZTP script
 
-While the above two techniques will perform the ZTP process on rtr2 - remember it involves DHCP requests, download, execution
+
