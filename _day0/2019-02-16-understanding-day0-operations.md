@@ -82,8 +82,8 @@ Based on the pod number (assuming `x`), connect to your ZTP box first:
 
 
 ```
-AKSHSHAR-M-33WP:~ akshshar$ ssh -i ~/nanog75.key tesuto@ztp.hackathon.pod0.cloud.tesuto.com
-Warning: the ECDSA host key for 'ztp.hackathon.pod0.cloud.tesuto.com' differs from the key for the IP address '35.197.94.94'
+AKSHSHAR-M-33WP:~ akshshar$ ssh -i ~/nanog75.key tesuto@ztp.hackathon.podx.cloud.tesuto.com
+Warning: the ECDSA host key for 'ztp.hackathon.podx.cloud.tesuto.com' differs from the key for the IP address '35.197.94.94'
 Offending key for IP in /Users/akshshar/.ssh/known_hosts:1
 Matching host key in /Users/akshshar/.ssh/known_hosts:5
 Are you sure you want to continue connecting (yes/no)? yes
