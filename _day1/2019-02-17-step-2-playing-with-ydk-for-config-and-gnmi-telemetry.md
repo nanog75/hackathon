@@ -1131,6 +1131,17 @@ As the code comments above suggest, the `telemetry.py` subscribes to the opencon
 Running this script directly will push data to kafka automatically. The Day2 team will be provided with a consumer for kafka that can read the same pushed data.
 
 
+### Task 2: Spinning up Telemetry collector with Ansible
+
+
+The Telemetry collector as shown above is simply a python script. We need to create a service out of this that can be spun up by Ansible.
+
+This is simple. We have already created a docker image for you that contains all the dependencies for the script to run on dockerhub:  
+
+><https://cloud.docker.com/u/akshshar/repository/docker/akshshar/nanog75-telemetry>
+
+with the tag:  `akshshar/nanog75-telemetry`
+
 
 
 
