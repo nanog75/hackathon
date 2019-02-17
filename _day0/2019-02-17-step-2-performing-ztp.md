@@ -56,7 +56,7 @@ To console into router rtr2, simply type:  `console rtr2` on the base Pod VM:
 >**Username**: rtrdev
 >**Password**: nanog75sf  
 >
->
+>On an actual router, this user is not present, this is only been made available for this hackathon to make things simpler.
 {: .notice--info}
 
 
