@@ -181,7 +181,7 @@ rtr4:
 ```
 
 
-On the ZTP node, dump the `/etc/dhcp/dhcpd.conf` file:
+To understand how, on the ZTP node, dump the `/etc/dhcp/dhcpd.conf` file:
 
 ```
 
@@ -361,6 +361,48 @@ tesuto@ztp:~$
 
 
 
+
+
+### Focus on rtr2
+
+The DHCP setting relevant to rtr2 is given below:
+
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+        class "xrv9k-rtr2" {
+            match if (substring(option dhcp-client-identifier,0,11) = <mark>"FGE000e0000");</mark>
+        }
+
+        pool {
+            allow members of "xrv9k-rtr2";
+            range 100.96.0.16 100.96.0.16;
+            next-server 100.96.0.20;
+
+            log (info, option vendor-class.cisco-vendor-id-vendor-class);
+            log (info, substring(option vendor-class.cisco-vendor-id-vendor-class,3,11));
+            log (info, substring(option vendor-class.cisco-vendor-id-vendor-class,19,99));
+
+            if exists user-class and option user-class = "exr-config" {
+              if (substring(option vendor-class.cisco-vendor-id-vendor-class,3,11)=<mark>"FGE000e0000"</mark>)
+              {
+                if (substring(option vendor-class.cisco-vendor-id-vendor-class,19,99)="R-IOSXRV9000-CC")
+                {
+                    <mark>#option bootfile-name "http://100.96.0.20/scripts/ztp_ncclient.py";
+                    option bootfile-name "http://100.96.0.20/configs/rtr2.config";</mark>
+                }
+              }
+            }
+
+            ddns-hostname "xrv9k-rtr2";
+            option routers 100.96.0.1;
+        }
+
+
+</code>
+</pre>
+</div>
 
 
 
