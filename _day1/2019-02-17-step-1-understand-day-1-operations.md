@@ -309,11 +309,27 @@ tesuto@dev1:~/code-samples$ tree -I yang
 27 directories, 69 files
 tesuto@dev1:~/code-samples$ 
 
+```
+
+
+For the Day1 group the relevant top level directories are :
+
+
+1. `ansible`:  This directory contains all the available playbooks for you to understand, modify and add to. 
+
+
+2.  `ydk`:  This directory contains a sample YDK code that will help you understand how YDK works along with gNMI
+
+
+3.  `telemetry`: This directory contains a telemetry collector using YDK with gNMI that you will utilize to set up monitoring data for the Day2 group. 
+
 
 
 ```
 
 
+
+```
 
 
 
