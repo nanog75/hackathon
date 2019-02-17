@@ -88,5 +88,81 @@ RP/0/RP0/CPU0:ios#
 RP/0/RP0/CPU0:ios#
 ```
 
+Now to initiate ZTP manually, we basically need to execute the CLI `ztp initiate noprompt` in the router CLI shell.
+However, since this setup reserves a single IP address from the DHCP server for each router, executing ZTP manually from an already provisioned box (rtr2) will fail since the ISC-DHCP server will not reissue an IP to the router that already has the IP present.
+
+To make it simple, we have a created a small script to remove the ip from the Managment port and execute `ztp initiate noprompt` for us. 
+
+So, in order to perform manual ZTP on any of the routers in the topology, simply run the following commands in router console:
+
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+RP/0/RP0/CPU0:ios#
+RP/0/RP0/CPU0:ios#bash
+Sun Feb 17 09:18:46.493 UTC
+[host:~]$ 
+[host:~]$ 
+[host:~]$ wget http://100.96.0.20/scripts/retry_manual_ztp.sh
+--2019-02-17 09:19:04--  http://100.96.0.20/scripts/retry_manual_ztp.sh
+Connecting to 100.96.0.20:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 881 [text/x-sh]
+Saving to: 'retry_manual_ztp.sh.1'
+
+100%[======================================>] 881         --.-K/s   in 0s      
+
+2019-02-17 09:19:04 (79.2 MB/s) - 'retry_manual_ztp.sh.1' saved [881/881]
+
+[host:~]$ 
+[host:~]$ chmod +x retry_manual_ztp.sh
+[host:~]$ 
+[host:~]$ ./retry_manual_ztp.sh 
++ read -r -d '' mgmt_clean_config
++ xrapply_string '!
+interface MgmtEth0/RP0/CPU0/0
+ no ipv4 address
+ shutdown
+!
+!
+end'
++ xrnns_apply_string '!
+interface MgmtEth0/RP0/CPU0/0
+ no ipv4 address
+ shutdown
+!
+!
+end'
+++ mktemp
++ local filename=/tmp/tmp.3PLe1NGYaN
++ printf '!
+interface MgmtEth0/RP0/CPU0/0
+ no ipv4 address
+ shutdown
+!
+!
+end\n'
++ xrnns_apply /tmp/tmp.3PLe1NGYaN
++ local filename=/tmp/tmp.3PLe1NGYaN
++ ip netns exec xrnns /pkg/bin/ztp_exec.sh xrnns_apply_ noisy ZTP /tmp/tmp.3PLe1NGYaN
+RP/0/RP0/CPU0:Feb 17 09:19:13.425 UTC: config[67046]: %MGBL-CONFIG_HIST_UPDATE-3-SYSDB_GET : Error 'sysdb' detected the 'warning' condition 'A verifier or EDM callback function returned: 'not found'' getting host address from  sysdb 
++ local ret=0
++ safe_rm_file /tmp/tmp.3PLe1NGYaN
++ [[ /tmp/tmp.3PLe1NGYaN = '' ]]
++ /bin/rm -f /tmp/tmp.3PLe1NGYaN
++ return 0
++ xrcmd 'ztp initiate noprompt'
++ xrnns_cmd 'ztp initiate noprompt'
++ ip netns exec xrnns /pkg/bin/ztp_exec.sh xrnns_cmd_ 'ztp initiate noprompt'
+ZTP will now run in the background.
+Please use "show logging" or look at /disk0:/ztp/ztp.log to check progress.
+Killed
+[host:~]$
+
+</code>
+</pre>
+</div>
+
 
 ### Initiating a wipe and reset (Repair)
