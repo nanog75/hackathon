@@ -52,10 +52,10 @@ chmod 400 ~/nanog75.key
 
 Assuming the pod number assigned to you is `x`, the FQDN to access each of the nodes in the topology is: 
 
-> * **JumpHost** : hackathon.podx.cloud.tesuto.com
-> * **ztp**: ztp.hackathon.podx.cloud.tesuto.com
-> * **dev1**:  dev1.hackathon.podx.cloud.tesuto.com
-> * **dev2**:  dev2.hackathon.podx.cloud.tesuto.com
+> 1. **JumpHost**:     hackathon.podx.cloud.tesuto.com
+> 2. **ztp**:          ztp.hackathon.podx.cloud.tesuto.com
+> 3. **dev1**:         dev1.hackathon.podx.cloud.tesuto.com
+> 4. **dev2**:         dev2.hackathon.podx.cloud.tesuto.com
 
 Using the key downloaded, ssh to the instances like so (for example for the ZTP node):
 
