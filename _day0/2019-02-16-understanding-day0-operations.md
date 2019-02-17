@@ -153,7 +153,7 @@ Let us focus only on router `rtr2` for now. We intend to bootstrap it to a requi
 
 ### DHCP setup
 
-To respond to the router with the required file (script or config), the DHCP server must be suitably setup to identify the requesting router based on its Serial Number before responding with a boot-filename (Option 67) specifying the file location.
+To respond to the router with the required file (script or config), the DHCP server must be suitably setup to identify the requesting router based on its Serial Number before responding with a bootfile-name (Option 67) specifying the file location.
 
 The DHCP server expects the serial number to  provided by the IOS-XR router in Option 61 (client-identifier) for DHCPv4 as well as in option 124 which contains both the Serial Number as well as the platform family and vendor code (9 for Cisco).
 
@@ -283,8 +283,8 @@ log (info, substring(option dhcp-client-identifier,0,11));
               {
                 if (substring(option vendor-class.cisco-vendor-id-vendor-class,19,99)="R-IOSXRV9000-CC")
                 {
-                    #option bootfile-name "http://100.96.0.20/scripts/ztp_ncclient.py";
-                    option bootfile-name "http://100.96.0.20/configs/rtr2.config";
+                    option bootfile-name "http://100.96.0.20/scripts/ztp_ncclient.py";
+                    #option bootfile-name "http://100.96.0.20/configs/rtr2.config";
                 }
               }
             }
@@ -365,7 +365,7 @@ tesuto@ztp:~$
 
 ### Focus on rtr2
 
-The DHCP setting relevant to rtr2 is given below:
+The DHCP settings relevant to rtr2 are highlighted below:
 
 
 <div class="highlighter-rouge">
@@ -377,20 +377,20 @@ The DHCP setting relevant to rtr2 is given below:
 
         pool {
             allow members of "xrv9k-rtr2";
-            range 100.96.0.16 100.96.0.16;
+            <mark>range 100.96.0.16 100.96.0.16;</mark>
             next-server 100.96.0.20;
 
             log (info, option vendor-class.cisco-vendor-id-vendor-class);
             log (info, substring(option vendor-class.cisco-vendor-id-vendor-class,3,11));
             log (info, substring(option vendor-class.cisco-vendor-id-vendor-class,19,99));
 
-            if exists user-class and option user-class = "exr-config" {
+            if exists user-class and option user-class = <mark>"exr-config" {</mark>
               if (substring(option vendor-class.cisco-vendor-id-vendor-class,3,11)=<mark>"FGE000e0000"</mark>)
               {
                 if (substring(option vendor-class.cisco-vendor-id-vendor-class,19,99)="R-IOSXRV9000-CC")
                 {
-                    <mark>#option bootfile-name "http://100.96.0.20/scripts/ztp_ncclient.py";
-                    option bootfile-name "http://100.96.0.20/configs/rtr2.config";</mark>
+                    <mark>option bootfile-name "http://100.96.0.20/scripts/ztp_ncclient.py";
+                    #option bootfile-name "http://100.96.0.20/configs/rtr2.config";</mark>
                 }
               }
             }
@@ -406,7 +406,13 @@ The DHCP setting relevant to rtr2 is given below:
 
 
 
+Notice that based on the Serial Number = `FGE000e0000`, rtr2 is assigned the IP address `100.96.0.16`.  
 
+Further, when the user-class (option 77) in the router's DHCP request is `exr-config`, then bootfile-name is currently set to be:
+
+```
+option bootfile-name "http://100.96.0.20/scripts/ztp_ncclient.py"
+```
 
 
 
