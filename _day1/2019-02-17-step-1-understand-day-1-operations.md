@@ -64,10 +64,10 @@ Assuming the pod number assigned to you is `x`, the FQDN to access each of the n
 > 3. **dev1**:         dev1.hackathon.pod`x`.cloud.tesuto.com
 > 4. **dev2**:         dev2.hackathon.pod`x`.cloud.tesuto.com
 
-Using the key downloaded, ssh to the instances like so (for example for the ZTP node):
+Using the key downloaded, ssh to the instances like so (for example for the dev1 node):
 
 ```
-ssh -i ~/nanog75.key tesuto@ztp.hackathon.podx.cloud.tesuto.com
+ssh -i ~/nanog75.key tesuto@dev1.hackathon.podx.cloud.tesuto.com
 
 ```
 {% endcapture %}
