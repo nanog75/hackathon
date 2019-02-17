@@ -158,7 +158,7 @@ Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-45-generic x86_64)
 
 Last login: Sun Feb 17 14:09:48 2019 from 128.107.241.176
 tesuto@dev2:~$ 
-
+tesuto@dev2:~$ 
 ```
 
 
@@ -167,11 +167,98 @@ tesuto@dev2:~$
 
 To save some time in the creation of gRIBI app, we have already coded up a gRPC client that talks to the gRIBI API exposed by IOS-XR.
 
-Further, we have abstracted out the individual pieces of the API into a JSON representation so that creation of a new LSP path is simply equivalent to creating a new json file.
+Further, we have abstracted out the individual pieces of the API into a JSON representation so that creation of a new LSP path is simply equivalent to creating and using a new json file.
 
-To view 
+To view the base code, let's clone the <https://github.com/nanog75/code-samples> repository:
 
 
+### Clone the code-samples repo
+
+First let's install the `tree` package to help us analyse the available code in the `code-samples` repo.
+
+
+```
+tesuto@dev2:~$ sudo apt-get install -y tree
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following NEW packages will be installed:
+  tree
+0 upgraded, 1 newly installed, 0 to remove and 6 not upgraded.
+Need to get 0 B/40.7 kB of archives.
+After this operation, 105 kB of additional disk space will be used.
+Selecting previously unselected package tree.
+(Reading database ... 75456 files and directories currently installed.)
+Preparing to unpack .../tree_1.7.0-5_amd64.deb ...
+Unpacking tree (1.7.0-5) ...
+Setting up tree (1.7.0-5) ...
+Processing triggers for man-db (2.8.3-2ubuntu0.1) ...
+tesuto@dev2:~$ 
+tesuto@dev2:~$ 
+```
+
+
+Now clone the repo located at:
+
+><https://github.com/nanog75/code-samples.git>
+
+
+```
+tesuto@dev2:~$ git clone https://github.com/nanog75/code-samples.git
+Cloning into 'code-samples'...
+remote: Enumerating objects: 1594, done.
+remote: Counting objects: 100% (1594/1594), done.
+remote: Compressing objects: 100% (621/621), done.
+remote: Total 1594 (delta 996), reused 1543 (delta 960), pack-reused 0
+Receiving objects: 100% (1594/1594), 12.74 MiB | 7.12 MiB/s, done.
+Resolving deltas: 100% (996/996), done.
+Checking out files: 100% (1360/1360), done.
+tesuto@dev2:~$ 
+``` 
+  
+Drop into the `code-samples/gribi` directory and dump the files using tree: 
+
+```
+tesuto@dev2:~/code-samples/gribi$ tree .
+.
+├── protos
+│   ├── enums.proto
+│   ├── gribi.proto
+│   ├── gribi_aft.proto
+│   ├── yext.proto
+│   └── ywrapper.proto
+└── src
+    ├── Makefile
+    ├── __init__.py
+    ├── genpy
+    │   ├── __init__.py
+    │   ├── enums_pb2.py
+    │   ├── gribi_aft_pb2.py
+    │   ├── gribi_pb2.py
+    │   ├── yext_pb2.py
+    │   └── ywrapper_pb2.py
+    ├── gribi_api
+    │   ├── __init__.py
+    │   ├── exceptions.py
+    │   ├── gribi_api.py
+    │   └── serializers.py
+    ├── gribi_client
+    │   ├── __init__.py
+    │   ├── gribi_client.py
+    │   ├── gribi_template.json
+    │   ├── path3
+    │   │   ├── r1.gribi.json
+    │   │   ├── r3.gribi.json
+    │   │   └── r4.gribi.json
+    │   ├── path3_add_lsp.sh
+    │   └── path3_delete_lsp.sh
+    └── util
+        ├── __init__.py
+        └── util.py
+
+7 directories, 27 files
+tesuto@dev2:~/code-samples/gribi$ 
+```
 
 
 
