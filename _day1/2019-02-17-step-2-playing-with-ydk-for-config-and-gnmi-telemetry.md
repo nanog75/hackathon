@@ -1260,6 +1260,25 @@ tesuto@dev1:~/code-samples/telemetry$ python3 kafka_consumer.py
 ```
 
 Awesome! The Telemetry collector running inside the docker container is pushing to kafka and the kafka_consumer.py script is able to connect to kafka and retrieve the same information in a json format.
-{: .notice--info}
+{: .notice--info}  
+
+
+
+**Your Task**:  You have seen above how the docker image needs to be spun up. The command is:
+
+```
+docker run -itd --name telemetry \
+       -v /home/tesuto/code-samples/telemetry/telemetry.py:/root/telemetry.py \
+       akshshar/nanog75-telemetry  \
+       /bin/bash -c "python3 /root/telemetry.py"
+
+```
+
+All you have to do is spin up the docker container using an Ansible playbook so that later you can integrate along with the other playbooks into a single playbook.
+
+
+
+Proceed to [Step3]({{ base_path }}) to wrap up Day1 operations.
+
 
 
