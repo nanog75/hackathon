@@ -87,7 +87,7 @@ Based on the pod number (assuming `x`), connect to your dev1 box first:
 
 ```
 AKSHSHAR-M-33WP:~ akshshar$ 
-AKSHSHAR-M-33WP:~ akshshar$ ssh -i ~/Downloads/nanog75.key tesuto@dev1.hackathon.pod0.cloud.tesuto.com
+AKSHSHAR-M-33WP:~ akshshar$ ssh -i ~/nanog75.key tesuto@dev1.hackathon.pod0.cloud.tesuto.com
 Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-45-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com
