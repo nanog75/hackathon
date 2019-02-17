@@ -275,7 +275,7 @@ Killed
 
 ### Initiating a wipe and reset (Repair)
 
-**Note**:  You only need to do this to showcase a true ZTP workflow once you've already tested the ZTP script and the manual ZTP workflow as described above. . Repair takes a long time (10+ minutes). Use the manual ZTP trigger process shown above to initiate the ZTP process while coding the script.
+**Note**:  You only need to do this to showcase a true ZTP workflow once you've already tested the ZTP script and the manual ZTP workflow as described above. Repair takes a long time (10+ minutes). Use the manual ZTP trigger process shown above to initiate the ZTP process while coding the script.
 {: .notice--warning} 
 
 
@@ -306,12 +306,6 @@ You will get a prompt, select `yes` and this will wipe out the rtr2 disk and boo
 This process is equivalent to provisioning a fresh router without config in your network.
 
 ![tesuto_repair3.png]({{site.baseurl}}/images/tesuto_repair3.png)
-
-
-**Note**:
-
-{: .notice--warning}
-
 
 
 ### Logs During Execution.
