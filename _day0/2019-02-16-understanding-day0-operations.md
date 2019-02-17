@@ -765,10 +765,12 @@ It shows 4 important steps:
 
 2. Connect to the IOS-XR netconf server/agent with appropriate retries:
 
-   ````# Connects to IOS-XR netconf agent and returns a manager handle for ncclient
+   ```
+   # Connects to IOS-XR netconf agent and returns a manager handle for ncclient
     # This is a method of the child class defined above that retries the connection
     # during initial boot for a specified maximum duration (default = 120seconds)
-    nc_mgr = ztp_script.ncclient_connect(host=host)```
+    nc_mgr = ztp_script.ncclient_connect(host=host)
+    ```
 
 
 3. Once the ncclient manager is available (nc_mgr), peform all the typical operations as you would with ncclient (<https://github.com/ncclient/ncclient>). Close the ncclient session once you're done.
