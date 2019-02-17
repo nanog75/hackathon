@@ -1259,4 +1259,7 @@ tesuto@dev1:~/code-samples/telemetry$ python3 kafka_consumer.py
 
 ```
 
+Awesome! The Telemetry collector running inside the docker container is pushing to kafka and the kafka_consumer.py script is able to connect to kafka and retrieve the same information in a json format.
+{: .notice--info}
+
 
