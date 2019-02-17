@@ -275,11 +275,11 @@ Killed
 
 ### Initiating a wipe and reset (Repair)
 
-**Note**:  You only need to do this to test your ZTP script once it is ready. Repair takes a long time (10+ minutes). Use the manual ZTP trigger process shown above to initiate the ZTP process while coding the script.
+**Note**:  You only need to do this to showcase a true ZTP workflow once you've already tested the ZTP script and the manual ZTP workflow as described above. . Repair takes a long time (10+ minutes). Use the manual ZTP trigger process shown above to initiate the ZTP process while coding the script.
 {: .notice--warning} 
 
 
-The other option is to perform a repair on the node from the Tesuto UI.
+To perform a repair on the node, we need to use Tesuto UI.
 
 For this purpose login to the Tesuto UI at :   
 
@@ -312,9 +312,31 @@ This process is equivalent to provisioning a fresh router without config in your
 
 {: .notice--warning}
 
+
+
 ### Logs During Execution.
 
-When ZTP is executing, to view the ongoing logs, console into the router, drop into `bash` and do a `tail -f` on `/var/log/ztp.log`
+When ZTP is executing (whether manual or through repair), to view the ongoing logs, console into the router, drop into `bash` and do a `tail -f` on `/var/log/ztp.log`
+
+
+```
+RP/0/RP0/CPU0:ios#
+RP/0/RP0/CPU0:ios#bash
+Sun Feb 17 09:50:47.670 UTC
+
+[host:~]$ 
+[host:~]$ tail -f /var/log/ztp.log 
+Parsing.
+21 bytes parsed in 1 sec (20)bytes/sec
+Committing
+Prepared commit in 0 sec
+..
+2 items committed in 2 sec (0)items/sec
+Updating.
+Updated Commit database in 1 sec 
+
+
+```
 
 
 
