@@ -152,6 +152,164 @@ tesuto@dev1:~$
 
 
 
+### Clone the code-samples repo
+
+First let's install the `tree` package to help us analyse the available code in the `code-samples` repo.
+
+
+```
+tesuto@dev1:~$ sudo apt-get install -y tree
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following NEW packages will be installed:
+  tree
+0 upgraded, 1 newly installed, 0 to remove and 6 not upgraded.
+Need to get 0 B/40.7 kB of archives.
+After this operation, 105 kB of additional disk space will be used.
+Selecting previously unselected package tree.
+(Reading database ... 75456 files and directories currently installed.)
+Preparing to unpack .../tree_1.7.0-5_amd64.deb ...
+Unpacking tree (1.7.0-5) ...
+Setting up tree (1.7.0-5) ...
+Processing triggers for man-db (2.8.3-2ubuntu0.1) ...
+tesuto@dev1:~$ 
+tesuto@dev1:~$ 
+```
+
+
+Now clone the repo located at:
+
+><https://github.com/nanog75/code-samples.git>
+
+
+```
+tesuto@dev1:~$ git clone https://github.com/nanog75/code-samples.git
+Cloning into 'code-samples'...
+remote: Enumerating objects: 1594, done.
+remote: Counting objects: 100% (1594/1594), done.
+remote: Compressing objects: 100% (621/621), done.
+remote: Total 1594 (delta 996), reused 1543 (delta 960), pack-reused 0
+Receiving objects: 100% (1594/1594), 12.74 MiB | 7.12 MiB/s, done.
+Resolving deltas: 100% (996/996), done.
+Checking out files: 100% (1360/1360), done.
+tesuto@dev1:~$ 
+tesuto@dev1:~$ 
+tesuto@dev1:~$ cd code-samples/
+
+tesuto@dev1:~/code-samples$ 
+tesuto@dev1:~/code-samples$ 
+tesuto@dev1:~/code-samples$ tree -I yang
+.
+├── README.md
+├── ansible
+│   ├── ansible_hosts
+│   └── playbooks
+│       ├── config_bgp
+│       │   ├── config_oc_bgp_ydk.yml
+│       │   ├── config_xr_bgp_netconf.yml
+│       │   ├── library
+│       │   │   └── config_bgp_oc_ydk.py
+│       │   └── xml
+│       │       ├── rtr1-bgp.xml
+│       │       └── rtr4-bgp.xml
+│       ├── openr_bringup
+│       │   ├── automate_docker_setup.py
+│       │   ├── docker_bringup.yml
+│       │   └── openr
+│       │       ├── hosts_rtr1
+│       │       ├── hosts_rtr2
+│       │       ├── hosts_rtr3
+│       │       ├── hosts_rtr4
+│       │       ├── increment_ipv4_prefix1.py
+│       │       ├── increment_ipv4_prefix2.py
+│       │       ├── launch_openr_rtr1.sh
+│       │       ├── launch_openr_rtr2.sh
+│       │       ├── launch_openr_rtr3.sh
+│       │       ├── launch_openr_rtr4.sh
+│       │       ├── run_openr_rtr1.sh
+│       │       ├── run_openr_rtr2.sh
+│       │       ├── run_openr_rtr3.sh
+│       │       └── run_openr_rtr4.sh
+│       └── reachability_check
+│           ├── ip_dest_reachable_ydk.yml
+│           ├── library
+│           │   └── ip_destination_reachable.py
+│           └── ping_variables.yml
+├── gribi
+│   ├── protos
+│   │   ├── enums.proto
+│   │   ├── gribi.proto
+│   │   ├── gribi_aft.proto
+│   │   ├── yext.proto
+│   │   └── ywrapper.proto
+│   └── src
+│       ├── Makefile
+│       ├── __init__.py
+│       ├── genpy
+│       │   ├── __init__.py
+│       │   ├── enums_pb2.py
+│       │   ├── gribi_aft_pb2.py
+│       │   ├── gribi_pb2.py
+│       │   ├── yext_pb2.py
+│       │   └── ywrapper_pb2.py
+│       ├── gribi_api
+│       │   ├── __init__.py
+│       │   ├── exceptions.py
+│       │   ├── gribi_api.py
+│       │   └── serializers.py
+│       ├── gribi_client
+│       │   ├── __init__.py
+│       │   ├── gribi_client.py
+│       │   ├── gribi_template.json
+│       │   ├── path3
+│       │   │   ├── r1.gribi.json
+│       │   │   ├── r3.gribi.json
+│       │   │   └── r4.gribi.json
+│       │   ├── path3_add_lsp.sh
+│       │   └── path3_delete_lsp.sh
+│       └── util
+│           ├── __init__.py
+│           └── util.py
+├── telemetry
+│   ├── gnmi_pb2.py
+│   ├── kafka_consumer.py
+│   └── telemetry.py
+├── ydk
+│   └── config_oc_bgp_ydk.py
+└── ztp
+    ├── dhcp
+    │   └── dhcpd.conf
+    └── web_server
+        ├── configs
+        │   ├── rtr1.config
+        │   ├── rtr2.config
+        │   ├── rtr3.config
+        │   └── rtr4.config
+        ├── packages
+        │   └── python-pip-7.1.0-r0.0.core2_64.rpm
+        ├── scripts
+        │   ├── restart_docker_xr.sh
+        │   ├── retry_manual_ztp.sh
+        │   └── ztp_ncclient.py
+        └── xml
+            └── rtr2
+                ├── grpc_config.xml
+                ├── hostname.xml
+                └── mpls_static.xml
+
+27 directories, 69 files
+tesuto@dev1:~/code-samples$ 
+
+
+
+```
+
+
+
+
+
+
 
 
 
