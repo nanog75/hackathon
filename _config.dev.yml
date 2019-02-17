@@ -7,19 +7,19 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "IOS-XR Programmability Devnet Workshop CLUS-2018"
-title_short              : "IOSXR-DEVNET-CLUS2018"
+title                    : "Nanog75 Hackathon on Network Operations brought to you by Cisco and Tesuto"
+title_short              : "NANOG75-HACKATHON"
 title_separator          : "|"
 name                     : &name "Cisco Systems Inc"
-description              : &description "Documentation, Blogs and Tutorials on the Application Hosting Infrastructure in IOS-XR"
+description              : &description "Welcome to the Instructions and Guidelines for the Feb 2019 Nanog75 Hackathon on Network Operations!"
 url                      : "http://localhost:4000" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
-gh_repo                  : "https://github.com/iosxr-devnet-ciscolive/workshop-docs/"
+gh_repo                  : "https://github.com/nanog75/hackathon"
 teaser                   : # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
 breadcrumbs              : true # true, false (default)
 words_per_minute         : 200
 comments:
-  provider               : "disqus" # false (default), "disqus", "facebook", "google-plus", custom"
+  provider               : false # false (default), "disqus", "facebook", "google-plus", custom"
   disqus:
     shortname            : "xrdocs" # https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-
   facebook:
@@ -36,12 +36,12 @@ yandex_site_verification :
 
 # Social Sharing
 twitter:
-  username               : &twitter "xrdocs"
+  username               : &twitter "nanog"
 facebook:
   username               :
   app_id                 :
   publisher              :
-og_image                 : "app-hosting-xrdocs.jpg" # Open Graph/Twitter default site image
+og_image                 : "nanog_hackathon_logo.png" # Open Graph/Twitter default site image
 # For specifying social profiles
 # - https://developers.google.com/structured-data/customize/social-profiles
 social:
@@ -63,10 +63,10 @@ google_ad_slot           :
 
 # Site Author
 author:
-  name             : "Cisco Web Team"
-  avatar           : "app-hosting-team.jpg"
-  bio              : "A Team of coders and network engineers determined to build the best network operating system for Web-Scale Service Providers"
-  location         : "San jose, California"
+  name             : "Nanog75 Hackathon Team"
+  avatar           : "nanog_hackathon_logo.png"
+  bio              : ""
+  location         : "San Francisco, California"
   email            :
   uri              :
   bitbucket        :
@@ -75,7 +75,7 @@ author:
   flickr           :
   facebook         :
   foursquare       :
-  github           : "xrdocs"
+  github           : "nanog75"
   google_plus      :
   keybase          :
   instagram        :
@@ -152,6 +152,15 @@ collections:
   wkinstructions:
     output: true
     permalink: /:collection/:path/
+  day0:
+    output: true
+    permalink: /:collection/:path/
+  day1:
+    output: true
+    permalink: /:collection/:path/
+  day2:
+    output: true
+    permalink: /:collection/:path/
 
 # Defaults
 defaults:
@@ -159,7 +168,7 @@ defaults:
 # _lab-instructions
   - scope:
       path: ""
-      type: wkinstructions
+      type: day0
     values:
       layout: single
       author_profile: true
@@ -168,7 +177,30 @@ defaults:
       share: true
       related: true
       position: "top"
-
+      
+  - scope:
+      path: ""
+      type: day1
+    values:
+      layout: single
+      author_profile: true
+      read_time: true
+      comments: true
+      share: true
+      related: true
+      position: "top"
+      
+  - scope:
+      path: ""
+      type: day2
+    values:
+      layout: single
+      author_profile: true
+      read_time: true
+      comments: true
+      share: true
+      related: true
+      position: "top" 
 
 # Outputting
 permalink: /:categories/:title/
@@ -224,7 +256,7 @@ tags:
 
 
 prose:
-  siteurl: 'https://iosxr-devnet-cisco.live'
+  siteurl: 'https://iosxr-lab-ciscolive.github.io'
   relativeLinks: 'http://prose.github.io/starter/links.jsonp'
   media: 'images'
   ignore:
@@ -267,7 +299,7 @@ prose:
     - _config.travis.yml
 
   metadata:
-    _blogs:
+    _wkinstructions:
       - name: "title"
         field:
             element: "text"

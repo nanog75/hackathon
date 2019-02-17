@@ -152,6 +152,15 @@ collections:
   wkinstructions:
     output: true
     permalink: /:collection/:path/
+  day0:
+    output: true
+    permalink: /:collection/:path/
+  day1:
+    output: true
+    permalink: /:collection/:path/
+  day2:
+    output: true
+    permalink: /:collection/:path/
 
 # Defaults
 defaults:
