@@ -194,9 +194,17 @@ Receiving objects: 100% (1594/1594), 12.74 MiB | 7.12 MiB/s, done.
 Resolving deltas: 100% (996/996), done.
 Checking out files: 100% (1360/1360), done.
 tesuto@dev1:~$ 
+
+Drop into the code-samples directory:
+```
 tesuto@dev1:~$ 
 tesuto@dev1:~$ cd code-samples/
+```
 
+
+Excluding the pre-packaged yang models (using the `-I` option with tree, we see the available files as shown below:  
+
+```
 tesuto@dev1:~/code-samples$ 
 tesuto@dev1:~/code-samples$ 
 tesuto@dev1:~/code-samples$ tree -I yang
