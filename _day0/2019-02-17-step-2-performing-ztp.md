@@ -169,6 +169,8 @@ Killed
 ### Initiating a wipe and reset (Repair)
 
 **Note**:  You only need to do this to test your ZTP script once it is ready. Repair takes a long time (10+ minutes). Use the manual ZTP trigger process shown above to initiate the ZTP process while coding the script.
+{: .notice--warning} 
+
 
 The other option is to perform a repair on the node from the Tesuto UI.
 
@@ -198,3 +200,16 @@ This process is equivalent to provisioning a fresh router without config in your
 
 ![tesuto_repair3.png]({{site.baseurl}}/images/tesuto_repair3.png)
 
+
+**Note**:
+
+{: .notice--warning}
+
+### Logs During Execution.
+
+When ZXT
+
+
+## Testing your ZTP script
+
+While the above two techniques will perform the ZTP process on rtr2 - remember it involves DHCP requests, download, execution
