@@ -406,7 +406,11 @@ So the `gribi_routes` entry with `id:1200` will create prefix "10.8.1.0/24" in t
 If you browse up, `next_hop_group: 1` corresponds to the next_hop_group with `key_id : 1` in `gribi_nh_groups` structure.   
 Further this `next_hop_group: 1` then points to a single next hop (`nh_keys`) with `key_index: 1`.  
 Lastly, this `key_index: 1` corresponds to next hop with `key_id: 1` in the `gribi_nhs` data structure.  
-In other words, a route to `10.8.1.0/24` via next_hop 10.3.1.20 and Gig0/0/0/2 will be pushed into the RIB of router r1. Further this route will push a single label = 17010 on the packets going through this route.
+In other words, a route to `10.8.1.0/24` via next_hop 10.3.1.20 and Gig0/0/0/2 will be pushed into the RIB of router r1. Further this route will push a single label = 17010 on the packets using this route as evidenced by the `pushed_mpls_label_stack` entry in the `gribi_nhs` structure for `key_index: 1`
+
+
+
+
 
 
 
