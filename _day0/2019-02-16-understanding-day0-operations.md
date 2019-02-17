@@ -430,14 +430,16 @@ The current ZTP script for rtr2 can be found on the webserver running locally on
 
 ```
 
-Let's dump this script. The script has appropriate comments at the different points to help a reader understand its content.   
+Let's dump this script. The script has appropriate comments at different points to help a reader understand its content.   
 
 
-<div class="highlighter-rouge">
-<pre class="highlight">
-<code>
+```
 tesuto@ztp:~$ 
 tesuto@ztp:~$ cat /var/www/html/scripts/ztp_ncclient.py 
+
+```
+
+```python
 #!/usr/bin/env python
 
 import sys, os, warnings
@@ -705,13 +707,56 @@ if __name__ == '__main__':
         ztp_script.syslogger.info("Failed to cleanup ncclient dependencies, aborting...")
         sys.exit(1)</mark>
 tesuto@ztp:~$ 
+```
+
+Let's highlight the relevant portion for this exercise:
+
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+    <mark># Initialize the basic configuration for ncclient to work
+    # Sets up local loopback as host to connect to and enable netconf on port 830.
+    # Also imports the local key (/root/.ssh/id_rsa.pub) for password free operation
+    result = ztp_script.ncclient_init(host_ip=host)
+    if result["status"] == "error":
+        ztp_script.syslogger.info("Failed to initialize configuration for ncclient, aborting....")
+
+        # sys.exit() used judiciously is quite important. ZTP will retry if your script returns a
+        # non zero exit code. In production, this ensures the box continuously looks to download and
+        # execute a working script by retrying on failure.
+        sys.exit(1)
+
+
+    # Connects to IOS-XR netconf agent and returns a manager handle for ncclient
+    # This is a method of the child class defined above that retries the connection
+    # during initial boot for a specified maximum duration (default = 120seconds)
+    nc_mgr = ztp_script.ncclient_connect(host=host)
+   
+    if nc_mgr is None:
+        ztp_script.syslogger.info("ncclient Manager not initialized, aborting...")
+        sys.exit(1)    
+    else:
+        # From here on, the operation is just normal ncclient usage
+        response = nc_mgr.get_config(source="running")
+        print(response)
+        response_dict=xmltodict.parse(str(response))
+        print json.dumps(response_dict, indent=4)
+
+        nc_mgr.close_session()
+
+
+    # Cleaning up the internal loopback configuration created as part of the
+    # ncclient_init() configuration is good practice. This is optional however.
+    result = ztp_script.ncclient_cleanup()
+    if result["status"] == "error":
+        ztp_script.syslogger.info("Failed to cleanup ncclient dependencies, aborting...")
+        sys.exit(1)</mark>
 </code>
 </pre>
 </div>
 
-
-
-Notice the highlighted portion above. It shows 3 important steps:
+It shows 4 important steps:
 
 
 1. Initialize the environment for ncclient:
@@ -726,7 +771,7 @@ Notice the highlighted portion above. It shows 3 important steps:
     nc_mgr = ztp_script.ncclient_connect(host=host)```
 
 
-3. Once the ncclient manager is available (nc_mgr), peform all the typical operations as you would with ncclient (<https://github.com/ncclient/ncclient>)
+3. Once the ncclient manager is available (nc_mgr), peform all the typical operations as you would with ncclient (<https://github.com/ncclient/ncclient>). Close the ncclient session once you're done.
 
     ```
     # From here on, the operation is just normal ncclient usage
@@ -734,8 +779,21 @@ Notice the highlighted portion above. It shows 3 important steps:
         print(response)
         response_dict=xmltodict.parse(str(response))
         print json.dumps(response_dict, indent=4)
+        nc_mgr.close_session()
+        
     ```
 
+4)  Finally, clean up the environment set up on the router during the ncclient_init() process:
+    
+    ```
+    # Cleaning up the internal loopback configuration created as part of the
+    # ncclient_init() configuration is good practice. This is optional however.
+    result = ztp_script.ncclient_cleanup()
+    if result["status"] == "error":
+        ztp_script.syslogger.info("Failed to cleanup ncclient dependencies, aborting...")
+        sys.exit(1)
+    ```
+    
 
 
 
