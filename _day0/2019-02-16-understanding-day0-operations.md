@@ -36,7 +36,8 @@ You will need the tesuto private key to ssh to the instances in your topology.
 
 This key can be downloaded from here:    
 ><https://storage.googleapis.com/tesuto-public/nanog75.key>  
-Save the key in your local machine. This document assumes you saved it to ~/nanog75.key 
+
+Download and save the key in your local machine. This document assumes you saved it to ~/nanog75.key 
 
 ```
 curl -o ~/nanog75.key https://storage.googleapis.com/tesuto-public/nanog75.key 
