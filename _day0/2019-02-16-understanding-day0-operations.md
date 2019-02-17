@@ -415,7 +415,7 @@ option bootfile-name "http://100.96.0.20/scripts/ztp_ncclient.py"
 ```
 
 
-
+This means that the script `ztp_ncclient.py` located on the web server at `http://100.96.0.20/scripts` will be specified to the router in option 67 causing the router `rtr2` to download and execute it.
 
 
 
