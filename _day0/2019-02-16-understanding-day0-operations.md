@@ -23,3 +23,9 @@ Make sure you have access to a Pod based on the pod number assigned to you.
 The instructions to connect to your pod can be found here: 
 
 >[Connect to your pod]({{ base_path }}/assets/NANOG75_Hackathon_Lab_Info.pdf)
+
+
+The topology for the hack is shown below: 
+
+![]({{ base_path }}/images/topology_nanog75.png)
+Assuming the pod number assigned to you is `x`, the UR
