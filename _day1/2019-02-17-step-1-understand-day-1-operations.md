@@ -22,7 +22,7 @@ Day1 operations would comprise any service or feature activation or application 
 
 ## Before we Begin
 
-
+**Note**:  
 `rtr2` is exclusively for use by the Day0 group in your team. You will be able to incorporate the changes meant for rtr2 and test them only after the Day0 group successfully performs ZTP on rtr2. {: .notice--warning} 
 
 Make sure you have access to a Pod based on the pod number assigned to you.
@@ -83,7 +83,7 @@ ssh -i ~/nanog75.key tesuto@dev1.hackathon.podx.cloud.tesuto.com
 
 ## Basic Components
 
-In the current topology for Day 1 (rtr2 is not available for Day1 and Day2 operations, not until Day0 group successfully bootstraps it),  the components we intend to use are:
+In the current topology for Day 1 (rtr2 is not available for Day1 and Day2 operations until Day0 group successfully bootstraps it),  the components we intend to use are:
 
 1. Ansible to orchestrate all the configurations and applications on the network and on all routers.
 
@@ -315,14 +315,14 @@ tesuto@dev1:~/code-samples$
 
 ### High Level Tasks
 
-For the Day1 group the relevant top level directories are :
+For the Day1 group, the relevant top level directories are :
 
 
 1. `ansible`:  This directory contains all the available playbooks for you to understand, modify and add to. These playbooks will eventually need to be combined into a single playbook.
 You will eventually need to have a playbook for each of the following operations:
     *  Configure BGP on rtr1 and rtr4 using YDK
     *  Bring up Open/R docker instances as IGP on all the routers(except rtr2, not until later)
-    *  Test Reachability on each router for the Open/R distributed loopbacks by leveraging YDK to execute pings on the IOS-XR routers through netconf actions.
+    *  Test reachability on each router for the Open/R distributed loopbacks by leveraging YDK to execute pings on the IOS-XR routers through netconf actions.
     *  Set up the telemetry collector to push data to the local kafka bus.
 
 2.  `ydk`:  This directory contains a sample YDK code that will help you understand how YDK works along with gNMI
