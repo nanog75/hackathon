@@ -22,6 +22,9 @@ Day1 operations would comprise any service or feature activation or application 
 
 ## Before we Begin
 
+
+`rtr2` is exclusively for use by the Day0 group in your team. You will be able to incorporate the changes meant for rtr2 and test them only after the Day0 group successfully performs ZTP on rtr2. {: .notice--warning} 
+
 Make sure you have access to a Pod based on the pod number assigned to you.
 The instructions to connect to your pod can be found here: 
 
@@ -129,7 +132,7 @@ tesuto@dev1:~$
 
 ## Basic Components
 
-In the current topology, the components we intend to use are:
+In the current topology for Day 1 (rtr2 is not available for Day1 and Day2 operations),  the components we intend to use are:
 
 1. Ansible to orchestrate all the configurations and applications on the network and on all routers.
 
