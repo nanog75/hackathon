@@ -269,6 +269,257 @@ tesuto@dev1:~/code-samples/ansible/playbooks/openr_bringup$ cat docker_bringup.y
 *  In the end, it checks if Open/R is already running and if so, it removes it before spinning up a new one.  
 
 
+### Run the Ansible playbook for Open/R
+
+
+```
+tesuto@dev1:~/code-samples/ansible$ 
+tesuto@dev1:~/code-samples/ansible$ 
+tesuto@dev1:~/code-samples/ansible$ ansible-playbook -i ansible_hosts playbooks/openr_bringup/docker_bringup.yml 
+
+PLAY [routers_shell] **********************************************************************************************************************************
+
+TASK [restart docker daemon and pull openr image] *****************************************************************************************************
+changed: [rtr1]
+changed: [rtr3]
+changed: [rtr4]
+
+TASK [Copy run_openr script to rtr] *******************************************************************************************************************
+ok: [rtr4]
+ok: [rtr1]
+ok: [rtr3]
+
+TASK [Copy hosts_r file to rtr] ***********************************************************************************************************************
+ok: [rtr1]
+ok: [rtr4]
+ok: [rtr3]
+
+TASK [Copy launch_openr script to rtr] ****************************************************************************************************************
+ok: [rtr1]
+ok: [rtr3]
+ok: [rtr4]
+
+TASK [Check docker container is running] **************************************************************************************************************
+ [WARNING]: Consider using 'become', 'become_method', and 'become_user' rather than running sudo
+
+changed: [rtr3]
+fatal: [rtr1]: FAILED! => {"changed": true, "cmd": "sudo -i docker inspect --format={{.State.Running}} openr", "delta": "0:00:00.492998", "end": "2019-02-17 12:59:37.194077", "msg": "non-zero return code", "rc": 1, "start": "2019-02-17 12:59:36.701079", "stderr": "stty: standard input: Inappropriate ioctl for device\nstty: standard input: Inappropriate ioctl for device\nError: No such image or container: openr", "stderr_lines": ["stty: standard input: Inappropriate ioctl for device", "stty: standard input: Inappropriate ioctl for device", "Error: No such image or container: openr"], "stdout": "", "stdout_lines": []}
+...ignoring
+changed: [rtr4]
+fatal: [rtr1]: FAILED! => {"changed": true, "cmd": "sudo -i docker inspect --format={{.State.Running}} openr", "delta": "0:00:00.492998", "end": "2019-02-17 12:59:37.194077", "msg": "non-zero return code", "rc": 1, "start": "2019-02-17 12:59:36.701079", "stderr": "stty: standard input: Inappropriate ioctl for device\nstty: standard input: Inappropriate ioctl for device\nError: No such image or container: openr", "stderr_lines": ["stty: standard input: Inappropriate ioctl for device", "stty: standard input: Inappropriate ioctl for device", "Error: No such image or container: openr"], "stdout": "", "stdout_lines": []}
+...ignoring
+
+TASK [debug] ******************************************************************************************************************************************
+ok: [rtr1] => {
+    "output.stdout_lines": [
+        "", 
+        "", 
+        "####### Restart the docker daemon to make sure changes take effect######", 
+        "", 
+        "", 
+        "###### Successfully restarted the docker daemon, response: ######", 
+        "", 
+        "['ztp-user connected from 127.0.0.1 using console on rtr1',", 
+        " '\\x1b[?7hsysadmin-vm:0_RP0# run ssh 10.0.2.16 service docker restart',", 
+        " 'Sun Feb  17 12:58:34.906 UTC',", 
+        " 'docker stop/waiting',", 
+        " 'docker start/running, process 17801',", 
+        " 'sysadmin-vm:0_RP0#']", 
+        "", 
+        "###### return value in json: ######", 
+        "", 
+        "[", 
+        "    \"ztp-user connected from 127.0.0.1 using console on rtr1\", ", 
+        "    \"\\u001b[?7hsysadmin-vm:0_RP0# run ssh 10.0.2.16 service docker restart\", ", 
+        "    \"Sun Feb  17 12:58:34.906 UTC\", ", 
+        "    \"docker stop/waiting\", ", 
+        "    \"docker start/running, process 17801\", ", 
+        "    \"sysadmin-vm:0_RP0#\"", 
+        "]", 
+        "Sleeping for about 30 seconds, waiting for the docker daemon to be up", 
+        "", 
+        "#######Pulling the docker image for Open/R ######", 
+        "", 
+        "Successfully downloaded the docker image", 
+        "Using default tag: latest", 
+        "latest: Pulling from akshshar/openr-xr", 
+        "Digest: sha256:0d81b575830fe776739f960870652c7d9da601eaf32f68fa5569e852a2c5d4b0", 
+        "Status: Image is up to date for akshshar/openr-xr:latest", 
+        ""
+    ]
+}
+ok: [rtr3] => {
+    "output.stdout_lines": [
+        "", 
+        "", 
+        "####### Restart the docker daemon to make sure changes take effect######", 
+        "", 
+        "", 
+        "###### Successfully restarted the docker daemon, response: ######", 
+        "", 
+        "['ztp-user connected from 127.0.0.1 using console on rtr3',", 
+        " '\\x1b[?7hsysadmin-vm:0_RP0# run ssh 10.0.2.16 service docker restart',", 
+        " 'Sun Feb  17 12:58:35.224 UTC',", 
+        " 'docker stop/waiting',", 
+        " 'docker start/running, process 20285',", 
+        " 'sysadmin-vm:0_RP0#']", 
+        "", 
+        "###### return value in json: ######", 
+        "", 
+        "[", 
+        "    \"ztp-user connected from 127.0.0.1 using console on rtr3\", ", 
+        "    \"\\u001b[?7hsysadmin-vm:0_RP0# run ssh 10.0.2.16 service docker restart\", ", 
+        "    \"Sun Feb  17 12:58:35.224 UTC\", ", 
+        "    \"docker stop/waiting\", ", 
+        "    \"docker start/running, process 20285\", ", 
+        "    \"sysadmin-vm:0_RP0#\"", 
+        "]", 
+        "Sleeping for about 30 seconds, waiting for the docker daemon to be up", 
+        "", 
+        "#######Pulling the docker image for Open/R ######", 
+        "", 
+        "Successfully downloaded the docker image", 
+        "Using default tag: latest", 
+        "latest: Pulling from akshshar/openr-xr", 
+        "Digest: sha256:0d81b575830fe776739f960870652c7d9da601eaf32f68fa5569e852a2c5d4b0", 
+        "Status: Image is up to date for akshshar/openr-xr:latest", 
+        ""
+    ]
+}
+ok: [rtr4] => {
+    "output.stdout_lines": [
+        "", 
+        "", 
+        "####### Restart the docker daemon to make sure changes take effect######", 
+        "", 
+        "", 
+        "###### Successfully restarted the docker daemon, response: ######", 
+        "", 
+        "['ztp-user connected from 127.0.0.1 using console on rtr4',", 
+        " '\\x1b[?7hsysadmin-vm:0_RP0# run ssh 10.0.2.16 service docker restart',", 
+        " 'Sun Feb  17 12:58:35.200 UTC',", 
+        " 'docker stop/waiting',", 
+        " 'docker start/running, process 14704',", 
+        " 'sysadmin-vm:0_RP0#']", 
+        "", 
+        "###### return value in json: ######", 
+        "", 
+        "[", 
+        "    \"ztp-user connected from 127.0.0.1 using console on rtr4\", ", 
+        "    \"\\u001b[?7hsysadmin-vm:0_RP0# run ssh 10.0.2.16 service docker restart\", ", 
+        "    \"Sun Feb  17 12:58:35.200 UTC\", ", 
+        "    \"docker stop/waiting\", ", 
+        "    \"docker start/running, process 14704\", ", 
+        "    \"sysadmin-vm:0_RP0#\"", 
+        "]", 
+        "Sleeping for about 30 seconds, waiting for the docker daemon to be up", 
+        "", 
+        "#######Pulling the docker image for Open/R ######", 
+        "", 
+        "Successfully downloaded the docker image", 
+        "Using default tag: latest", 
+        "latest: Pulling from akshshar/openr-xr", 
+        "Digest: sha256:0d81b575830fe776739f960870652c7d9da601eaf32f68fa5569e852a2c5d4b0", 
+        "Status: Image is up to date for akshshar/openr-xr:latest", 
+        ""
+    ]
+}
+
+TASK [Clean up docker container if running] ***********************************************************************************************************
+skipping: [rtr1]
+changed: [rtr3]
+changed: [rtr4]
+
+TASK [debug] ******************************************************************************************************************************************
+ok: [rtr3] => {
+    "output.stdout_lines": [
+        "openr"
+    ]
+}
+ok: [rtr1] => {
+    "output.stdout_lines": "VARIABLE IS NOT DEFINED!"
+}
+ok: [rtr4] => {
+    "output.stdout_lines": [
+        "openr"
+    ]
+}
+
+TASK [Bring up the docker container] ******************************************************************************************************************
+changed: [rtr3]
+changed: [rtr4]
+changed: [rtr1]
+
+TASK [debug] ******************************************************************************************************************************************
+ok: [rtr4] => {
+    "output.stdout_lines": [
+        "e53a77599eee5461b8ba7cf2651f5b486f7ba662d44d9e0d2caa0b018227ba46"
+    ]
+}
+ok: [rtr1] => {
+    "output.stdout_lines": [
+        "74f2b43076353c47f3370bf7efb5b41257a311597813954680b5a7b32694e552"
+    ]
+}
+ok: [rtr3] => {
+    "output.stdout_lines": [
+        "ba6c8bdb070c3f695ac706e385bca5c50d12b589b4bf6b781a2644815b647904"
+    ]
+}
+
+TASK [Pause the playbook to allow routes to be distributed before running the reachability playbook] **************************************************
+Pausing for 120 seconds
+(ctrl+C then 'C' = continue early, ctrl+C then 'A' = abort)
+ok: [rtr1]
+
+PLAY RECAP ********************************************************************************************************************************************
+rtr1                       : ok=10   changed=3    unreachable=0    failed=0   
+rtr3                       : ok=10   changed=4    unreachable=0    failed=0   
+rtr4                       : ok=10   changed=4    unreachable=0    failed=0   
+
+tesuto@dev1:~/code-samples/ansible$ 
+tesuto@dev1:~/code-samples/ansible$ 
+tesuto@dev1:~/code-samples/ansible$ 
+```
+
+
+Now if we check the BGP session state on rtr1, we see it has now been established:
+
+```
+RP/0/RP0/CPU0:rtr1#
+RP/0/RP0/CPU0:rtr1#show bgp summary 
+Sun Feb 17 13:02:35.113 UTC
+BGP router identifier 172.16.1.1, local AS number 65000
+BGP generic scan interval 60 secs
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0000000   RD version: 2
+BGP main routing table version 2
+BGP NSR Initial initsync version 2 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+BGP scan interval 60 secs
+
+BGP is operating in STANDALONE mode.
+
+
+Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+Speaker               2          2          2          2           2           0
+
+Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+172.16.4.1        0 65000      86      87        2    0    0 00:02:32          0
+
+RP/0/RP0/CPU0:rtr1#
+RP/0/RP0/CPU0:rtr1#show bgp sessions 
+Sun Feb 17 13:03:56.340 UTC
+
+Neighbor        VRF                   Spk    AS   InQ  OutQ  NBRState     NSRState
+172.16.4.1      default                 0 65000     0     0  Established  None
+RP/0/RP0/CPU0:rtr1#
+
+
+```
+
+
 
 
 
