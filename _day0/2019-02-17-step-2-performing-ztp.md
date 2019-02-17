@@ -100,11 +100,11 @@ So, in order to perform manual ZTP on any of the routers in the topology, simply
 <pre class="highlight">
 <code>
 RP/0/RP0/CPU0:ios#
-RP/0/RP0/CPU0:ios#bash
+RP/0/RP0/CPU0:ios#<mark>bash</mark>
 Sun Feb 17 09:18:46.493 UTC
 [host:~]$ 
 [host:~]$ 
-[host:~]$ wget http://100.96.0.20/scripts/retry_manual_ztp.sh
+[host:~]$ <mark>wget http://100.96.0.20/scripts/retry_manual_ztp.sh</mark>
 --2019-02-17 09:19:04--  http://100.96.0.20/scripts/retry_manual_ztp.sh
 Connecting to 100.96.0.20:80... connected.
 HTTP request sent, awaiting response... 200 OK
@@ -116,9 +116,9 @@ Saving to: 'retry_manual_ztp.sh.1'
 2019-02-17 09:19:04 (79.2 MB/s) - 'retry_manual_ztp.sh.1' saved [881/881]
 
 [host:~]$ 
-[host:~]$ chmod +x retry_manual_ztp.sh
+[host:~]$ <mark>chmod +x retry_manual_ztp.sh</mark>
 [host:~]$ 
-[host:~]$ ./retry_manual_ztp.sh 
+[host:~]$ <mark>./retry_manual_ztp.sh</mark>
 + read -r -d '' mgmt_clean_config
 + xrapply_string '!
 interface MgmtEth0/RP0/CPU0/0
