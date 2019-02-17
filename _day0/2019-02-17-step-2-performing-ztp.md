@@ -56,7 +56,7 @@ tesuto@jumpbox:~$
 
 ```
 
-As the above output indicates, on the Base pod VM you press `?` to see the list of commands available to you.
+As the above output indicates, on the Base pod VM you can press `?` to see the list of commands available to you.
 
 To console into router rtr2, simply type:  `console rtr2` on the base Pod VM:
 
