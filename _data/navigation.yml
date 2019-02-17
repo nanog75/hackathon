@@ -1,6 +1,10 @@
 main:
-  - title: "Lab-Instructions"
-    url: /lab-instructions/
-
+  - title: "Day0"
+    url: /day0-instructions/
+  - title: "Day1"
+    url: /day1-instructions/
+  - title: "Day2"
+    url: /day2-instructions/
+    
   - title: "Search"
     url: /search
