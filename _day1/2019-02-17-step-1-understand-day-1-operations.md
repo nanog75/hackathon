@@ -313,13 +313,17 @@ tesuto@dev1:~/code-samples$
 ```
 
 
-### 
+### High Level Tasks
 
 For the Day1 group the relevant top level directories are :
 
 
-1. `ansible`:  This directory contains all the available playbooks for you to understand, modify and add to. 
-
+1. `ansible`:  This directory contains all the available playbooks for you to understand, modify and add to. These playbooks will eventually need to be combined into a single playbook.
+You will eventually need to have a playbook for each of the following operations:
+    *  Configure BGP on rtr1 and rtr4 using YDK
+    *  Bring up Open/R docker instances as IGP on all the routers(except rtr2, not until later)
+    *  Test Reachability on each router for the Open/R distributed loopbacks by leveraging YDK to execute pings on the IOS-XR routers through netconf actions.
+    *  Set up the telemetry collector to push data to the local kafka bus.
 
 2.  `ydk`:  This directory contains a sample YDK code that will help you understand how YDK works along with gNMI
 
