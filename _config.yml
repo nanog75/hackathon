@@ -7,19 +7,19 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "IOS-XR Programmability Lab SP SEVT Feb-2019"
-title_short              : "IOSXR-SEVT-FEB19"
+title                    : "Nanog75 Hackathon on Network Operations brought to you by Cisco and Tesuto"
+title_short              : "NANOG75-HACKATHON"
 title_separator          : "|"
 name                     : &name "Cisco Systems Inc"
-description              : &description "Welcome to the Feb 2019 SEVT Lab for IOS-XR programmability!"
-url                      : "https://sevt-sp.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
-baseurl                  : "/xr-programmability-lab" # the subpath of your site, e.g. "/blog"
-gh_repo                  : "https://github.com/sevt-sp/xr-programmability-lab"
+description              : &description "Welcome to the Instructions and Guidelines for the Feb 2019 Nanog75 Hackathon on Network Operations!"
+url                      : "https://nanog75.github.io/" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+baseurl                  : "/hackathon" # the subpath of your site, e.g. "/blog"
+gh_repo                  : "https://github.com/nanog75/hackathon"
 teaser                   : # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
 breadcrumbs              : true # true, false (default)
 words_per_minute         : 200
 comments:
-  provider               : "disqus" # false (default), "disqus", "facebook", "google-plus", custom"
+  provider               : false # false (default), "disqus", "facebook", "google-plus", custom"
   disqus:
     shortname            : "xrdocs" # https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-
   facebook:
@@ -36,12 +36,12 @@ yandex_site_verification :
 
 # Social Sharing
 twitter:
-  username               : &twitter "xrdocs"
+  username               : &twitter "nanog"
 facebook:
   username               :
   app_id                 :
   publisher              :
-og_image                 : "app-hosting-xrdocs.jpg" # Open Graph/Twitter default site image
+og_image                 : "nanog_hackathon_logo.png" # Open Graph/Twitter default site image
 # For specifying social profiles
 # - https://developers.google.com/structured-data/customize/social-profiles
 social:
@@ -63,10 +63,10 @@ google_ad_slot           :
 
 # Site Author
 author:
-  name             : "Cisco Web Team"
-  avatar           : "app-hosting-team.jpg"
-  bio              : "A Team of coders and network engineers determined to build the best network operating system for Web-Scale Service Providers"
-  location         : "San jose, California"
+  name             : "Nanog75 Hackathon Team"
+  avatar           : "nanog_hackathon_logo.png"
+  bio              : ""
+  location         : "San Francisco, California"
   email            :
   uri              :
   bitbucket        :
@@ -75,7 +75,7 @@ author:
   flickr           :
   facebook         :
   foursquare       :
-  github           : "xrdocs"
+  github           : "nanog75"
   google_plus      :
   keybase          :
   instagram        :
