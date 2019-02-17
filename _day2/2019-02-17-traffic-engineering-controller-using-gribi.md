@@ -21,27 +21,28 @@ tags:
 
 ## Understanding Day2 Operations
 
-Day2 Operations tend to vary across deployments since they are quite intrinsically tied to the nature of the network Operator's business model and the operator's core focus.  
+Day2 operations tend to vary across deployments since they are quite intrinsically tied to the nature of the network operator's business model and the operator's core focus.  
 
 For an infrastructure provider, the network itself is the most important entity that needs to be protected from failures and is also the source of telemetry/monitoring information for alarms and/or remediation decisions, usually through provisioning a new policy or configuration snippet.
   
-For an application provider, much like most of the large scale Web service-providers, the network is primarily a plumbing mechanism and the health of the applications running in the datacenters is core focus. In such cases, we usually see telemetry/monitoring information being extracted out of the applications directly and remediation actions based on this information typically involve real-time traffic engineering or route manipulation.   
+For an application provider, much like most of the large scale Web service-providers, the network is primarily a plumbing mechanism and the health of the applications running in the datacenters is the core focus. In such cases, we usually see telemetry/monitoring information being extracted out of the applications directly and remediation actions based on this information typically involve real-time traffic engineering or route manipulation.   
 
    
    
-The second scenario is what often leads to the need for low-level highly performant APIs that can help an operator create ephemeral state (non-static, not saved in config) in the router's control plane or directly the data plane in response to real-time monitoring data.   
+The second scenario is what often leads to the need for low-level highly performant APIs that can help an operator create ephemeral state (non-static, not saved in config) in the router's control plane or directly in the data plane in response to real-time monitoring data.   
 
 
 Openconfig's gRIBI API is one such api that aims to provide a standard inteface to the RIB and MPLS database of a router to enable manipulation of routes and Incoming Label Mapping (ILM) entries with high performance expectations.    
 
-The API model (proto files) can be found here : < https://github.com/openconfig/gribi>
+The API model (proto files) can be found here : 
+><https://github.com/openconfig/gribi>
 
 
 
 ## Before we Begin
 
-
-`rtr2` is exclusively for use by the Day0 group in your team. You will be able to incorporate the changes meant for rtr2 and test them only after the Day0 group successfully performs ZTP on rtr2. {: .notice--warning} 
+`rtr2` is exclusively for use by the Day0 group in your team. You will be able to incorporate the changes meant for rtr2 and test them only after the Day0 group successfully performs ZTP on rtr2. 
+{: .notice--warning} 
 
 Make sure you have access to a Pod based on the pod number assigned to you.
 The instructions to connect to your pod can be found here: 
@@ -111,7 +112,7 @@ The figure below shows the possible LSP paths in the current topology:
 
 
 The gRIBI controller must therefore have predefined policies on the label PUSH, SWAP and POP operations to be performed per path.
-Once the Telemetry information is received via the kafka bus, any network event (like shut of an interface or interface counters or BGP session state etc.) could be utilized as a trigger to change the currently programmed LSP path.
+Once the Telemetry information is received via the kafka bus, any network event (like shut of an interface or interface counters or BGP session state etc.) can be utilized as a trigger to change the currently programmed LSP path.
 
 
 
@@ -268,7 +269,7 @@ The gribi_client that accepts a json based input is in the `gribi_client` direct
 ### View pre-created LSP json
 
 
-Let's the view the json files that are pre-created for path2 as shown in the figure above (green from rtr1 to rtr3 to rtr4). 
+Let's the view the json files that are pre-created for path2 as shown in the figure above (the green path from rtr1 to rtr3 to rtr4). 
 
 Drop into the directory `gribi_client/path3` directory:
 
@@ -401,7 +402,7 @@ tesuto@dev2:~/code-samples/gribi/src/gribi_client/path3$ cat r1.gribi.json
 
 The way to read this is as follows:
 
-1. First consider the `gribi_routes` entry. This always corresponds to the label imposition entry that also pushes a route to our destination (rtr4-dev2 subnet) into the rib of rtr1.   
+1. First consider the `gribi_routes` entry. This always corresponds to the label imposition entry that also pushes a route to our destination (rtr4-dev2 subnet) into the RIB of rtr1.   
 So the `gribi_routes` entry with `id:1200` will create prefix "10.8.1.0/24" in the rtr1 rib with `next_hop_group: 1`.  
 If you browse up, `next_hop_group: 1` corresponds to the next_hop_group with `key_id : 1` in `gribi_nh_groups` structure.   
 Further this `next_hop_group: 1` then points to a single next hop (`nh_keys`) with `key_index: 1`.  
@@ -416,7 +417,7 @@ In other words, a route to `10.8.1.0/24` via next_hop 10.3.1.20 and Gig0/0/0/2 w
 
 In this way, try to write down the label entries and route entries that will created by r2.gribi.json and r3.gribi.json.
 
-Effectively, these input json files will help create an LSP path from rtr1 to rtr4 via rtr3 such that packets entering rtr1 from dev1, destined towards 10.8.1.0/24 via rtr1 will follow this path and packets entering rtr4 from dev2, destined towards 10.1.1.0/24 will follow the reverse path.
+Effectively, these input json files will help create an LSP path from rtr1 to rtr4 via rtr3 such that packets entering rtr1 from dev1, destined towards 10.8.1.0/24 via rtr1 will follow this path and packets entering rtr4 from dev2, destined towards 10.1.1.0/24, will follow the reverse path.
 
 
 
