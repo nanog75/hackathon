@@ -34,3 +34,15 @@ At the end of Step2, you should have:
 
 
 
+
+## Spinning up Open/R as an IGP on the routers
+
+
+Open/R (<https://github.com/facebook/openr>) is a routing protocol stack that was open-sourced by Facebook in late 2017.
+
+It was designed to easily integratable with lower level APIs provided by Vendor stacks and it was therefore straightforward to integrate with IOS-XR's Service-Layer APIs to allow Open/R to co-exist with standard IOS-XR protocols while running as an application on IOS-XR.
+
+The integration code can be found here:
+
+><https://github.com/akshshar/openr-xr>
+
