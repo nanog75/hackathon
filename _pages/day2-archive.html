@@ -1,0 +1,21 @@
+---
+layout: archive
+permalink: /day2-instructions/
+title: "Instructions and Guidelines for Day2 Hack"
+author_profile: true
+author: "Nanog75 Hackathon Team"
+---
+
+{% include base_path %}
+{% capture written_year %}'None'{% endcapture %}
+{% assign sorted = (site.day2 | sort: 'date') %}
+{% for post in sorted %}
+{% if post.position == "top" %}
+  {% capture year %}{{ post.date | date: '%B %Y' }}{% endcapture %}
+  {% if year != written_year %}
+    <h2 id="{{ year | slugify }}" class="archive__subtitle">{{ year }}</h2>
+    {% capture written_year %}{{ year }}{% endcapture %}
+  {% endif %}
+  {% include archive-techdocs.html %}
+{% endif %}
+{% endfor %}
