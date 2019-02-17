@@ -322,7 +322,7 @@ Let's break down the required CLI configuration into  individual Yang models tha
    
    The Yang model to be used is :  `Cisco-IOS-XR-man-ems-cfg.yang`
    
-   Again, being an XR specific model, we've converted it into XML for you:
+   Again, being an XR specific model, we've generated the XML RPC for you:
    
    ```
    <config>
@@ -342,9 +342,285 @@ Let's break down the required CLI configuration into  individual Yang models tha
 3. For the mpls static CLI:
 
    ```
-   
+   !
+   mpls static
+   interface GigabitEthernet0/0/0/0
+   interface GigabitEthernet0/0/0/1
+   interface GigabitEthernet0/0/0/2
+   !
    
    ```
+   The Yang model to be used is : `Cisco-IOS-XR-mpls-static-cfg.yang`
+   
+   Being an XR specific model, we've generated the XML for you:
+   
+   ```
+   <config>
+    <mpls-static xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-mpls-static-cfg">
+		<enable></enable>
+		<interfaces>
+			<interface>
+				<interface-name>GigabitEthernet0/0/0/0</interface-name>
+			</interface>
+			<interface>
+				<interface-name>GigabitEthernet0/0/0/1</interface-name>
+			</interface>
+			<interface>
+                 <interface-name>GigabitEthernet0/0/0/2</interface-name>
+               </interface>
+		</interfaces>
+	</mpls-static>
+   </config> 
+   ```
+   This XML snippet is stored as `mpls_static.xml` on the webserver at `/var/www/html/xml/rtr2/`
+   
+   
+This leaves us with two CLI snippets:
+
+lldp configuration:
+
+```
+!
+lldp
+!
+
+```
+
+and data port configurations:
+
+```
+!
+interface GigabitEthernet0/0/0/0
+ ipv4 address 10.2.1.20 255.255.255.0
+ ipv6 enable
+ no shutdown
+!
+interface GigabitEthernet0/0/0/1
+ ipv4 address 10.4.1.10 255.255.255.0
+ ipv6 enable
+ no shutdown
+!
+interface GigabitEthernet0/0/0/2
+ ipv4 address 10.5.1.10 255.255.255.0
+ ipv6 enable
+ no shutdown
+!
 
 
+```
+   
+Both of these CLI snippets have Openconfig Models available to generate the XML for them.
+These are:
+
+* LLDP Openconfig model:  `openconfig-lldp.yang`
+* Interface Openconfig Model:  `openconfig-interfaces.yang`
+
+
+
+
+## Getting Access to Yang models
+
+
+Clone the `code-samples` repository to get access to the Yang models compatible with the release of the vendor with appropriate deviations implemented:
+
+
+```
+tesuto@ztp:~$ 
+tesuto@ztp:~$ git clone https://github.com/nanog75/code-samples
+Cloning into 'code-samples'...
+remote: Enumerating objects: 1603, done.
+remote: Counting objects: 100% (1603/1603), done.
+remote: Compressing objects: 100% (625/625), done.
+remote: Total 1603 (delta 1001), reused 1551 (delta 964), pack-reused 0
+Receiving objects: 100% (1603/1603), 12.74 MiB | 7.52 MiB/s, done.
+Resolving deltas: 100% (1001/1001), done.
+Checking out files: 100% (2650/2650), done.
+tesuto@ztp:~$ 
+tesuto@ztp:~$ 
+tesuto@ztp:~$ cd code-samples/ztp/yang/
+tesuto@ztp:~/code-samples/ztp/yang$ 
+tesuto@ztp:~/code-samples/ztp/yang$ 
+tesuto@ztp:~/code-samples/ztp/yang$ 
+tesuto@ztp:~/code-samples/ztp/yang$ ls
+CISCO-ENTITY-FRU-CONTROL-MIB.yang                     Cisco-IOS-XR-manageability-object-tracking-cfg.yang
+Cisco-IOS-XR-PRIVATE-ocacl-ipv4-oper-sub1.yang        Cisco-IOS-XR-manageability-object-tracking-datatypes.yang
+Cisco-IOS-XR-PRIVATE-ocacl-ipv4-oper.yang             Cisco-IOS-XR-manageability-object-tracking-oper-sub1.yang
+Cisco-IOS-XR-PRIVATE-ocacl-ipv6-oper-sub1.yang        Cisco-IOS-XR-manageability-object-tracking-oper.yang
+Cisco-IOS-XR-PRIVATE-ocacl-ipv6-oper.yang             Cisco-IOS-XR-manageability-perfmgmt-cfg.yang
+Cisco-IOS-XR-PRIVATE-ocacl-l2-oper-sub1.yang          Cisco-IOS-XR-manageability-perfmgmt-datatypes.yang
+Cisco-IOS-XR-PRIVATE-ocacl-l2-oper.yang               Cisco-IOS-XR-manageability-perfmgmt-oper-sub1.yang
+Cisco-IOS-XR-PRIVATE-ocni-bgp-oper-sub1.yang          Cisco-IOS-XR-manageability-perfmgmt-oper.yang
+Cisco-IOS-XR-PRIVATE-ocni-bgp-oper.yang               Cisco-IOS-XR-mdrv-lib-cfg.yang
+Cisco-IOS-XR-PRIVATE-ocni-bpm-oper-sub1.yang          Cisco-IOS-XR-mediasvr-linux-oper-sub1.yang
+Cisco-IOS-XR-PRIVATE-ocni-bpm-oper.yang               Cisco-IOS-XR-mediasvr-linux-oper.yang
+Cisco-IOS-XR-PRIVATE-ocni-mpls-rsvp-oper-sub1.yang    Cisco-IOS-XR-mpls-io-cfg.yang
+Cisco-IOS-XR-PRIVATE-ocni-mpls-rsvp-oper.yang         Cisco-IOS-XR-mpls-io-oper-sub1.yang
+Cisco-IOS-XR-PRIVATE-ocni-mpls-static-oper-sub1.yang  Cisco-IOS-XR-mpls-io-oper.yang
+Cisco-IOS-XR-PRIVATE-ocni-mpls-static-oper.yang       Cisco-IOS-XR-mpls-ldp-cfg-datatypes.yang
+Cisco-IOS-XR-PRIVATE-ocni-mpls-te-oper-sub1.yang      Cisco-IOS-XR-mpls-ldp-cfg.yang
+Cisco-IOS-XR-PRIVATE-ocni-mpls-te-oper.yang           Cisco-IOS-XR-mpls-ldp-oper-datatypes.yang
+Cisco-IOS-XR-Subscriber-infra-subdb-oper-sub1.yang    Cisco-IOS-XR-mpls-ldp-oper-sub1.yang
+Cisco-IOS-XR-Subscriber-infra-subdb-oper-sub2.yang    Cisco-IOS-XR-mpls-ldp-oper-sub2.yang
+Cisco-IOS-XR-Subscriber-infra-subdb-oper.yang         Cisco-IOS-XR-mpls-ldp-oper-sub3.yang
+Cisco-IOS-XR-aaa-aaacore-cfg.yang                     Cisco-IOS-XR-mpls-ldp-oper.yang
+Cisco-IOS-XR-aaa-diameter-base-mib-cfg.yang           Cisco-IOS-XR-mpls-lsd-cfg.yang
+Cisco-IOS-XR-aaa-diameter-cfg.yang                    Cisco-IOS-XR-mpls-lsd-oper-sub1.yang
+Cisco-IOS-XR-aaa-diameter-oper-sub1.yang              Cisco-IOS-XR-mpls-lsd-oper.yang
+Cisco-IOS-XR-aaa-diameter-oper.yang                   Cisco-IOS-XR-mpls-oam-cfg.yang
+Cisco-IOS-XR-aaa-lib-cfg.yang                         Cisco-IOS-XR-mpls-oam-oper-sub1.yang
+Cisco-IOS-XR-aaa-lib-datatypes.yang                   Cisco-IOS-XR-mpls-oam-oper.yang
+Cisco-IOS-XR-aaa-locald-admin-cfg.yang                Cisco-IOS-XR-mpls-static-cfg.yang
+Cisco-IOS-XR-aaa-locald-cfg.yang                      Cisco-IOS-XR-mpls-static-oper-sub1.yang
+Cisco-IOS-XR-aaa-locald-oper-sub1.yang                Cisco-IOS-XR-mpls-static-oper.yang
+Cisco-IOS-XR-aaa-locald-oper.yang                     Cisco-IOS-XR-mpls-te-cfg.yang
+Cisco-IOS-XR-aaa-nacm-cfg.yang                        Cisco-IOS-XR-mpls-te-datatypes.yang
+Cisco-IOS-XR-aaa-nacm-oper-sub1.yang                  Cisco-IOS-XR-mpls-te-oper-sub1.yang
+Cisco-IOS-XR-aaa-nacm-oper.yang                       Cisco-IOS-XR-mpls-te-oper-sub2.yang
+Cisco-IOS-XR-aaa-protocol-radius-cfg.yang             Cisco-IOS-XR-mpls-te-oper-sub3.yang
+Cisco-IOS-XR-aaa-protocol-radius-oper-sub1.yang       Cisco-IOS-XR-mpls-te-oper-sub4.yang
+Cisco-IOS-XR-aaa-protocol-radius-oper-sub2.yang       Cisco-IOS-XR-mpls-te-oper-sub5.yang
+Cisco-IOS-XR-aaa-protocol-radius-oper.yang            Cisco-IOS-XR-mpls-te-oper-sub6.yang
+Cisco-IOS-XR-aaa-tacacs-cfg.yang                      Cisco-IOS-XR-mpls-te-oper
+
+
+..........
+
+
+```
+
+Install pyang:
+
+```
+tesuto@ztp:~$ 
+tesuto@ztp:~$ sudo pip3 install pyang
+The directory '/home/tesuto/.cache/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+The directory '/home/tesuto/.cache/pip' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+Collecting pyang
+  Downloading https://files.pythonhosted.org/packages/43/d3/0cc5538d83db3216f4c5acbfa5849a601dfe2e80e5fade872d5e6d5ee7d7/pyang-1.7.8-py2.py3-none-any.whl (447kB)
+    100% |████████████████████████████████| 450kB 2.6MB/s 
+Requirement already satisfied: lxml in ./.local/lib/python3.6/site-packages (from pyang)
+Installing collected packages: pyang
+Successfully installed pyang-1.7.8
+tesuto@ztp:~$ 
+
+```
+
+## Parse the yang model using pyang
+
+
+Let's look at the lldp yang model for example:
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+tesuto@ztp:~/code-samples/ztp/yang$ 
+tesuto@ztp:~/code-samples/ztp/yang$ pyang -f tree openconfig-lldp.yang 
+module: openconfig-lldp
+ <mark> +--rw lldp
+     +--rw config
+     |  +--rw enabled?                      boolean</mark>
+     |  +--rw hello-timer?                  uint64
+     |  +--rw suppress-tlv-advertisement*   identityref
+     |  +--rw system-name?                  string
+     |  +--rw system-description?           string
+     |  +--rw chassis-id?                   string
+     |  +--rw chassis-id-type?              oc-lldp-types:chassis-id-type
+     +--ro state
+     |  +--ro enabled?                      boolean
+     |  +--ro hello-timer?                  uint64
+     |  +--ro suppress-tlv-advertisement*   identityref
+     |  +--ro system-name?                  string
+     |  +--ro system-description?           string
+     |  +--ro chassis-id?                   string
+     |  +--ro chassis-id-type?              oc-lldp-types:chassis-id-type
+     |  +--ro counters
+     |     +--ro frame-in?           yang:counter64
+     |     +--ro frame-out?          yang:counter64
+     |     +--ro frame-error-in?     yang:counter64
+     |     +--ro frame-discard?      yang:counter64
+     |     +--ro tlv-discard?        yang:counter64
+     |     +--ro tlv-unknown?        yang:counter64
+     |     +--ro last-clear?         yang:date-and-time
+     |     +--ro tlv-accepted?       yang:counter64
+     |     +--ro entries-aged-out?   yang:counter64
+     +--rw interfaces
+        +--rw interface* [name]
+           +--rw name         -> ../config/name
+           +--rw config
+           |  +--rw name?      oc-if:base-interface-ref
+           |  +--rw enabled?   boolean
+           +--ro state
+           |  +--ro name?       oc-if:base-interface-ref
+           |  +--ro enabled?    boolean
+           |  +--ro counters
+           |     +--ro frame-in?          yang:counter64
+           |     +--ro frame-out?         yang:counter64
+           |     +--ro frame-error-in?    yang:counter64
+           |     +--ro frame-discard?     yang:counter64
+           |     +--ro tlv-discard?       yang:counter64
+           |     +--ro tlv-unknown?       yang:counter64
+           |     +--ro last-clear?        yang:date-and-time
+           |     +--ro frame-error-out?   yang:counter64
+           +--ro neighbors
+              +--ro neighbor* [id]
+                 +--ro id              -> ../state/id
+                 +--ro config
+                 +--ro state
+                 |  +--ro system-name?               string
+                 |  +--ro system-description?        string
+                 |  +--ro chassis-id?                string
+                 |  +--ro chassis-id-type?           oc-lldp-types:chassis-id-type
+                 |  +--ro id?                        string
+                 |  +--ro age?                       uint64
+                 |  +--ro last-update?               int64
+                 |  +--ro port-id?                   string
+                 |  +--ro port-id-type?              oc-lldp-types:port-id-type
+                 |  +--ro port-description?          string
+                 |  +--ro management-address?        string
+                 |  +--ro management-address-type?   string
+                 +--ro custom-tlvs
+                 |  +--ro tlv* [type oui oui-subtype]
+                 |     +--ro type           -> ../state/type
+                 |     +--ro oui            -> ../state/oui
+                 |     +--ro oui-subtype    -> ../state/oui-subtype
+                 |     +--ro config
+                 |     +--ro state
+                 |        +--ro type?          int32
+                 |        +--ro oui?           string
+                 |        +--ro oui-subtype?   string
+                 |        +--ro value?         binary
+                 +--ro capabilities
+                    +--ro capability* [name]
+                       +--ro name      -> ../state/name
+                       +--ro config
+                       +--ro state
+                          +--ro name?      identityref
+                          +--ro enabled?   boolean
+tesuto@ztp:~/code-samples/ztp/yang$ 
+</code>
+</pre>
+</div>
+
+
+The highlighted entries above indicate the exact fields we need to capture in the final XML snippet.
+So this gets converted into:
+
+```
+<config>
+        <lldp xmlns="http://openconfig.net/yang/lldp">
+		<config>
+			<enabled>true</enabled>
+		</config>
+	</lldp>
+</config>
+
+```
+
+with `xmlns="http://openconfig.net/yang/` being the generic openconfig namespace denotion.
+
+
+
+
+   
+   
 
