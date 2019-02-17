@@ -706,9 +706,9 @@ Since you are going to spend time to figure out the YDK code to create the above
 
 This is already set up for you.
 
-Browse into the `code-samples/ansible/playbooks/config_bgp/` directory. the structure is shown below.
+Browse into the `code-samples/ansible/playbooks/config_bgp/` directory. The structure is shown below.
 
-There are two options available;
+There are two options available:
 
 1. **The Easy route**:  Use the pre-existing `config_xr_bgp_netconf.yml` playbook with the Ansible netconf_config module to utilize the native IOS-XR BGP yang model and configure the two routers.
 This playbook utilizes `rtr1-bgp.xml` and `rtr2-bgp.xml` files shown below.  
@@ -732,7 +732,7 @@ tesuto@dev1:~/code-samples/ansible/playbooks/config_bgp$
 
 ```
 
-2. **The Fun route**:  You've seen how the YDK script above is written. And also have seen the openconfig model to utilize to create the object to configure BGP on the two routers. There is a library file for ansible that is created already for you. Look at `~/code-samples/ansible/playbooks/config_bgp/library/config_bgp_oc_ydk.py`:
+2. **The Fun route**:  You've seen how the YDK script above is written. And also have seen the openconfig model to utilize to create the object to configure BGP on the two routers. There is a library file for Ansible that is created already for you. Look at `~/code-samples/ansible/playbooks/config_bgp/library/config_bgp_oc_ydk.py`:
 
 ```
 tesuto@dev1:~/code-samples/ansible/playbooks/config_bgp$ cat library/config_bgp_oc_ydk.py 
@@ -1011,7 +1011,7 @@ tesuto@dev1:~/code-samples/ansible$
 
 ```
 
-This is using the exact same code as the earlier YDK script in the `config_bgp_ipv4()` function above. So deconstruct the fields from `openconfig-bgp.yang model` you need to fill out, for YDK to generate the required RPC call. Then you can complete the code in the above library file.
+This is using the exact same code as the earlier YDK script in the `config_bgp_ipv4()` function above. So deconstruct the fields from `openconfig-bgp.yang` model you need to fill out, for YDK to generate the required RPC call. Then you can complete the code in the above library file.
 
 No need to touch any part of the code other than  `config_bgp_ipv4()` (look for the comment in the code) and you should be then able to run the ansible-playbook to configure BGP for you.
 
@@ -1164,7 +1164,7 @@ tesuto@dev1:~/code-samples/telemetry$
 To test that the telemetry collector inside the docker container is actually sending data to the kafka bus, let's execute the kafka consumer script provided as an aid in the same `telemetry/` directory:
 
 
-You would need to install `kafka-python` before you execute the `kafka_consumer.py` script:
+You will need to install `kafka-python` before you execute the `kafka_consumer.py` script:
 
 ```
 esuto@dev1:~/code-samples/telemetry$ 
