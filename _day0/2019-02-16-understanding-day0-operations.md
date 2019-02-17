@@ -142,6 +142,211 @@ This process is shown below:
 ![ztp_workflow.png]({{site.baseurl}}/images/ztp_workflow.png)
 
 
+1. When the router receives a CLI configuration file, it will replace its existing configuration with the configuration it downloads as part of the ZTP process.  
+2. When the router receives a script (bash or python), it will execute the downloaded script which is responsible for applying a config to the router or perform any linux operation on the system.
+
+
+## Understanding the Setup
+
+Let us focus only on router `rtr2` for now. We intend to bootstrap it to a required configuration.
+
+
+### DHCP setup
+
+To respond to the router with the required file (script or config), the DHCP server must be suitably setup to identify the requesting router based on its Serial Number before responding with a boot-filename (Option 67) specifying the file location.
+
+The DHCP server expects the serial number to  provided by the IOS-XR router in Option 61 (client-identifier) for DHCPv4 as well as in option 124 which contains both the Serial Number as well as the platform family and vendor code (9 for Cisco).
+
+You are NOT required to set up the DHCP server settings. This is already done for you.
+Each router in the topology has a unique, persistent Serial-Number as well as 
+
+
+On the ZTP node, dump the `/etc/dhcp/dhcpd.conf` file:
+
+```
+
+tesuto@ztp:~$ 
+tesuto@ztp:~$ cat /etc/dhcp/dhcpd.conf 
+# dhcpd.conf
+#
+# Sample configuration file for ISC dhcpd
+#
+# Attention: If /etc/ltsp/dhcpd.conf exists, that will be used as
+# configuration file instead of this file.
+#
+
+# option definitions common to all supported networks...
+option domain-name "cisco.local";
+
+default-lease-time 600;
+max-lease-time 7200;
+
+# The ddns-updates-style parameter controls whether or not the server will
+# attempt to do a DNS update when a lease is confirmed. We default to the
+# behavior of the version 2 packages ('none', since DHCP v2 didn't
+# have support for DDNS.)
+ddns-update-style none;
+
+log-facility local7;
+
+# DHCP Pools
+#################################
+# localpool
+#################################
+
+
+option space cisco-vendor-id-vendor-class code width 1 length width 1;
+option vendor-class.cisco-vendor-id-vendor-class code 9 = {string};
+
+######### Network 100.96.0.0/12 ################
+shared-network 100-96-0-0 {
+
+
+####### Pools ##############
+
+  subnet 100.96.0.0 netmask 255.240.0.0 {
+      option subnet-mask 255.240.0.0;
+      option broadcast-address 100.111.255.255;
+      option routers 1;
+      option domain-name-servers 8.8.8.8;
+  }
+
+
+log (info, substring(option dhcp-client-identifier,0,11));
+######## Matching Classes ##########
+
+
+        class "xrv9k-rtr1" {
+            match if (substring(option dhcp-client-identifier,0,11) = "FGE00080000");
+        }
+
+        pool {
+            allow members of "xrv9k-rtr1";
+            range 100.96.0.14 100.96.0.14;
+            next-server 100.96.0.20;
+
+            log (info, option vendor-class.cisco-vendor-id-vendor-class);
+            log (info, substring(option vendor-class.cisco-vendor-id-vendor-class,3,11));
+            log (info, substring(option vendor-class.cisco-vendor-id-vendor-class,19,99));
+
+            if exists user-class and option user-class = "exr-config" {
+              if (substring(option vendor-class.cisco-vendor-id-vendor-class,3,11)="FGE00080000")
+              {
+                if (substring(option vendor-class.cisco-vendor-id-vendor-class,19,99)="R-IOSXRV9000-CC")
+                {
+                    #option bootfile-name "http://100.96.0.20/scripts/ztp_ncclient.py";
+                    option bootfile-name "http://100.96.0.20/configs/rtr1.config";
+                }
+              }
+            }
+
+            ddns-hostname "xrv9k-rtr1";
+            option routers 100.96.0.1;
+        }
+
+
+        class "xrv9k-rtr2" {
+            match if (substring(option dhcp-client-identifier,0,11) = "FGE000e0000");
+        }
+
+        pool {
+            allow members of "xrv9k-rtr2";
+            range 100.96.0.16 100.96.0.16;
+            next-server 100.96.0.20;
+
+            log (info, option vendor-class.cisco-vendor-id-vendor-class);
+            log (info, substring(option vendor-class.cisco-vendor-id-vendor-class,3,11));
+            log (info, substring(option vendor-class.cisco-vendor-id-vendor-class,19,99));
+
+            if exists user-class and option user-class = "exr-config" {
+              if (substring(option vendor-class.cisco-vendor-id-vendor-class,3,11)="FGE000e0000")
+              {
+                if (substring(option vendor-class.cisco-vendor-id-vendor-class,19,99)="R-IOSXRV9000-CC")
+                {
+                    #option bootfile-name "http://100.96.0.20/scripts/ztp_ncclient.py";
+                    option bootfile-name "http://100.96.0.20/configs/rtr2.config";
+                }
+              }
+            }
+
+            ddns-hostname "xrv9k-rtr2";
+            option routers 100.96.0.1;
+        }
+
+
+
+        class "xrv9k-rtr3" {
+            match if (substring(option dhcp-client-identifier,0,11) = "FGE00140000");
+        }
+
+        pool {
+            allow members of "xrv9k-rtr3";
+            range 100.96.0.18 100.96.0.18;
+            next-server 100.96.0.20;
+
+            log (info, option vendor-class.cisco-vendor-id-vendor-class);
+            log (info, substring(option vendor-class.cisco-vendor-id-vendor-class,3,11));
+            log (info, substring(option vendor-class.cisco-vendor-id-vendor-class,19,99));
+
+            if exists user-class and option user-class = "exr-config" {
+              if (substring(option vendor-class.cisco-vendor-id-vendor-class,3,11)="FGE00140000")
+              {
+                if (substring(option vendor-class.cisco-vendor-id-vendor-class,19,99)="R-IOSXRV9000-CC")
+                {
+                    #option bootfile-name "http://100.96.0.20/scripts/ztp_ncclient.py";
+                    option bootfile-name "http://100.96.0.20/configs/rtr3.config";
+                }
+              }
+            }
+
+            ddns-hostname "xrv9k-rtr3";
+            option routers 100.96.0.1;
+        }
+
+
+        class "xrv9k-rtr4" {
+          match if (substring(option dhcp-client-identifier,0,11) = "FGE002c0000");
+        }
+
+        pool {
+            allow members of "xrv9k-rtr4";
+            range 100.96.0.26 100.96.0.26;
+            next-server 100.96.0.20;
+
+            log (info, option vendor-class.cisco-vendor-id-vendor-class);
+            log (info, substring(option vendor-class.cisco-vendor-id-vendor-class,3,11));
+            log (info, substring(option vendor-class.cisco-vendor-id-vendor-class,19,99));
+
+            if exists user-class and option user-class = "exr-config" {
+              if (substring(option vendor-class.cisco-vendor-id-vendor-class,3,11)="FGE002c0000")
+              {
+                if (substring(option vendor-class.cisco-vendor-id-vendor-class,19,99)="R-IOSXRV9000-CC")
+                {
+                    #option bootfile-name "http://100.96.0.20/scripts/ztp_ncclient.py";
+                    option bootfile-name "http://100.96.0.20/configs/rtr4.config";
+                }
+              }
+            }
+
+            ddns-hostname "xrv9k-rtr4";
+            option routers 100.96.0.1;
+        }
+
+}
+tesuto@ztp:~$ 
+
+
+```
+
+
+
+
+
+
+
+
+
+
 
 
 
