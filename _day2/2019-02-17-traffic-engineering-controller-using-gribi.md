@@ -41,8 +41,8 @@ The API model (proto files) can be found here :
 
 ## Before we Begin
 
-**Note**: 
-`rtr2` is exclusively for use by the Day0 group in your team. You will be able to incorporate the changes meant for rtr2 and test them only after the Day0 group successfully performs ZTP on rtr2. {: .notice--warning} 
+`rtr2` is exclusively for use by the Day0 group in your team. You will be able to incorporate the changes meant for rtr2 and test them only after the Day0 group successfully performs ZTP on rtr2. 
+{: .notice--warning} 
 
 Make sure you have access to a Pod based on the pod number assigned to you.
 The instructions to connect to your pod can be found here: 
