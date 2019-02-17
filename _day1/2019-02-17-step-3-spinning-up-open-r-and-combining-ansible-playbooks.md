@@ -931,3 +931,20 @@ tesuto@dev1:~/code-samples/ansible$
 
 Excellent! Each router was able to ping the loopback0 ip address of every other router.
 {: .notice--success}
+
+
+
+## Task 5: Integrate all the playbooks into a single playbook
+
+
+Your last task as part of the Day1 is to integrate all the playbooks till now:
+
+1.  `config_oc_bgp_ydk.yml`: To configure BGP using YDK
+2.  The playbook required to spin up the gNMI Telemetry collector docker container
+3.  `docker_bringup.yml`: To bringup Open/R on each router.
+4.  `ip_dest_reachable_ydk.yml`:  To check reachability established through Open/R.
+
+Create one single playbook from these playbooks and edit `ansible_hosts` file to uncomment rtr2 entries and be ready for rtr2 when it comes up post Day0 operations!
+
+
+
