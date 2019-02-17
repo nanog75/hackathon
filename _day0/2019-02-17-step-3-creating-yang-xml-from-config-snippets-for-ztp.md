@@ -640,7 +640,12 @@ Store these files on the web server at `/var/www/html/xml/rtr2`
 
 If you take a look at the existing script at `/var/www/html/scripts/ztp_ncclient.py`, there is already a Serial-Number to router name Map in each script.  
 
-Use the map to determine unique urls per router. 
+Use the map to determine unique urls per router. Download the files and use ncclient to apply them and check for error conditions.
+
+
+ZTP automation requires some patience to set up even if the actual script is fairly simple.  
+Hang in there and it'll be worth it!
+{: .notice--success}
 
 
 
