@@ -123,6 +123,26 @@ tesuto@ztp:~$
 ```
 
 
+## The Goal
+
+The goal of the Day0 group is to make all the routers perform ZTP to attain a base configuration required for subsequent operations.
+
+
+**Important**: ZTP is an impactful operation and can affect other users in the topology. Therefore, to start off, only `rtr2` has been earmarked for exclusive use by the Day0 group.
+**DO NOT** perform ZTP on the other routers in your topology until you have a working ZTP script.
+
+
+## The Basics
+
+### What is ZTP?
+
+ZTP stands for Zero touch provisioning and involves bringing up a router from scratch (without any configuration) by providing a ZTP script or a CLI configuration file to the router as part of the  DHCP offer in response to the router's request.
+This process is shown below:
+
+![ztp_workflow.png]({{site.baseurl}}/images/ztp_workflow.png)
+
+
+
 
 
 
