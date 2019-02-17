@@ -430,7 +430,8 @@ The current ZTP script for rtr2 can be found on the webserver running locally on
 
 ```
 
-Let's dump this script. The script has appropriate comments at the different points to help a reader understand its content. 
+Let's dump this script. The script has appropriate comments at the different points to help a reader understand its content.   
+
 
 <div class="highlighter-rouge">
 <pre class="highlight">
