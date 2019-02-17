@@ -1,7 +1,7 @@
 ---
 published: true
 date: '2019-02-16 23:11 -0800'
-title: Understanding Day0 Operations
+title: 'Step 1: Understanding Day0 Operations'
 author: Nanog75 Hackathon Team
 tags:
   - nanog75
@@ -805,6 +805,3 @@ You job is to focus only on the above highlighted portion of code to add ncclien
 
 
 To understand how to perform ZTP on the router rtr2, follow along to the [Step2]({{ base_path }})
-
-
-
