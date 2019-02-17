@@ -80,6 +80,27 @@ ssh -i ~/nanog75.key tesuto@dev1.hackathon.podx.cloud.tesuto.com
 
 
 
+
+## Basic Components
+
+In the current topology for Day 1 (rtr2 is not available for Day1 and Day2 operations, not until Day0 group successfully bootstraps it),  the components we intend to use are:
+
+1. Ansible to orchestrate all the configurations and applications on the network and on all routers.
+
+2. Using gNMI as a way of communicating with the router for configuration using Yang models over gRPC as well as to subscribe to telemetry data from the routers.
+
+3. YDK to enable the use of Yang models through python objects. Learn more about YDK here: <http://ydk.io> and its integration with gNMI here : <https://github.com/CiscoDevNet/ydk-py/tree/master/gnmi/samples>
+
+
+4.  Open/R to act as an IGP on the IOS-XR routers and distribute loopback addresses so that BGP sessions can come up.
+
+
+
+
+
+## Looking at Base code
+
+
 ## Connect to the dev1 box
 
 
@@ -129,31 +150,6 @@ tesuto@dev1:~$
 
 ```
 
-
-## Basic Components
-
-In the current topology for Day 1 (rtr2 is not available for Day1 and Day2 operations, not until Day0 group successfully bootstraps it),  the components we intend to use are:
-
-1. Ansible to orchestrate all the configurations and applications on the network and on all routers.
-
-2. Using gNMI as a way of communicating with the router for configuration using Yang models over gRPC as well as to subscribe to telemetry data from the routers.
-
-3. YDK to enable the use of Yang models through python objects. Learn more about YDK here: <http://ydk.io> and its integration with gNMI here : <https://github.com/CiscoDevNet/ydk-py/tree/master/gnmi/samples>
-
-
-4.  Open/R to act as an IGP on the IOS-XR routers and distribute loopback addresses so that BGP sessions can come up.
-
-
-
-
-
-## Looking at Base code
-
-
-### SSH to dev1
-
-
-For the Day1 group, the development box to be used is `dev1`
 
 
 
