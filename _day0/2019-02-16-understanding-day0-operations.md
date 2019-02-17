@@ -669,7 +669,7 @@ if __name__ == '__main__':
     # It will be cleaned up as part of ncclient_cleanup() method
     host = "172.16.20.1"
 
-   <mark> # Initialize the basic configuration for ncclient to work
+    # Initialize the basic configuration for ncclient to work
     # Sets up local loopback as host to connect to and enable netconf on port 830.
     # Also imports the local key (/root/.ssh/id_rsa.pub) for password free operation
     result = ztp_script.ncclient_init(host_ip=host)
@@ -705,7 +705,7 @@ if __name__ == '__main__':
     result = ztp_script.ncclient_cleanup()
     if result["status"] == "error":
         ztp_script.syslogger.info("Failed to cleanup ncclient dependencies, aborting...")
-        sys.exit(1)</mark>
+        sys.exit(1)
 tesuto@ztp:~$ 
 ```
 
