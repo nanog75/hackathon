@@ -429,7 +429,7 @@ The current ZTP script for rtr2 can be found on the webserver running locally on
 
 ```
 
-Let's dump this script. The script has appropriate comments at the different points to help a reader understand is content.
+Let's dump this script. The script has appropriate comments at the different points to help a reader understand its content. 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -712,7 +712,22 @@ tesuto@ztp:~$
 
 
 
+Notice the highlighted portion above. It shows 3 important steps:
 
+
+1. Initialize the environment for ncclient:
+   Using `ztp_script.ncclient_init(host_ip=host)`
+
+
+2. Connect to the IOS-XR netconf server/agent with appropriate retries:
+
+   ````# Connects to IOS-XR netconf agent and returns a manager handle for ncclient
+    # This is a method of the child class defined above that retries the connection
+    # during initial boot for a specified maximum duration (default = 120seconds)
+    nc_mgr = ztp_script.ncclient_connect(host=host)```
+
+
+3. 
 
 
 
