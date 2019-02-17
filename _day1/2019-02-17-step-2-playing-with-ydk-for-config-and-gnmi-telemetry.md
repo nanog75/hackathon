@@ -648,7 +648,7 @@ tesuto@dev1:~/yang$
 ## Your Tasks
 
 
-Your task is to get the following configuration on rtr1 and rtr2 using YDK.
+Your task is to get the following configuration on rtr1 and rtr4 using YDK.
 
 **rtr1 BGP configuration**:
 
@@ -674,7 +674,7 @@ router bgp 65000
 
 ```
 
-**rtr2 BGP configuration**:
+**rtr4 BGP configuration**:
 
 ```
 router bgp 65000
@@ -711,7 +711,7 @@ Browse into the `code-samples/ansible/playbooks/config_bgp/` directory. The stru
 There are two options available:
 
 1. **The Easy route**:  Use the pre-existing `config_xr_bgp_netconf.yml` playbook with the Ansible netconf_config module to utilize the native IOS-XR BGP yang model and configure the two routers.
-This playbook utilizes `rtr1-bgp.xml` and `rtr2-bgp.xml` files shown below.  
+This playbook utilizes `rtr1-bgp.xml` and `rtr4-bgp.xml` files shown below.  
 
 
 
@@ -1279,6 +1279,3 @@ All you have to do is spin up the docker container using an Ansible playbook so 
 
 
 Proceed to [Step3]({{ base_path }}) to wrap up Day1 operations.
-
-
-
