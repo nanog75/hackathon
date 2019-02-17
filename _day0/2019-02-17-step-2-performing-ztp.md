@@ -194,7 +194,7 @@ Now click on `hackathon` and it will open up the devices page for you. Hover to 
 
 
 You will get a prompt, select `yes` and this will wipe out the rtr2 disk and boot from scratch.
-This process is equivalent 
+This process is equivalent to provisioning a fresh router without config in your network.
 
 ![tesuto_repair3.png]({{site.baseurl}}/images/tesuto_repair3.png)
 
