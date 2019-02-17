@@ -165,19 +165,19 @@ As the file below shows, the following IP addresses are assigned based on the Se
 
 ```
 rtr1:  
-    IP:  100.96.0.14
+    IPv4 Address:   100.96.0.14
     Serial Number:  FGE00080000
     
 rtr2:
-    IP:  100.96.0.16
+    IPv4 Address:   100.96.0.16
     Serial Number:  FGE000e0000
     
 rtr3:
-    IP:  100.96.0.18
+    IPv4 Address:   100.96.0.18
     Serial Number:  FGE00140000
     
 rtr4:
-    IP:  100.96.0.26
+    IPv4 Address:   100.96.0.26
     Serial Number:  FGE002c0000
 ```
 
