@@ -1,0 +1,1144 @@
+<aside class="sidebar__right">
+<nav class="toc">
+    <header><h4 class="nav__title"><i class="fa fa-file-text"></i> On This Page</h4></header>
+<ul class="toc__menu" id="markdown-toc">
+  <li><a href="#playing-with-the-onbox-ztp-bash-hooks" id="markdown-toc-playing-with-the-onbox-ztp-bash-hooks">Playing with the onbox ZTP bash hooks</a>    <ul>
+      <li><a href="#connect-to-router-r1" id="markdown-toc-connect-to-router-r1">Connect to router r1</a></li>
+      <li><a href="#show-commands" id="markdown-toc-show-commands">Show commands</a>        <ul>
+          <li><a href="#drop-into-bash" id="markdown-toc-drop-into-bash">Drop into Bash</a></li>
+          <li><a href="#source-the-ztp_helpersh-library" id="markdown-toc-source-the-ztp_helpersh-library">Source the ztp_helper.sh library</a></li>
+          <li><a href="#execute-the-show-command" id="markdown-toc-execute-the-show-command">Execute the show command</a></li>
+          <li><a href="#checking-an-invalid-show-command" id="markdown-toc-checking-an-invalid-show-command">Checking an invalid show command</a></li>
+          <li><a href="#running-an-exec-command" id="markdown-toc-running-an-exec-command">Running an exec command</a>            <ul>
+              <li><a href="#dump-the-initial-set-of-logs" id="markdown-toc-dump-the-initial-set-of-logs">Dump the initial set of logs</a></li>
+              <li><a href="#clear-the-logs-using-xrcmd" id="markdown-toc-clear-the-logs-using-xrcmd">Clear the logs using xrcmd</a></li>
+            </ul>
+          </li>
+          <li><a href="#running-admin-commands" id="markdown-toc-running-admin-commands">Running admin commands</a></li>
+        </ul>
+      </li>
+      <li><a href="#configuration-merge" id="markdown-toc-configuration-merge">Configuration Merge</a>        <ul>
+          <li><a href="#using-xrapply-to-bring-up-gigabitethernet0000" id="markdown-toc-using-xrapply-to-bring-up-gigabitethernet0000">Using xrapply to bring up GigabitEthernet0/0/0/0</a>            <ul>
+              <li><a href="#create-the-local-configuration-file" id="markdown-toc-create-the-local-configuration-file">Create the local configuration file</a></li>
+              <li><a href="#source-pkgbinztp_helpersh" id="markdown-toc-source-pkgbinztp_helpersh">Source /pkg/bin/ztp_helper.sh</a></li>
+              <li><a href="#do-a-configuration-merge-using-xrapply" id="markdown-toc-do-a-configuration-merge-using-xrapply">Do a configuration merge using xrapply</a></li>
+              <li><a href="#check-the-return-value" id="markdown-toc-check-the-return-value">Check the return value</a></li>
+              <li><a href="#verify-the-configuration-was-properly-applied" id="markdown-toc-verify-the-configuration-was-properly-applied">Verify the configuration was properly applied</a></li>
+            </ul>
+          </li>
+          <li><a href="#using-xrapply-with-an-invalid-configuration-file" id="markdown-toc-using-xrapply-with-an-invalid-configuration-file">Using xrapply with an invalid Configuration file</a>            <ul>
+              <li><a href="#create-an-invalid-configuration-file" id="markdown-toc-create-an-invalid-configuration-file">Create an invalid configuration file</a></li>
+              <li><a href="#do-a-config-merge-using-xrapply" id="markdown-toc-do-a-config-merge-using-xrapply">Do a config merge using xrapply</a></li>
+              <li><a href="#check-the-return-code" id="markdown-toc-check-the-return-code">Check the return code</a></li>
+            </ul>
+          </li>
+          <li><a href="#using-xrapply_string_with_reason-to-configure-gigabitethernet0001" id="markdown-toc-using-xrapply_string_with_reason-to-configure-gigabitethernet0001">Using xrapply_string_with_reason to configure GigabitEthernet0/0/0/1</a></li>
+        </ul>
+      </li>
+      <li><a href="#configuration-replace" id="markdown-toc-configuration-replace">Configuration Replace</a></li>
+    </ul>
+  </li>
+  <li><a href="#playing-with-the-onbox-ztp-python-hooks" id="markdown-toc-playing-with-the-onbox-ztp-python-hooks">Playing with the Onbox ZTP Python hooks</a>    <ul>
+      <li><a href="#connect-to-router-r1-1" id="markdown-toc-connect-to-router-r1-1">Connect to router r1</a></li>
+      <li><a href="#show-commands-1" id="markdown-toc-show-commands-1">Show commands</a>        <ul>
+          <li><a href="#execute-the-show-command-1" id="markdown-toc-execute-the-show-command-1">Execute the show command</a></li>
+          <li><a href="#checking-an-invalid-show-command-1" id="markdown-toc-checking-an-invalid-show-command-1">Checking an invalid show command</a></li>
+          <li><a href="#running-an-exec-command-1" id="markdown-toc-running-an-exec-command-1">Running an exec command</a>            <ul>
+              <li><a href="#dump-the-initial-set-of-logs-1" id="markdown-toc-dump-the-initial-set-of-logs-1">Dump the initial set of logs</a></li>
+              <li><a href="#clear-the-logs-using-xrcmd-1" id="markdown-toc-clear-the-logs-using-xrcmd-1">Clear the logs using xrcmd</a></li>
+            </ul>
+          </li>
+          <li><a href="#running-admin-commands-1" id="markdown-toc-running-admin-commands-1">Running admin commands</a></li>
+        </ul>
+      </li>
+      <li><a href="#configuration-merge-1" id="markdown-toc-configuration-merge-1">Configuration Merge</a>        <ul>
+          <li><a href="#using-xrapply-to-bring-up-gigabitethernet0000-1" id="markdown-toc-using-xrapply-to-bring-up-gigabitethernet0000-1">Using xrapply() to bring up GigabitEthernet0/0/0/0</a>            <ul>
+              <li><a href="#create-the-local-configuration-file-1" id="markdown-toc-create-the-local-configuration-file-1">Create the local configuration file</a></li>
+              <li><a href="#import--ztphelpers-from-pkgbinztp_helperpy" id="markdown-toc-import--ztphelpers-from-pkgbinztp_helperpy">Import  ZtpHelpers from /pkg/bin/ztp_helper.py</a></li>
+              <li><a href="#do-a-configuration-merge-using-xrapply-1" id="markdown-toc-do-a-configuration-merge-using-xrapply-1">Do a configuration merge using xrapply</a></li>
+              <li><a href="#check-the-return-value-1" id="markdown-toc-check-the-return-value-1">Check the return value</a></li>
+            </ul>
+          </li>
+          <li><a href="#using-xrapply-with-an-invalid-configuration-file-1" id="markdown-toc-using-xrapply-with-an-invalid-configuration-file-1">Using xrapply with an invalid Configuration file</a>            <ul>
+              <li><a href="#create-an-invalid-configuration-file-1" id="markdown-toc-create-an-invalid-configuration-file-1">Create an invalid configuration file</a></li>
+              <li><a href="#do-a-config-merge-using-xrapply-1" id="markdown-toc-do-a-config-merge-using-xrapply-1">Do a config merge using xrapply</a></li>
+            </ul>
+          </li>
+          <li><a href="#using-xrapply_string-with-the-reason-parameter-to-configure-gigabitethernet0001" id="markdown-toc-using-xrapply_string-with-the-reason-parameter-to-configure-gigabitethernet0001">Using xrapply_string() with the <code class="highlighter-rouge">reason</code> parameter to configure GigabitEthernet0/0/0/1</a></li>
+        </ul>
+      </li>
+      <li><a href="#configuration-replace-1" id="markdown-toc-configuration-replace-1">Configuration Replace</a></li>
+    </ul>
+  </li>
+</ul>
+
+  </nav>
+</aside>
+
+<h1 id="playing-with-the-onbox-ztp-bash-hooks">Playing with the onbox ZTP bash hooks</h1>
+
+<p>Time to play around with the ZTP Bash hooks! Let’s try out a few use cases.
+We’ll choose router r1 as our test platform.</p>
+
+<blockquote class="notice--info">
+  <p>Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active.</p>
+
+  <p>If you haven’t connected yet, check out the instructions to do so here:
+<a href="https://iosxr-lab-ciscolive.github.io/LTRSPG-2414-cleur2019/assets/CLEUR19-AkshatSharma-IOS-XR-Programmability-Session-1-Friday.pdf">https://iosxr-lab-ciscolive.github.io/LTRSPG-2414-cleur2019/assets/CLEUR19-AkshatSharma-IOS-XR-Programmability-Session-1-Friday.pdf</a></p>
+
+  <p>Once you’re connected, use the following instructions to connect to the individual nodes.
+The instructions in the workshop will simply refer to the Name of the box to connect without
+repeating the connection details and credentials. So refer back to this list when you need it.</p>
+
+  <p>The 3 nodes in the topology are:</p>
+
+  <p style="font-size: 16px;"><b>Development Linux System (DevBox)</b></p>
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> IP Address: 10.10.20.170
+ Username/Password: [admin/admin]
+ SSH Port: 2211
+</code></pre></div>  </div>
+
+  <p style="font-size: 16px;"><b>IOS-XRv9000 R1: (Router r1)</b></p>
+
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>IP Address: 10.10.20.170  
+Username/Password: [admin/admin]   
+Management IP: 10.10.20.170  
+XR SSH Port: 2221    
+NETCONF Port: 8321   
+gRPC Port: 57021  
+XR-Bash SSH Port: 2222    
+</code></pre></div>  </div>
+
+  <p style="font-size: 16px;"><b>IOS-XRv9000 R2:  (Router r2)</b></p>
+
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>IP Address: 10.10.20.170   
+Username/Password: [admin/admin]   
+Management IP: 10.10.20.170   
+XR SSH Port: 2231    
+NETCONF Port: 8331   
+gRPC Port: 57031    
+XR-Bash SSH Port: 2232
+</code></pre></div>  </div>
+</blockquote>
+
+<p>The Topology in use is shown below:
+<img src="/images/topology_devnet.png" alt="topology_devnet.png" /></p>
+
+<h2 id="connect-to-router-r1">Connect to router r1</h2>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Username</b>: admin<br /><b>Password</b>: admin<br /><b>SSH port</b>: 2221<br /><b>IP</b>: 10.10.20.170
+</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Laptop-terminal:$ ssh -p 2221 admin@10.10.20.170
+
+
+--------------------------------------------------------------------------
+  Router 1 (Cisco IOS XR Sandbox)
+--------------------------------------------------------------------------
+
+
+Password:
+
+
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+
+</code></pre></div></div>
+
+<h2 id="show-commands">Show commands</h2>
+
+<p>The <code class="highlighter-rouge">xrcmd</code> utility is used for this purpose. Let’s dump the running configuration.
+To use this utility drop into the IOS-XR bash shell using the <code class="highlighter-rouge">bash</code> CLI and first source the <code class="highlighter-rouge">/pkg/bin/ztp_helper.sh</code> library.</p>
+
+<h4 id="drop-into-bash">Drop into Bash</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#bash
+Sun Aug 19 21:43:45.615 UTC
+[r1:~]$
+[r1:~]$
+</code></pre></div></div>
+
+<h4 id="source-the-ztp_helpersh-library">Source the ztp_helper.sh library</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$ source /pkg/bin/ztp_helper.sh
+[r1:~]$
+</code></pre></div></div>
+
+<h4 id="execute-the-show-command">Execute the show command</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$ xrcmd "show running-config"
+Building configuration...
+!! IOS XR Configuration version = 6.4.1
+!! Last configuration change at Sun Aug 19 21:44:14 2018 by ZTP
+!
+hostname r1
+banner motd ;
+--------------------------------------------------------------------------
+  Router 1 (Cisco IOS XR Sandbox)
+--------------------------------------------------------------------------
+;
+service timestamps log datetime msec
+service timestamps debug datetime msec
+username admin
+ group root-lr
+ group cisco-support
+ secret 5 $1$A4C9$oaNorr6BXDruE4gDd086L.
+!
+line console
+ timestamp disable
+ exec-timeout 0 0
+!
+vty-pool default 0 4 line-template VTY-TEMPLATE
+call-home
+ service active
+ contact smart-licensing
+ profile CiscoTAC-1
+  active
+  destination transport-method http
+ !
+!
+interface MgmtEth0/RP0/CPU0/0
+ description *** MANAGEMENT INTERFACE ***
+ ipv4 address dhcp
+!
+interface GigabitEthernet0/0/0/0
+ shutdown
+!
+interface GigabitEthernet0/0/0/1
+ shutdown
+!
+interface GigabitEthernet0/0/0/2
+ shutdown
+!
+interface GigabitEthernet0/0/0/3
+ shutdown
+!
+interface GigabitEthernet0/0/0/4
+ shutdown
+!
+router static
+ address-family ipv4 unicast
+  0.0.0.0/0 192.168.122.1
+ !
+!
+netconf-yang agent
+ ssh
+!
+ssh server v2
+ssh server netconf vrf default
+end
+
+[r1:~]$
+
+
+</code></pre></div></div>
+
+<h3 id="checking-an-invalid-show-command">Checking an invalid show command</h3>
+
+<p>The return value for xrcmd will unfortunately always be 0, so it is incumbent on us to parse the output and check for the string <code class="highlighter-rouge">% Invalid input detected at '^' marker.</code> which is dependable. The python library that the next learning lab in this module will showcase, already does this and returns a proper error code.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$
+[r1:~]$ xrcmd "Hello World"
+showtech_helper error: Parsing of command "Hello World" failed
+Hello World
+ ^
+% Invalid input detected at '^' marker.
+[r1:~]$
+
+</code></pre></div></div>
+
+<h3 id="running-an-exec-command">Running an exec command</h3>
+
+<p>Exec commands are essentially run in the exec mode and they can affect the state of the system unlike show commands that are read-only actions.
+For example, let’s say we want to clear the logs on the system. We can utilize <code class="highlighter-rouge">xrcmd</code> to do so. But in addition, exec commands usually offer <strong>prompts</strong> that must be handled as part of the xrcmd call. We do so by taking advantage of some bash capabilities as shown below:</p>
+
+<h4 id="dump-the-initial-set-of-logs">Dump the initial set of logs</h4>
+
+<p>Your logs at this stage could look completely different but dump the last 10 lines of the current logs to verify that the clearing process works:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$ xrcmd "show logging" |  tail -10
+RP/0/RP0/CPU0:Aug 20 01:39:10.662 UTC: devc-vty[298]: The specified TTY (4, 8) is not registered in the DB
+RP/0/RP0/CPU0:Aug 20 01:39:10.704 UTC: devc-vty[298]: The specified TTY (4, 8) is not registered in the DB
+RP/0/RP0/CPU0:Aug 20 01:39:23.505 UTC: nvgen[65561]: %MGBL-CONFIG_HIST_UPDATE-3-SYSDB_GET : Error 'sysdb' detected the 'warning' condition 'A verifier or EDM callback function returned: 'not found'' getting host address from  sysdb
+RP/0/RP0/CPU0:Aug 20 01:39:23.660 UTC: devc-vty[298]: The specified TTY (4, 8) is not registered in the DB
+RP/0/RP0/CPU0:Aug 20 01:39:23.676 UTC: devc-vty[298]: The specified TTY (4, 8) is not registered in the DB
+RP/0/RP0/CPU0:Aug 20 01:39:23.703 UTC: devc-vty[298]: The specified TTY (4, 8) is not registered in the DB
+RP/0/RP0/CPU0:Aug 20 01:49:21.506 UTC: SSHD_[68896]: %SECURITY-SSHD-6-INFO_USER_LOGOUT : User 'admin' from '192.168.122.1' logged out on 'vty0'
+RP/0/RP0/CPU0:Aug 20 01:57:56.782 UTC: SSHD_[66208]: %SECURITY-SSHD-6-INFO_SUCCESS : Successfully authenticated user 'admin' from '192.168.122.1' on 'vty0'(cipher 'aes128-ctr', mac 'hmac-sha2-256')
+RP/0/RP0/CPU0:Aug 20 02:08:17.238 UTC: SSHD_[66208]: %SECURITY-SSHD-6-INFO_USER_LOGOUT : User 'admin' from '192.168.122.1' logged out on 'vty0'
+RP/0/RP0/CPU0:Aug 20 02:13:26.371 UTC: SSHD_[66446]: %SECURITY-SSHD-6-INFO_SUCCESS : Successfully authenticated user 'admin' from '192.168.122.1' on 'vty0'(cipher 'aes128-ctr', mac 'hmac-sha2-256')
+[r1:~]$
+
+</code></pre></div></div>
+
+<h4 id="clear-the-logs-using-xrcmd">Clear the logs using xrcmd</h4>
+
+<p><code class="highlighter-rouge">clear logging</code> as an exec command prompts the user like so:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RP/0/RP0/CPU0:r1#clear logging
+Mon Aug 20 01:58:14.572 UTC
+Clear logging buffer [confirm] [y/n] :
+</code></pre></div></div>
+
+<p>So to automate against this, simply echo out “y” in response to the xrcmd output. To do that, we can use:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$
+[r1:~]$
+[r1:~]$ echo -ne "y\n" | xrcmd "clear logging"
+Clear logging buffer [confirm] [y/n] :[r1:~]$
+[r1:~]$
+
+</code></pre></div></div>
+
+<p>Great! Now checking the output of “show logging” again:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$ xrcmd "show logging"
+Syslog logging: enabled (0 messages dropped, 0 flushes, 0 overruns)
+    Console logging: level warnings, 39 messages logged
+    Monitor logging: level debugging, 0 messages logged
+    Trap logging: level informational, 0 messages logged
+    Buffer logging: level debugging, 0 messages logged
+
+Log Buffer (2097152 bytes):
+
+[r1:~]$
+[r1:~]$
+
+</code></pre></div></div>
+
+<h3 id="running-admin-commands">Running admin commands</h3>
+
+<p>In IOS-XR the admin mode is a privileged mode that allows you to run certain administrative exec commands like reloading or shutting down the box, running privileged show commands like “admin show environment power” etc.</p>
+
+<p>To run these commands we again utilize <code class="highlighter-rouge">xrcmd</code> and the power of <code class="highlighter-rouge">echo</code> to funnel in the required admin show/exec commands to the admin mode.
+Since we’re on a virtual router, we can’t really get environment dumps, so let’s issue a simple “show platform” on the admin cli.</p>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Running admin commands require a root-lr user to be configured on the router and an environment variable AAA_USER is used along with ZTP bash hooks to enable privilege associated with the root-lr user to gain access to the admin mode. Since the router has `admin` configured as the root-lr user, we set `AAA_USER=admin`
+</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$
+[r1:~]$ export AAA_USER=admin &amp;&amp; echo -ne "show platform\n" | xrcmd "admin"
+
+ztp-user connected from 127.0.0.1 using console on r1
+sysadmin-vm:0_RP0# show platform
+Mon Aug  20 02:29:28.260 UTC
+Location  Card Type               HW State      SW State      Config State  
+----------------------------------------------------------------------------
+0/0       R-IOSXRV9000-LC-C       OPERATIONAL   N/A           NSHUT         
+0/RP0     R-IOSXRV9000-RP-C       OPERATIONAL   OPERATIONAL   NSHUT         
+
+sysadmin-vm:0_RP0# [r1:~]$
+
+</code></pre></div></div>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Perfect! Any admin command you would potentially want to perform (even configuration in the admin shell) can be performed using the above method - reloads, reload to ipxe, change the state of the LEDs on the box, etc. Just use a combination of `\n` to separate out individual lines meant for the admin CLI. We can now proceed with the configuration manipulation hooks.</p>
+
+<h2 id="configuration-merge">Configuration Merge</h2>
+
+<p>Earlier, we listed 4 different utilities that allow you to play around with configuration merge on IOS-XR:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xrapply
+xrapply_with_reason
+xrapply_string
+xrapply_string_with_reason
+</code></pre></div></div>
+
+<p>We will just try <code class="highlighter-rouge">xrapply</code> and <code class="highlighter-rouge">xrapply_string_with_reason</code> as a quick showcase. It is an exercise for the reader to try out the other utilities outside the context of this lab. We’ve already seen the existing configuration, so let’s use the config merge utilities one by one to bring up GigabitEthernet Interfaces on r1.</p>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Important</b>: We expect the user to perform the same exact steps on r2 before we head to the next section! Remember interfaces on both the routers should be up before we try to bring up protocols on the box using a bash script we will develop in the next section</p>
+
+<h3 id="using-xrapply-to-bring-up-gigabitethernet0000">Using xrapply to bring up GigabitEthernet0/0/0/0</h3>
+
+<p><code class="highlighter-rouge">xrapply</code> uses a configuration file as an argument.
+So let’s create a file in the IOS-XR shell with the following content:</p>
+
+<h4 id="create-the-local-configuration-file">Create the local configuration file</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$ cat &gt; /root/gig0up.conf &lt;&lt; EOF
+&gt; !
+&gt; interface GigabitEthernet0/0/0/0
+&gt;   ipv4 address 10.1.1.10/24
+&gt;   no shutdown
+&gt; !
+&gt; end
+&gt; EOF
+[r1:~]$
+</code></pre></div></div>
+<p>You could use <code class="highlighter-rouge">vi</code> for this purpose as well. In the end the file looks something like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$ cat /root/gig0up.conf
+!
+interface GigabitEthernet0/0/0/0
+  ipv4 address 10.1.1.10/24
+  no shutdown
+!
+end
+[r1:~]$
+</code></pre></div></div>
+
+<p>Now <code class="highlighter-rouge">xrapply</code> will add this configuration to the pre-existing configuration and will bring up <code class="highlighter-rouge">GigabitEthernet0/0/0/0</code> with the ip address <code class="highlighter-rouge">10.1.1.10/24</code>.</p>
+
+<h4 id="source-pkgbinztp_helpersh">Source /pkg/bin/ztp_helper.sh</h4>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">You might not need to source it if you're working in the same shell as the xrcmd command earlier.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$
+[r1:~]$ source /pkg/bin/ztp_helper.sh
+[r1:~]$
+</code></pre></div></div>
+
+<h4 id="do-a-configuration-merge-using-xrapply">Do a configuration merge using xrapply</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$ xrapply /root/gig0up.conf
+[r1:~]$
+
+</code></pre></div></div>
+
+<h4 id="check-the-return-value">Check the return value</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$ echo $?
+0
+[r1:~]$
+</code></pre></div></div>
+<p>exit code 0 indicates that the configuration application was successful!</p>
+
+<h4 id="verify-the-configuration-was-properly-applied">Verify the configuration was properly applied</h4>
+
+<p>We’ll use the <code class="highlighter-rouge">xrcmd</code> utility to verify (exactly as you would in your own script):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$
+[r1:~]$ xrcmd "show configuration commit changes last 1"
+Building configuration...
+!! IOS XR Configuration version = 6.4.1
+interface GigabitEthernet0/0/0/0
+ ipv4 address 10.1.1.10 255.255.255.0
+!
+end
+
+[r1:~]$
+
+</code></pre></div></div>
+<p>Also, verify that the interface is up as expected:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+[r1:~]$ xrcmd "show ip int br"
+
+Interface                      IP-Address      Status          Protocol Vrf-Name
+MgmtEth0/RP0/CPU0/0            192.168.122.21  Up              Up       default
+GigabitEthernet0/0/0/0         10.1.1.10       Up              Up       default
+GigabitEthernet0/0/0/1         unassigned      Shutdown        Down     default
+GigabitEthernet0/0/0/2         unassigned      Shutdown        Down     default
+GigabitEthernet0/0/0/3         unassigned      Shutdown        Down     default
+GigabitEthernet0/0/0/4         unassigned      Shutdown        Down     default
+[r1:~]$
+[r1:~]$
+</code></pre></div></div>
+
+<h3 id="using-xrapply-with-an-invalid-configuration-file">Using xrapply with an invalid Configuration file</h3>
+
+<p>Just for kicks, let’s see what happens if we create an invalid configuration file and try to use xrapply:</p>
+
+<h4 id="create-an-invalid-configuration-file">Create an invalid configuration file</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$
+[r1:~]$ cat &gt; /root/invalid_config_file &lt;&lt; EOF
+&gt; !
+&gt; interface invalid-interface-name
+&gt;   ipv4 address 1.1.1.2/24
+&gt;   no shutdown
+&gt; !
+&gt; end
+&gt; EOF
+[r1:~]$
+</code></pre></div></div>
+
+<h4 id="do-a-config-merge-using-xrapply">Do a config merge using xrapply</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$
+[r1:~]$ xrapply /root/invalid_config_file
+!! SYNTAX/AUTHORIZATION ERRORS: This configuration failed due to
+!! one or more of the following reasons:
+!!  - the entered commands do not exist,
+!!  - the entered commands have errors in their syntax,
+!!  - the software packages containing the commands are not active,
+!!  - the current user is not a member of a task-group that has
+!!    permissions to use the commands.
+
+interface invalid-interface-name
+  ipv4 address 1.1.1.2/24
+  no shutdown
+
+[r1:~]$
+</code></pre></div></div>
+<p>Great! it throws up an error!</p>
+
+<h4 id="check-the-return-code">Check the return code</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$
+[r1:~]$ echo $?
+1
+[r1:~]$
+</code></pre></div></div>
+<p>This is very useful: by throwing up a distinct non-zero exit code upon failure to apply the configuration, it allows us to automate more deterministically.</p>
+
+<h3 id="using-xrapply_string_with_reason-to-configure-gigabitethernet0001">Using xrapply_string_with_reason to configure GigabitEthernet0/0/0/1</h3>
+
+<p>The steps are illustrated below, think of it as a combination of the requirements for <code class="highlighter-rouge">xrapply_string</code> and <code class="highlighter-rouge">xrapply_with_reason</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$
+[r1:~]$ read -r -d '' gigup1_config &lt;&lt; EOF
+&gt; !
+&gt; interface GigabitEthernet0/0/0/1
+&gt;   ipv4 address 11.1.1.10/24
+&gt;   no shutdown
+&gt; !
+&gt; end
+&gt; EOF
+[r1:~]$
+[r1:~]$ echo "$gigup1_config"
+!
+interface GigabitEthernet0/0/0/3
+  ipv4 address 11.1.1.10/24
+  no shutdown
+!
+end
+[r1:~]$
+[r1:~]$ xrapply_string_with_reason "Testing xrapply_string_with_reason" "$gigup1_config"
+[r1:~]$
+[r1:~]$
+[r1:~]$ xrcmd "show configuration commit list 1 detail"
+
+   1) CommitId: 1000000024                 Label: NONE
+      UserId:   ZTP                        Line:  ZTP
+      Client:   CLI                        Time:  Mon Aug 20 00:47:24 2018
+      Comment:  Testing xrapply_string_with_reason
+[r1:~]$
+[r1:~]$
+[r1:~]$ xrcmd "show configuration commit changes last 1 "
+Building configuration...
+!! IOS XR Configuration version = 6.4.1
+interface GigabitEthernet0/0/0/1
+ ipv4 address 11.1.1.10 255.255.255.0
+ no shutdown
+!
+end
+
+[r1:~]$
+[r1:~]$ xrcmd "show ipv4 interface brief"
+
+Interface                      IP-Address      Status          Protocol Vrf-Name
+MgmtEth0/RP0/CPU0/0            192.168.122.21  Up              Up       default
+GigabitEthernet0/0/0/0         10.1.1.10       Up              Up       default
+GigabitEthernet0/0/0/1         11.1.1.10       Up              Up       default
+GigabitEthernet0/0/0/2         unassigned      Shutdown        Down     default
+GigabitEthernet0/0/0/3         unassigned      Shutdown        Down     default
+GigabitEthernet0/0/0/4         unassigned      Shutdown        Down     default
+[r1:~]$
+[r1:~]$
+</code></pre></div></div>
+
+<h2 id="configuration-replace">Configuration Replace</h2>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Very Very Important</b>: Configuration Replace can be potentially dangerous. If you make a mistake with the type of configuration you want to enforce, you can potentially lose connectivity to the router. So make sure you take precautions to ensure the final config is what you want at the end of the process</p>
+
+<p>We will not be attempting an xrreplace as part of this lab. But The basic workflow for using <code class="highlighter-rouge">xrreplace</code> is the same as <code class="highlighter-rouge">xrapply</code>. Provide a file containing the config to <code class="highlighter-rouge">xrreplace</code> and upon execution it will replace the entire configuration on the router with the configuration specified in the file.</p>
+
+<h1 id="playing-with-the-onbox-ztp-python-hooks">Playing with the Onbox ZTP Python hooks</h1>
+
+<p>Time to play around with the ZTP Python hooks! Let’s try out a few use cases.
+We’ll choose router r1 as our test platform.
+Follow instructions in the “Before you Begin” section to understand the SSH ports you have access to.</p>
+
+<h2 id="connect-to-router-r1-1">Connect to router r1</h2>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Username</b>: admin<br /><b>Password</b>: admin<br /><b>SSH port</b>: 2221<br /><b>IP</b>: 10.10.20.170
+</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Laptop-terminal:$ ssh -p 2221 admin@10.10.20.170
+
+
+--------------------------------------------------------------------------
+  Router 1 (Cisco IOS XR Sandbox)
+--------------------------------------------------------------------------
+
+
+Password:
+
+
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+
+</code></pre></div></div>
+
+<h2 id="show-commands-1">Show commands</h2>
+
+<p>The <code class="highlighter-rouge">xrcmd()</code> utility is used for this purpose. Let’s dump the running configuration.
+To use this utility drop into the IOS-XR bash shell using the <code class="highlighter-rouge">bash</code> CLI and open up the python interpreter:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">RP</span><span class="o">/</span><span class="mi">0</span><span class="o">/</span><span class="n">RP0</span><span class="o">/</span><span class="n">CPU0</span><span class="p">:</span><span class="n">r1</span><span class="c">#</span>
+<span class="n">RP</span><span class="o">/</span><span class="mi">0</span><span class="o">/</span><span class="n">RP0</span><span class="o">/</span><span class="n">CPU0</span><span class="p">:</span><span class="n">r1</span><span class="c">#bash  </span>
+<span class="n">Sat</span> <span class="n">Sep</span>  <span class="mi">8</span> <span class="mi">18</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mf">22.730</span> <span class="n">UTC</span>
+<span class="p">[</span><span class="n">r1</span><span class="p">:</span><span class="o">~</span><span class="p">]</span><span class="err">$</span>
+<span class="p">[</span><span class="n">r1</span><span class="p">:</span><span class="o">~</span><span class="p">]</span><span class="err">$</span> <span class="n">python</span>
+<span class="n">Python</span> <span class="mf">2.7</span><span class="o">.</span><span class="mi">3</span> <span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">Dec</span> <span class="mi">12</span> <span class="mi">2017</span><span class="p">,</span> <span class="mi">08</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mo">03</span><span class="p">)</span>
+<span class="p">[</span><span class="n">GCC</span> <span class="mf">4.9</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">on</span> <span class="n">linux2</span>
+<span class="n">Type</span> <span class="s">"help"</span><span class="p">,</span> <span class="s">"copyright"</span><span class="p">,</span> <span class="s">"credits"</span> <span class="ow">or</span> <span class="s">"license"</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span><span class="o">.</span>
+<span class="o">&gt;&gt;&gt;</span>
+
+</code></pre></div></div>
+
+<p>Now let’s import the <code class="highlighter-rouge">ZtpHelpers</code> class from the  <code class="highlighter-rouge">/pkg/bin/ztp_helper.py</code> module. Multiple ways to do this, but we simply append the <code class="highlighter-rouge">sys.path</code> to include <code class="highlighter-rouge">/pkg/bin</code>.
+Further, to use the utilities provided by the <code class="highlighter-rouge">ZtpHelpers</code> class we need to create an object of this class:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">sys</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">"/pkg/bin"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">ztp_helper</span> <span class="kn">import</span> <span class="n">ZtpHelpers</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ztp_obj</span><span class="o">=</span><span class="n">ZtpHelpers</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span>
+
+</code></pre></div></div>
+
+<h4 id="execute-the-show-command-1">Execute the show command</h4>
+
+<p>The <code class="highlighter-rouge">xrcmd</code> method in the <code class="highlighter-rouge">ZtpHelpers</code> class allows us to run show and exec commands in XR CLI. It takes a <code class="highlighter-rouge">cmd</code> parameter as input which is a dictionary of the structure:<br />
+<code class="highlighter-rouge">{ 'exec_cmd': '', 'prompt_response': '' }</code></p>
+
+<p><code class="highlighter-rouge">prompt_response</code> is an optional field meant for exec commands that require the script to answer prompts offered by the IOS-XR shell in response to <code class="highlighter-rouge">exec_cmd</code>.</p>
+
+<p>Let’s try and fetch the <code class="highlighter-rouge">running-config</code> from the router. We’re still in the python interpreter on the router:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">cmd</span><span class="o">=</span><span class="p">{</span><span class="s">"exec_cmd"</span> <span class="p">:</span> <span class="s">"show running-config"</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ztp_obj</span><span class="o">.</span><span class="n">xrcmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+<span class="n">Building</span> <span class="n">configuration</span><span class="o">...</span>
+<span class="p">{</span><span class="s">'status'</span><span class="p">:</span> <span class="s">'success'</span><span class="p">,</span> <span class="s">'output'</span><span class="p">:</span> <span class="p">[</span><span class="s">'!! IOS XR Configuration version = 6.4.1'</span><span class="p">,</span> <span class="s">'!! Last configuration change at Sat Sep  8 19:07:36 2018 by ZTP'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'hostname r1'</span><span class="p">,</span> <span class="s">'banner motd ;'</span><span class="p">,</span> <span class="s">'--------------------------------------------------------------------------'</span><span class="p">,</span> <span class="s">'Router 1 (Cisco IOS XR Sandbox)'</span><span class="p">,</span> <span class="s">'--------------------------------------------------------------------------'</span><span class="p">,</span> <span class="s">';'</span><span class="p">,</span> <span class="s">'logging console debugging'</span><span class="p">,</span> <span class="s">'service timestamps log datetime msec'</span><span class="p">,</span> <span class="s">'service timestamps debug datetime msec'</span><span class="p">,</span> <span class="s">'username admin'</span><span class="p">,</span> <span class="s">'group root-lr'</span><span class="p">,</span> <span class="s">'group cisco-support'</span><span class="p">,</span> <span class="s">'secret 5 $1$A4C9$oaNorr6BXDruE4gDd086L.'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'line console'</span><span class="p">,</span> <span class="s">'timestamp disable'</span><span class="p">,</span> <span class="s">'exec-timeout 0 0'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'vty-pool default 0 4 line-template VTY-TEMPLATE'</span><span class="p">,</span> <span class="s">'call-home'</span><span class="p">,</span> <span class="s">'service active'</span><span class="p">,</span> <span class="s">'contact smart-licensing'</span><span class="p">,</span> <span class="s">'profile CiscoTAC-1'</span><span class="p">,</span> <span class="s">'active'</span><span class="p">,</span> <span class="s">'destination transport-method http'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'interface MgmtEth0/RP0/CPU0/0'</span><span class="p">,</span> <span class="s">'description *** MANAGEMENT INTERFACE ***'</span><span class="p">,</span> <span class="s">'ipv4 address dhcp'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'interface GigabitEthernet0/0/0/0'</span><span class="p">,</span> <span class="s">'ipv6 address 1010:1010::10/64'</span><span class="p">,</span> <span class="s">'ipv6 enable'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'interface GigabitEthernet0/0/0/1'</span><span class="p">,</span> <span class="s">'ipv6 address 2020:2020::10/64'</span><span class="p">,</span> <span class="s">'ipv6 enable'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'interface GigabitEthernet0/0/0/2'</span><span class="p">,</span> <span class="s">'shutdown'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'interface GigabitEthernet0/0/0/3'</span><span class="p">,</span> <span class="s">'shutdown'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'interface GigabitEthernet0/0/0/4'</span><span class="p">,</span> <span class="s">'shutdown'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'router static'</span><span class="p">,</span> <span class="s">'address-family ipv4 unicast'</span><span class="p">,</span> <span class="s">'0.0.0.0/0 10.0.2.2'</span><span class="p">,</span> <span class="s">'1.2.3.5/32 10.0.2.2'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'router bgp 65400'</span><span class="p">,</span> <span class="s">'bgp router-id 11.1.1.10'</span><span class="p">,</span> <span class="s">'address-family ipv4 unicast'</span><span class="p">,</span> <span class="s">'network 11.1.1.0/24'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'neighbor 11.1.1.20'</span><span class="p">,</span> <span class="s">'remote-as 65450'</span><span class="p">,</span> <span class="s">'address-family ipv4 unicast'</span><span class="p">,</span> <span class="s">'next-hop-self'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'grpc'</span><span class="p">,</span> <span class="s">'port 57777'</span><span class="p">,</span> <span class="s">'no-tls'</span><span class="p">,</span> <span class="s">'service-layer'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'telemetry model-driven'</span><span class="p">,</span> <span class="s">'destination-group DGroup1'</span><span class="p">,</span> <span class="s">'address-family ipv4 192.168.122.11 port 5432'</span><span class="p">,</span> <span class="s">'encoding self-describing-gpb'</span><span class="p">,</span> <span class="s">'protocol tcp'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'sensor-group SGroup1'</span><span class="p">,</span> <span class="s">'sensor-path Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'sensor-group IPV6Neighbor'</span><span class="p">,</span> <span class="s">'sensor-path Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'subscription IPV6'</span><span class="p">,</span> <span class="s">'sensor-group-id IPV6Neighbor sample-interval 15000'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'subscription Sub1'</span><span class="p">,</span> <span class="s">'sensor-group-id SGroup1 sample-interval 30000'</span><span class="p">,</span> <span class="s">'destination-id DGroup1'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'netconf-yang agent'</span><span class="p">,</span> <span class="s">'ssh'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'ssh server v2'</span><span class="p">,</span> <span class="s">'ssh server netconf vrf default'</span><span class="p">,</span> <span class="s">'end'</span><span class="p">]}</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Great! The running-config was returned as a list of lines. Let's pretty print this configuration.
+</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pprint</span><span class="p">(</span><span class="n">ztp_obj</span><span class="o">.</span><span class="n">xrcmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
+<span class="n">Building</span> <span class="n">configuration</span><span class="o">...</span>
+<span class="p">{</span><span class="s">'output'</span><span class="p">:</span> <span class="p">[</span><span class="s">'!! IOS XR Configuration version = 6.4.1'</span><span class="p">,</span>
+            <span class="s">'!! Last configuration change at Sat Sep  8 19:07:36 2018 by ZTP'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'hostname r1'</span><span class="p">,</span>
+            <span class="s">'banner motd ;'</span><span class="p">,</span>
+            <span class="s">'--------------------------------------------------------------------------'</span><span class="p">,</span>
+            <span class="s">'Router 1 (Cisco IOS XR Sandbox)'</span><span class="p">,</span>
+            <span class="s">'--------------------------------------------------------------------------'</span><span class="p">,</span>
+            <span class="s">';'</span><span class="p">,</span>
+            <span class="s">'logging console debugging'</span><span class="p">,</span>
+            <span class="s">'service timestamps log datetime msec'</span><span class="p">,</span>
+            <span class="s">'service timestamps debug datetime msec'</span><span class="p">,</span>
+            <span class="s">'username admin'</span><span class="p">,</span>
+            <span class="s">'group root-lr'</span><span class="p">,</span>
+            <span class="s">'group cisco-support'</span><span class="p">,</span>
+            <span class="s">'secret 5 $1$A4C9$oaNorr6BXDruE4gDd086L.'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'line console'</span><span class="p">,</span>
+            <span class="s">'timestamp disable'</span><span class="p">,</span>
+            <span class="s">'exec-timeout 0 0'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'vty-pool default 0 4 line-template VTY-TEMPLATE'</span><span class="p">,</span>
+            <span class="s">'call-home'</span><span class="p">,</span>
+            <span class="s">'service active'</span><span class="p">,</span>
+            <span class="s">'contact smart-licensing'</span><span class="p">,</span>
+            <span class="s">'profile CiscoTAC-1'</span><span class="p">,</span>
+            <span class="s">'active'</span><span class="p">,</span>
+            <span class="s">'destination transport-method http'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'interface MgmtEth0/RP0/CPU0/0'</span><span class="p">,</span>
+            <span class="s">'description *** MANAGEMENT INTERFACE ***'</span><span class="p">,</span>
+            <span class="s">'ipv4 address dhcp'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'interface GigabitEthernet0/0/0/0'</span><span class="p">,</span>
+            <span class="s">'ipv6 address 1010:1010::10/64'</span><span class="p">,</span>
+            <span class="s">'ipv6 enable'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'interface GigabitEthernet0/0/0/1'</span><span class="p">,</span>
+            <span class="s">'ipv6 address 2020:2020::10/64'</span><span class="p">,</span>
+            <span class="s">'ipv6 enable'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'interface GigabitEthernet0/0/0/2'</span><span class="p">,</span>
+            <span class="s">'shutdown'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'interface GigabitEthernet0/0/0/3'</span><span class="p">,</span>
+            <span class="s">'shutdown'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'interface GigabitEthernet0/0/0/4'</span><span class="p">,</span>
+            <span class="s">'shutdown'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'router static'</span><span class="p">,</span>
+            <span class="s">'address-family ipv4 unicast'</span><span class="p">,</span>
+            <span class="s">'0.0.0.0/0 10.0.2.2'</span><span class="p">,</span>
+            <span class="s">'1.2.3.5/32 10.0.2.2'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'router bgp 65400'</span><span class="p">,</span>
+            <span class="s">'bgp router-id 11.1.1.10'</span><span class="p">,</span>
+            <span class="s">'address-family ipv4 unicast'</span><span class="p">,</span>
+            <span class="s">'network 11.1.1.0/24'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'neighbor 11.1.1.20'</span><span class="p">,</span>
+            <span class="s">'remote-as 65450'</span><span class="p">,</span>
+            <span class="s">'address-family ipv4 unicast'</span><span class="p">,</span>
+            <span class="s">'next-hop-self'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'grpc'</span><span class="p">,</span>
+            <span class="s">'port 57777'</span><span class="p">,</span>
+            <span class="s">'no-tls'</span><span class="p">,</span>
+            <span class="s">'service-layer'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'telemetry model-driven'</span><span class="p">,</span>
+            <span class="s">'destination-group DGroup1'</span><span class="p">,</span>
+            <span class="s">'address-family ipv4 192.168.122.11 port 5432'</span><span class="p">,</span>
+            <span class="s">'encoding self-describing-gpb'</span><span class="p">,</span>
+            <span class="s">'protocol tcp'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'sensor-group SGroup1'</span><span class="p">,</span>
+            <span class="s">'sensor-path Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'sensor-group IPV6Neighbor'</span><span class="p">,</span>
+            <span class="s">'sensor-path Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'subscription IPV6'</span><span class="p">,</span>
+            <span class="s">'sensor-group-id IPV6Neighbor sample-interval 15000'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'subscription Sub1'</span><span class="p">,</span>
+            <span class="s">'sensor-group-id SGroup1 sample-interval 30000'</span><span class="p">,</span>
+            <span class="s">'destination-id DGroup1'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'netconf-yang agent'</span><span class="p">,</span>
+            <span class="s">'ssh'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'ssh server v2'</span><span class="p">,</span>
+            <span class="s">'ssh server netconf vrf default'</span><span class="p">,</span>
+            <span class="s">'end'</span><span class="p">],</span>
+ <span class="s">'status'</span><span class="p">:</span> <span class="s">'success'</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>You can clearly see that the response  is a dictionary that contains two fields: <code class="highlighter-rouge">output</code> and <code class="highlighter-rouge">status</code>. Since the <code class="highlighter-rouge">exec_cmd</code> was successfull executed, <code class="highlighter-rouge">status</code>=<code class="highlighter-rouge">success</code> and <code class="highlighter-rouge">output</code>=<code class="highlighter-rouge">output of the exec/show command</code>.</p>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">
+<b>The return values using the ztp python library utilities are very useful in deterministically writing CLI automation in python.</b></p>
+
+<h3 id="checking-an-invalid-show-command-1">Checking an invalid show command</h3>
+
+<p>Unlike the ZTP bash library, the ZTP python library does not put the onus of determining an invalid show command on the end user. Instead it returns <code class="highlighter-rouge">status</code>=<code class="highlighter-rouge">error</code> and <code class="highlighter-rouge">output</code>=<code class="highlighter-rouge">% Invalid input detected at '^' marker.</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">cmd</span><span class="o">=</span><span class="p">{</span><span class="s">"exec_cmd"</span> <span class="p">:</span> <span class="s">"Hello World"</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pprint</span><span class="p">(</span><span class="n">ztp_obj</span><span class="o">.</span><span class="n">xrcmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
+<span class="n">showtech_helper</span> <span class="n">error</span><span class="p">:</span> <span class="n">Parsing</span> <span class="n">of</span> <span class="n">command</span> <span class="s">"Hello World"</span> <span class="n">failed</span>
+<span class="p">{</span><span class="s">'output'</span><span class="p">:</span> <span class="p">[</span><span class="s">'Hello World'</span><span class="p">,</span> <span class="s">'^'</span><span class="p">,</span> <span class="s">"</span><span class="si">% </span><span class="s">Invalid input detected at '^' marker."</span><span class="p">],</span>
+ <span class="s">'status'</span><span class="p">:</span> <span class="s">'error'</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span>
+
+</code></pre></div></div>
+
+<h3 id="running-an-exec-command-1">Running an exec command</h3>
+
+<p>Exec commands are essentially run in the exec mode and they can affect the state of the system unlike show commands that are read-only actions.
+For example, let’s say we want to clear the logs on the system. We can utilize <code class="highlighter-rouge">xrcmd</code> to do so. But in addition, exec commands usually offer <strong>prompts</strong> that must be handled as part of the xrcmd call. We do so by taking advantage of the <code class="highlighter-rouge">prompt_response</code> field in the dictionary passed into the <code class="highlighter-rouge">xrcmd()</code> method:</p>
+
+<h4 id="dump-the-initial-set-of-logs-1">Dump the initial set of logs</h4>
+
+<p>Your logs at this stage could look completely different but dump the last 10 lines of the current logs to verify that the clearing process works (we do this using the python library as well):</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">cmd</span><span class="o">=</span><span class="p">{</span><span class="s">"exec_cmd"</span> <span class="p">:</span> <span class="s">"show logging"</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">show_logging</span><span class="o">=</span><span class="n">ztp_obj</span><span class="o">.</span><span class="n">xrcmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pprint</span><span class="p">(</span><span class="n">show_logging</span><span class="p">[</span><span class="s">"status"</span><span class="p">])</span>
+<span class="s">'success'</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pprint</span><span class="p">(</span><span class="n">show_logging</span><span class="p">[</span><span class="s">"output"</span><span class="p">][</span><span class="o">-</span><span class="mi">10</span><span class="p">:])</span>
+<span class="p">[</span><span class="s">"RP/0/RP0/CPU0:Sep  8 19:07:34.182 UTC: config[68961]: </span><span class="si">%</span><span class="s">MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'ZTP'. Use 'show configuration commit changes 1000000175' to view the changes."</span><span class="p">,</span>
+ <span class="s">"RP/0/RP0/CPU0:Sep  8 19:07:35.559 UTC: exec[69085]: </span><span class="si">%</span><span class="s">SECURITY-LOGIN-6-AUTHEN_SUCCESS : Successfully authenticated user 'ztp-user' from '&lt;unknown&gt;' on 'vty9'"</span><span class="p">,</span>
+ <span class="s">'RP/0/RP0/CPU0:Sep  8 19:07:35.562 UTC: devc-vty[298]: The specified TTY (4, 9) is not registered in the DB'</span><span class="p">,</span>
+ <span class="s">'RP/0/RP0/CPU0:Sep  8 19:07:35.687 UTC: devc-vty[298]: The specified TTY (4, 9) is not registered in the DB'</span><span class="p">,</span>
+ <span class="s">"RP/0/RP0/CPU0:Sep  8 19:07:35.692 UTC: exec[69085]: </span><span class="si">%</span><span class="s">SECURITY-LOGIN-6-CLOSE : User 'ztp-user' logged out"</span><span class="p">,</span>
+ <span class="s">'RP/0/RP0/CPU0:Sep  8 19:07:37.094 UTC: syslog_dev[119]: locald_DLRSC[327] PID-16853: passwd: password expiry information changed.'</span><span class="p">,</span>
+ <span class="s">'RP/0/RP0/CPU0:Sep  8 19:07:37.187 UTC: syslog_dev[119]: locald_DLRSC[327] PID-16877: Removing user ztp-user from group root-lr'</span><span class="p">,</span>
+ <span class="s">"RP/0/RP0/CPU0:Sep  8 19:07:39.156 UTC: config[69121]: </span><span class="si">%</span><span class="s">MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'ZTP'. Use 'show configuration commit changes 1000000176' to view the changes."</span><span class="p">,</span>
+ <span class="s">"RP/0/RP0/CPU0:Sep  8 19:08:03.417 UTC: SSHD_[68000]: </span><span class="si">%</span><span class="s">SECURITY-SSHD-6-INFO_USER_LOGOUT : User 'admin' from '192.168.122.1' logged out on 'vty0'"</span><span class="p">,</span>
+ <span class="s">"RP/0/RP0/CPU0:Sep  8 19:08:15.515 UTC: SSHD_[69282]: </span><span class="si">%</span><span class="s">SECURITY-SSHD-6-INFO_SUCCESS : Successfully authenticated user 'admin' from '192.168.122.1' on 'vty0'(cipher 'aes128-ctr', mac 'hmac-sha2-256')"</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span>
+
+</code></pre></div></div>
+
+<h4 id="clear-the-logs-using-xrcmd-1">Clear the logs using xrcmd</h4>
+
+<p><code class="highlighter-rouge">clear logging</code> as an exec command prompts the user like so:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RP/0/RP0/CPU0:r1#clear logging
+Mon Aug 20 01:58:14.572 UTC
+Clear logging buffer [confirm] [y/n] :
+</code></pre></div></div>
+
+<p>So to automate against this, simply provide “y\n” as a <code class="highlighter-rouge">prompt_response</code> field in the <code class="highlighter-rouge">xrcmd()</code> input dictionary:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">cmd</span><span class="o">=</span><span class="p">{</span><span class="s">"exec_cmd"</span> <span class="p">:</span> <span class="s">"clear logging"</span><span class="p">,</span> <span class="s">"prompt_response"</span> <span class="p">:</span> <span class="s">"y</span><span class="se">\n</span><span class="s">"</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ztp_obj</span><span class="o">.</span><span class="n">xrcmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+<span class="p">{</span><span class="s">'status'</span><span class="p">:</span> <span class="s">'success'</span><span class="p">,</span> <span class="s">'output'</span><span class="p">:</span> <span class="p">[</span><span class="s">'Clear logging buffer [confirm] [y/n] :'</span><span class="p">]}</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>Great! Now checking the output of “show logging” again:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">cmd</span><span class="o">=</span><span class="p">{</span><span class="s">"exec_cmd"</span> <span class="p">:</span> <span class="s">"show logging"</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">show_logging</span><span class="o">=</span><span class="n">ztp_obj</span><span class="o">.</span><span class="n">xrcmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pprint</span><span class="p">(</span><span class="n">show_logging</span><span class="p">[</span><span class="s">"status"</span><span class="p">])</span>
+<span class="s">'success'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pprint</span><span class="p">(</span><span class="n">show_logging</span><span class="p">[</span><span class="s">"output"</span><span class="p">][</span><span class="o">-</span><span class="mi">10</span><span class="p">:])</span>
+<span class="p">[</span><span class="s">'Syslog logging: enabled (0 messages dropped, 0 flushes, 0 overruns)'</span><span class="p">,</span>
+ <span class="s">'Console logging: level debugging, 9948 messages logged'</span><span class="p">,</span>
+ <span class="s">'Monitor logging: level debugging, 9610 messages logged'</span><span class="p">,</span>
+ <span class="s">'Trap logging: level informational, 0 messages logged'</span><span class="p">,</span>
+ <span class="s">'Buffer logging: level debugging, 0 messages logged'</span><span class="p">,</span>
+ <span class="s">'Log Buffer (2097152 bytes):'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">The log buffer has been cleared!</p>
+
+<h3 id="running-admin-commands-1">Running admin commands</h3>
+
+<p>In IOS-XR the admin mode is a privileged mode that allows you to run certain administrative exec commands like reloading or shutting down the box, running privileged show commands like “admin show environment power” etc.</p>
+
+<p>To accomplish this we rope in the ZTP Bash library (get acquainted with ZTP Bash library through the first lab in this CLI Automation module) to execute the admin command using Python’s Subprocess module.</p>
+
+<p>Let us first define an <code class="highlighter-rouge">admincmd()</code>  utility of our own.</p>
+
+<p>Drop into the <code class="highlighter-rouge">bash</code> shell of router <code class="highlighter-rouge">r1</code> again and create a <code class="highlighter-rouge">run_admin_cmd.py</code> file that contains the following code (you can use <code class="highlighter-rouge">vi</code> to accomplish this on the box itself):</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">RP</span><span class="o">/</span><span class="mi">0</span><span class="o">/</span><span class="n">RP0</span><span class="o">/</span><span class="n">CPU0</span><span class="p">:</span><span class="n">r1</span><span class="c">#</span>
+<span class="n">RP</span><span class="o">/</span><span class="mi">0</span><span class="o">/</span><span class="n">RP0</span><span class="o">/</span><span class="n">CPU0</span><span class="p">:</span><span class="n">r1</span><span class="c">#bash</span>
+<span class="n">Sun</span> <span class="n">Sep</span>  <span class="mi">9</span> <span class="mo">00</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mf">24.569</span> <span class="n">UTC</span>
+<span class="p">[</span><span class="n">r1</span><span class="p">:</span><span class="o">~</span><span class="p">]</span><span class="err">$</span>
+<span class="p">[</span><span class="n">r1</span><span class="p">:</span><span class="o">~</span><span class="p">]</span><span class="err">$</span> <span class="n">cat</span> <span class="n">run_admin_cmd</span><span class="o">.</span><span class="n">py</span>
+<span class="c">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="k">def</span> <span class="nf">admincmd</span><span class="p">(</span><span class="n">root_lr_user</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cmd</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">cmd</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">"status"</span> <span class="p">:</span> <span class="s">"error"</span><span class="p">,</span> <span class="s">"output"</span> <span class="p">:</span> <span class="s">"No command specified"</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">root_lr_user</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">"status"</span> <span class="p">:</span> <span class="s">"error"</span><span class="p">,</span> <span class="s">"output"</span> <span class="p">:</span> <span class="s">"root-lr user not specified"</span><span class="p">}</span>
+
+    <span class="n">status</span> <span class="o">=</span> <span class="s">"success"</span>
+
+    <span class="c"># Set up the AAA_USER environment variable to set up</span>
+    <span class="c"># task map for admin cmd execution</span>
+    <span class="n">export_aaa_user</span><span class="o">=</span><span class="s">"export AAA_USER="</span><span class="o">+</span><span class="n">root_lr_user</span>
+
+    <span class="c"># Source ztp_helper.sh ZTP Bash library to make sure that</span>
+    <span class="c"># the xrcmd bash command is available</span>
+
+    <span class="n">source_ztp_bash</span><span class="o">=</span><span class="s">"source /pkg/bin/ztp_helper.sh"</span>
+
+    <span class="c"># Combine the two shell commands</span>
+    <span class="n">cmd_env_setup</span><span class="o">=</span><span class="n">export_aaa_user</span><span class="o">+</span> <span class="s">"&amp;&amp;"</span> <span class="o">+</span><span class="n">source_ztp_bash</span>
+
+
+    <span class="c"># Set up use of xrcmd and echo to funnel in admin commands</span>
+    <span class="c"># to the admin shell of IOS-XR</span>
+    <span class="n">run_admin_cmd</span><span class="o">=</span><span class="s">"echo -ne </span><span class="se">\"</span><span class="s">"</span><span class="o">+</span><span class="n">cmd</span><span class="o">+</span><span class="s">"</span><span class="se">\\</span><span class="s">n </span><span class="se">\"</span><span class="s"> | xrcmd </span><span class="se">\"</span><span class="s">admin</span><span class="se">\"</span><span class="s">"</span>
+
+    <span class="c">#Set up the final bash command to run</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd_env_setup</span><span class="o">+</span> <span class="s">"&amp;&amp;"</span> <span class="o">+</span><span class="n">run_admin_cmd</span>
+
+
+    <span class="c"># Utilize SubProcess to run the shell command</span>
+    <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+
+
+    <span class="c"># Filter out invalid admin exec/show commands and construct list out of output</span>
+
+    <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span><span class="p">:</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="s">"error"</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s">"Failed to get command output"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s">""</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+            <span class="n">fixed_line</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="s">" "</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">output_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fixed_line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s">"syntax error: expecting"</span> <span class="ow">in</span> <span class="n">fixed_line</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="s">"error"</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">output_list</span><span class="p">)</span>    <span class="c"># Removing empty items</span>
+
+    <span class="c"># Return the result with status and output</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">"status"</span> <span class="p">:</span> <span class="n">status</span><span class="p">,</span> <span class="s">"output"</span> <span class="p">:</span> <span class="n">output</span><span class="p">}</span>
+<span class="p">[</span><span class="n">r1</span><span class="p">:</span><span class="o">~</span><span class="p">]</span><span class="err">$</span>
+</code></pre></div></div>
+
+<p>Here, we have created our own python function to run an admincmd in IOS-XR. Walk through the code comments to understand the flow of the code in greater detail.</p>
+
+<p>Now open up a python interpreter in the same directory as the <code class="highlighter-rouge">run_admin_cmd.py</code> file and import the <code class="highlighter-rouge">admincmd()</code> function we just created:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">r1</span><span class="p">:</span><span class="o">~</span><span class="p">]</span><span class="err">$</span>
+<span class="p">[</span><span class="n">r1</span><span class="p">:</span><span class="o">~</span><span class="p">]</span><span class="err">$</span> <span class="n">python</span>
+<span class="n">Python</span> <span class="mf">2.7</span><span class="o">.</span><span class="mi">3</span> <span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">Dec</span> <span class="mi">12</span> <span class="mi">2017</span><span class="p">,</span> <span class="mi">08</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mo">03</span><span class="p">)</span>
+<span class="p">[</span><span class="n">GCC</span> <span class="mf">4.9</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">on</span> <span class="n">linux2</span>
+<span class="n">Type</span> <span class="s">"help"</span><span class="p">,</span> <span class="s">"copyright"</span><span class="p">,</span> <span class="s">"credits"</span> <span class="ow">or</span> <span class="s">"license"</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span><span class="o">.</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">run_admin_cmd</span> <span class="kn">import</span> <span class="n">admincmd</span>
+</code></pre></div></div>
+<p>We are now ready to run some admin commands through the python interpreter shell.
+We’ll try to run a simple show command in the admin mode:</p>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Running admin commands require a root-lr user to be configured on the router and an environment variable AAA_USER is used along with ZTP bash hooks to enable privilege associated with the root-lr user to gain access to the admin mode. Since the router has `admin` configured as the root-lr user, we set `root_lr_user`=`admin`
+</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">r1</span><span class="p">:</span><span class="o">~</span><span class="p">]</span><span class="err">$</span> <span class="n">python</span>
+<span class="n">Python</span> <span class="mf">2.7</span><span class="o">.</span><span class="mi">3</span> <span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">Dec</span> <span class="mi">12</span> <span class="mi">2017</span><span class="p">,</span> <span class="mi">08</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mo">03</span><span class="p">)</span>
+<span class="p">[</span><span class="n">GCC</span> <span class="mf">4.9</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">on</span> <span class="n">linux2</span>
+<span class="n">Type</span> <span class="s">"help"</span><span class="p">,</span> <span class="s">"copyright"</span><span class="p">,</span> <span class="s">"credits"</span> <span class="ow">or</span> <span class="s">"license"</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span><span class="o">.</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">run_admin_cmd</span> <span class="kn">import</span> <span class="n">admincmd</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">admincmd</span><span class="p">(</span><span class="n">root_lr_user</span><span class="o">=</span><span class="s">"admin"</span><span class="p">,</span> <span class="n">cmd</span><span class="o">=</span><span class="s">"show platform"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pprint</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="p">{</span><span class="s">'output'</span><span class="p">:</span> <span class="p">[</span><span class="s">'ztp-user connected from 127.0.0.1 using console on r1'</span><span class="p">,</span>
+            <span class="s">'</span><span class="se">\x1b</span><span class="s">[?7hsysadmin-vm:0_RP0#show platform'</span><span class="p">,</span>
+            <span class="s">'Sun Sep  9  00:17:29.516 UTC'</span><span class="p">,</span>
+            <span class="s">'Location  Card Type               HW State      SW State      Config State'</span><span class="p">,</span>
+            <span class="s">'----------------------------------------------------------------------------'</span><span class="p">,</span>
+            <span class="s">'0/0       R-IOSXRV9000-LC-C       OPERATIONAL   N/A           NSHUT'</span><span class="p">,</span>
+            <span class="s">'0/RP0     R-IOSXRV9000-RP-C       OPERATIONAL   OPERATIONAL   NSHUT'</span><span class="p">,</span>
+            <span class="s">'sysadmin-vm:0_RP0#'</span><span class="p">],</span>
+ <span class="s">'status'</span><span class="p">:</span> <span class="s">'success'</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span>
+
+</code></pre></div></div>
+
+<p>Perfect! we can now proceed with the configuration manipulation hooks.</p>
+
+<h2 id="configuration-merge-1">Configuration Merge</h2>
+
+<p>There are 2 different utilities that allow you to play around with <strong>configuration merge</strong> on IOS-XR:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xrapply()
+xrapply_string()
+</code></pre></div></div>
+
+<p>Let’s try each one of these out. We’ve already seen the existing configuration, so let’s use the config merge utilities one by one to bring up four GigabitEthernet Interfaces on r1.</p>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Important</b>: We expect the user to perform the same exact steps on r2 before we head to the next section! Remember interfaces on both the routers should be up before we try to bring up protocols on the box using a python script we will develop in the next section</p>
+
+<h3 id="using-xrapply-to-bring-up-gigabitethernet0000-1">Using xrapply() to bring up GigabitEthernet0/0/0/0</h3>
+
+<p><code class="highlighter-rouge">xrapply</code> uses a configuration file as an argument.
+So let’s create a file in the IOS-XR shell with the following content:</p>
+
+<h4 id="create-the-local-configuration-file-1">Create the local configuration file</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">r1</span><span class="p">:</span><span class="o">~</span><span class="p">]</span><span class="err">$</span> <span class="n">python</span>
+<span class="n">Python</span> <span class="mf">2.7</span><span class="o">.</span><span class="mi">3</span> <span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">Dec</span> <span class="mi">12</span> <span class="mi">2017</span><span class="p">,</span> <span class="mi">08</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mo">03</span><span class="p">)</span>
+<span class="p">[</span><span class="n">GCC</span> <span class="mf">4.9</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">on</span> <span class="n">linux2</span>
+<span class="n">Type</span> <span class="s">"help"</span><span class="p">,</span> <span class="s">"copyright"</span><span class="p">,</span> <span class="s">"credits"</span> <span class="ow">or</span> <span class="s">"license"</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span><span class="o">.</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">file_path</span><span class="o">=</span><span class="s">"/root/gig0up.conf"</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">file_content</span><span class="o">=</span><span class="s">"""
+... !
+... interface GigabitEthernet0/0/0/0
+...   ipv4 address 10.1.1.10/24
+...   no shutdown
+... !
+... end
+... """</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+<span class="o">...</span>     <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_content</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span>   
+</code></pre></div></div>
+
+<p>You could use <code class="highlighter-rouge">vi</code> for this purpose as well. In the end the file looks something like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[r1:~]$ cat /root/gig0up.conf
+!
+interface GigabitEthernet0/0/0/0
+  ipv4 address 10.1.1.10/24
+  no shutdown
+!
+end
+[r1:~]$
+</code></pre></div></div>
+
+<p>Now <code class="highlighter-rouge">xrapply()</code> will add this configuration to the pre-existing configuration and will bring up <code class="highlighter-rouge">GigabitEthernet0/0/0/0</code> with the ip address <code class="highlighter-rouge">100.1.1.10/24</code>.</p>
+
+<h4 id="import--ztphelpers-from-pkgbinztp_helperpy">Import  ZtpHelpers from /pkg/bin/ztp_helper.py</h4>
+
+<p>In the python interpreter:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">"/pkg/bin"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">ztp_helper</span> <span class="kn">import</span> <span class="n">ZtpHelpers</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ztp_obj</span><span class="o">=</span><span class="n">ZtpHelpers</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<h4 id="do-a-configuration-merge-using-xrapply-1">Do a configuration merge using xrapply</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="o">=</span><span class="n">ztp_obj</span><span class="o">.</span><span class="n">xrapply</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">file_path</span><span class="p">)</span>
+<span class="n">Building</span> <span class="n">configuration</span><span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span>
+<span class="p">{</span><span class="s">'status'</span><span class="p">:</span> <span class="s">'success'</span><span class="p">,</span> <span class="s">'output'</span><span class="p">:</span> <span class="p">[</span><span class="s">'!! IOS XR Configuration version = 6.4.1'</span><span class="p">,</span> <span class="s">'interface GigabitEthernet0/0/0/0'</span><span class="p">,</span> <span class="s">'ipv4 address 100.1.1.10 255.255.255.0'</span><span class="p">,</span> <span class="s">'no shutdown'</span><span class="p">,</span> <span class="s">'!'</span><span class="p">,</span> <span class="s">'end'</span><span class="p">]}</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<h4 id="check-the-return-value-1">Check the return value</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pprint</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="p">{</span><span class="s">'output'</span><span class="p">:</span> <span class="p">[</span><span class="s">'!! IOS XR Configuration version = 6.4.1'</span><span class="p">,</span>
+            <span class="s">'interface GigabitEthernet0/0/0/0'</span><span class="p">,</span>
+            <span class="s">'ipv4 address 100.1.1.10 255.255.255.0'</span><span class="p">,</span>
+            <span class="s">'no shutdown'</span><span class="p">,</span>
+            <span class="s">'!'</span><span class="p">,</span>
+            <span class="s">'end'</span><span class="p">],</span>
+ <span class="s">'status'</span><span class="p">:</span> <span class="s">'success'</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span>
+
+</code></pre></div></div>
+
+<p>The configuration merge was successful (<code class="highlighter-rouge">status</code> in the response) and the <code class="highlighter-rouge">output</code> field contains the contents of the  last configuration merge.</p>
+
+<h3 id="using-xrapply-with-an-invalid-configuration-file-1">Using xrapply with an invalid Configuration file</h3>
+
+<p>Just for kicks, let’s see what happens if we create an invalid configuration file and try to use xrapply:</p>
+
+<h4 id="create-an-invalid-configuration-file-1">Create an invalid configuration file</h4>
+
+<p>without leaving the python interpreter:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">invalid_config_filepath</span><span class="o">=</span><span class="s">"/root/invalid_config_file"</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">file_content</span><span class="o">=</span><span class="s">"""
+... !
+... interface invalid-interface-name
+...   ipv4 address 1.1.1.2/24
+...   no shutdown
+... !
+... end
+... """</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">invalid_config_filepath</span><span class="p">,</span> <span class="s">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+<span class="o">...</span>     <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_content</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<h4 id="do-a-config-merge-using-xrapply-1">Do a config merge using xrapply</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">ztp_obj</span><span class="o">.</span><span class="n">xrapply</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">invalid_config_filepath</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pprint</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="p">{</span><span class="s">'output'</span><span class="p">:</span> <span class="p">[</span><span class="s">'!! SYNTAX/AUTHORIZATION ERRORS: This configuration failed due to'</span><span class="p">,</span>
+            <span class="s">'!! one or more of the following reasons:'</span><span class="p">,</span>
+            <span class="s">'!!  - the entered commands do not exist,'</span><span class="p">,</span>
+            <span class="s">'!!  - the entered commands have errors in their syntax,'</span><span class="p">,</span>
+            <span class="s">'!!  - the software packages containing the commands are not active,'</span><span class="p">,</span>
+            <span class="s">'!!  - the current user is not a member of a task-group that has'</span><span class="p">,</span>
+            <span class="s">'!!    permissions to use the commands.'</span><span class="p">,</span>
+            <span class="s">'interface invalid-interface-name'</span><span class="p">,</span>
+            <span class="s">'ipv4 address 1.1.1.2/24'</span><span class="p">,</span>
+            <span class="s">'no shutdown'</span><span class="p">],</span>
+ <span class="s">'status'</span><span class="p">:</span> <span class="s">'error'</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>Great! it throws up an error as expected. With the help of the return value, we can write more deteministic code to address configuration errors in our scripts.</p>
+
+<h3 id="using-xrapply_string-with-the-reason-parameter-to-configure-gigabitethernet0001">Using xrapply_string() with the <code class="highlighter-rouge">reason</code> parameter to configure GigabitEthernet0/0/0/1</h3>
+
+<p>The steps are illustrated below. In this case the <code class="highlighter-rouge">reason</code> parameter is passed to the python utility as an option. 
+The python interpreter we opened earlier continues to be utilized.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt;
+&gt;&gt;&gt; gig1up_config="""
+... !
+... interface GigabitEthernet0/0/0/1
+...   ipv4 address 11.1.1.10/24
+...   no shutdown
+... !
+... end
+... """
+&gt;&gt;&gt;
+&gt;&gt;&gt; print(gig1up_config)
+
+!
+interface GigabitEthernet0/0/0/3
+  ipv4 address 11.1.1.10/24
+  no shutdown
+!
+end
+
+&gt;&gt;&gt;
+&gt;&gt;&gt; import sys
+&gt;&gt;&gt; sys.path.append("/pkg/bin")
+&gt;&gt;&gt; from ztp_helper import ZtpHelpers
+&gt;&gt;&gt; ztp_obj=ZtpHelpers()
+&gt;&gt;&gt;
+&gt;&gt;&gt;
+&gt;&gt;&gt; reason_string = "Testing python xrapply_string() with the reason parameter"
+&gt;&gt;&gt;
+&gt;&gt;&gt; response = ztp_obj.xrapply_string(cmd=gig3up_config, reason=reason_string)                    
+Building configuration...
+&gt;&gt;&gt;
+&gt;&gt;&gt;
+&gt;&gt;&gt; from pprint import pprint
+&gt;&gt;&gt;
+&gt;&gt;&gt; pprint(response)
+{'output': ['!! IOS XR Configuration version = 6.4.1',
+            'interface GigabitEthernet0/0/0/3',
+            'ipv4 address 11.1.1.10 255.255.255.0',
+            'no shutdown',
+            '!',
+            'end'],
+ 'status': 'success'}
+&gt;&gt;&gt;
+&gt;&gt;&gt;
+&gt;&gt;&gt; response = ztp_obj.xrcmd({"exec_cmd" : "show configuration commit list 1 detail"})
+&gt;&gt;&gt;
+&gt;&gt;&gt; pprint(response)
+{'output': ['1) CommitId: 1000000184                 Label: NONE',
+            'UserId:   ZTP                        Line:  ZTP',
+            'Client:   CLI                        Time:  Sun Sep  9 02:16:46 2018',
+            'Comment:  Testing python xrapply_string() with the reason parameter'],
+ 'status': 'success'}
+&gt;&gt;&gt;
+&gt;&gt;&gt;
+</code></pre></div></div>
+
+<h2 id="configuration-replace-1">Configuration Replace</h2>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Very Very Important</b>: Configuration Replace can be potentially dangerous. If you make a mistake with the type of configuration you want to enforce, you can potentially lose connectivity to the router. So make sure you take precautions to ensure the final config is what you want at the end of the process</p>
+
+<p>We will not be attempting an xrreplace as part of this lab. But The basic workflow for using <code class="highlighter-rouge">xrreplace</code> is the same as <code class="highlighter-rouge">xrapply</code>. Provide a file containing the config to <code class="highlighter-rouge">xrreplace</code> and upon execution it will replace the entire configuration on the router with the configuration specified in the file.</p>

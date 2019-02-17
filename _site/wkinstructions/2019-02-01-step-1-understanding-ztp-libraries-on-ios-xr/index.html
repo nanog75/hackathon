@@ -1,0 +1,284 @@
+<aside class="sidebar__right">
+<nav class="toc">
+    <header><h4 class="nav__title"><i class="fa fa-file-text"></i> On This Page</h4></header>
+<ul class="toc__menu" id="markdown-toc">
+  <li><a href="#introduction-understanding-ztp-and-the-ztp-bash-and-python-helper-libraries" id="markdown-toc-introduction-understanding-ztp-and-the-ztp-bash-and-python-helper-libraries">Introduction: Understanding ZTP and the ZTP bash and Python helper libraries</a>    <ul>
+      <li><a href="#the-ztp-helper-libraries" id="markdown-toc-the-ztp-helper-libraries">The ZTP Helper Libraries</a>        <ul>
+          <li><a href="#ztp-helper-bash-libary" id="markdown-toc-ztp-helper-bash-libary">ZTP Helper bash Libary</a></li>
+          <li><a href="#ztp-helper-python-libary" id="markdown-toc-ztp-helper-python-libary">ZTP Helper Python Libary</a>            <ul>
+              <li><a href="#ztphelpers-class-methods" id="markdown-toc-ztphelpers-class-methods">ZtpHelpers class Methods:</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+  </nav>
+</aside>
+<p>.</p>
+
+<h1 id="introduction-understanding-ztp-and-the-ztp-bash-and-python-helper-libraries">Introduction: Understanding ZTP and the ZTP bash and Python helper libraries</h1>
+
+<p>Zero Touch Provisioning(ZTP) is a device provisioning mechanism that allows network devices running IOS-XR to be powered-on and provisioned in a completely automated fashion. The high-level workflow for ZTP is as follows:</p>
+
+<ol>
+  <li>The network-device with an IOS-XR image installed is powered on.</li>
+  <li>Upon boot-up, the ZTP process runs if the device does not have a prior configuration.</li>
+  <li>The ZTP process triggers dhclient on the Management port (and with the upcoming IOS-XR 6.5.1 release, even on the production/data ports) to send out a DHCP request identifying itself using DHCP options:
+    <ul>
+      <li>DHCP(v4/v6) client-id=Serial Number,</li>
+      <li>DHCPv4 option 124: Vendor, Platform, Serial-Number</li>
+      <li>DHCPv6 option 16: Vendor, Platform, Serial-Number</li>
+    </ul>
+  </li>
+  <li>The DHCP server identifies the device and responds with either an IOS-XR configuration file or a ZTP script as the filename option.</li>
+  <li>If the device receives a configuration file, it would simply apply the configuration and terminate the ZTP process.</li>
+  <li>If the device receives a script or binary executable, it will simply execute the script/binary in the default bash shell in a network namespace corresponding to the global/default VRF. This script can be used to configure the device and/or install IOS-XR packages, set up linux applications etc.</li>
+</ol>
+
+<p>This workflow is depicted in the figure below:</p>
+
+<p><img src="/images/ztp_workflow.png" alt="ztp_workflow.png" /></p>
+
+<blockquote>
+  <p>The concepts behind IOS-XR ZTP and further details on its operationalization in your network are expanded upon in the great set of blogs and tutorials on <a href="https://xrdocs.io">https://xrdocs.io</a>. <br />
+In particular:</p>
+  <ul>
+    <li><a href="https://xrdocs.io/software-management/tutorials/2016-08-26-working-with-ztp/"><strong>Working with IOS-XR ZTP</strong></a></li>
+    <li><a href="https://xrdocs.io/software-management/blogs/2017-09-21-ios-xr-ztp-learning-through-packet-captures/"><strong>IOS-XR ZTP: Learning through Packet Captures</strong></a></li>
+  </ul>
+</blockquote>
+
+<h2 id="the-ztp-helper-libraries">The ZTP Helper Libraries</h2>
+
+<p>It is clear from the above workflow that the DHCP server can respond to the device with a script/binary as one of the options.
+This script/binary is executed in the IOS-XR Bash shell and may be used to interact with IOS-XR CLI to configure, verify the configured state and even run exec commands based on the workflow that the operator chooses.</p>
+
+<p>So it goes without saying that the IOS-XR Bash shell must offer utilties/APIs/hooks that can allow a downloaded script/binary to interact-with/automate the IOS-XR CLI.</p>
+
+<p>These utilities are provided by the <code class="highlighter-rouge">ZTP helper libraries for Bash and Python</code> that are available for scripts running on-box in the IOS-XR Linux shell.</p>
+
+<h3 id="ztp-helper-bash-libary">ZTP Helper bash Libary</h3>
+
+<p>The ZTP helper bash library is simply a bash script that creates useful wrappers out of pre-existing IOS-XR CLI interaction binaries in the IOS-XR shell.</p>
+
+<p>On the router, this helper script is located at <code class="highlighter-rouge">/pkg/bin/ztp_helper.sh</code>.
+To use this library, any Bash script (or even python scripts utilizing bash calls) must import the <code class="highlighter-rouge">ztp_helper.sh</code> library.  Upon import, the following bash hooks become available:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Bash Utility</th>
+      <th style="text-align: left">Argument</th>
+      <th style="text-align: left">Function</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><code class="highlighter-rouge">xrcmd</code></td>
+      <td style="text-align: left"><code class="highlighter-rouge">&lt;exec or show command&gt;</code></td>
+      <td style="text-align: left"><br />Exec commands and show commands in XR CLI<br /><br /></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="highlighter-rouge">xrapply</code></td>
+      <td style="text-align: left"><code class="highlighter-rouge">&lt;local filename&gt;</code></td>
+      <td style="text-align: left"><br /> <strong>Configuration Merge.</strong><br />Apply additional configuration using a file<br /><br /></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="highlighter-rouge">xrapply_with_reason</code></td>
+      <td style="text-align: left"><strong>Arg1</strong>: <code class="highlighter-rouge">&lt;reason&gt;</code> <br /><strong>Arg2</strong>: <code class="highlighter-rouge">&lt;local filename&gt;</code><br />&lt;img width=180/&gt;</td>
+      <td style="text-align: left"><br /> <strong>Configuration Merge</strong><br /> Apply additional configuration using a file along with a <strong>reason</strong> <br /> <br /> P.S. <strong>reason</strong> shows up as comment in <code class="highlighter-rouge">show configuration commit list detail</code><br /><br /></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="highlighter-rouge">xrapply_string</code></td>
+      <td style="text-align: left"><code class="highlighter-rouge">&lt;config string&gt;</code></td>
+      <td style="text-align: left"><br /><strong>Configuration Merge.</strong><br /> Apply additional configuration using a single line string (carriage returns are affected using <code class="highlighter-rouge">\n</code>)<br /><br /></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="highlighter-rouge">xrapply_string_with_reason</code></td>
+      <td style="text-align: left"><strong>Arg1</strong>: <code class="highlighter-rouge">&lt;reason&gt;</code><br /><strong>Arg2</strong>:<code class="highlighter-rouge">&lt;config string&gt;</code></td>
+      <td style="text-align: left"><br /><strong>Configuration Merge.</strong><br />Apply additional configuration using a single line string (carriage returns are affected using <code class="highlighter-rouge">\n</code>)<br /> <br /> P.S. <strong>reason</strong> shows up as comment in <code class="highlighter-rouge">show configuration commit list detail</code><br /><br /></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="highlighter-rouge">xrreplace</code></td>
+      <td style="text-align: left"><code class="highlighter-rouge">&lt;local filename&gt;</code></td>
+      <td style="text-align: left"><br /><strong>Configuration Replace</strong>.<br />Replace existing configuration with the configuration contained in the filename specified as argument.<br /><br /></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="ztp-helper-python-libary">ZTP Helper Python Libary</h3>
+
+<p>The ZTP helper Python library is simply a python script that creates useful wrappers out of pre-existing IOS-XR CLI interaction binaries in the IOS-XR shell.</p>
+
+<p>On the router, this helper script is located at <code class="highlighter-rouge">/pkg/bin/ztp_helper.sh</code>.
+To use this library, any Python script  must import the <code class="highlighter-rouge">ztp_helper.py</code> library.  Upon import, the following python hooks become available:</p>
+
+<p>The ZTP python library defines a single Python class called <code class="highlighter-rouge">ZtpHelpers</code>. This class contains all the utility methods that are described below.</p>
+
+<h4 id="ztphelpers-class-methods">ZtpHelpers class Methods:</h4>
+
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Object Creation:  <pre><code>__init__()</code></pre></b></p></div></div>
+
+<p><strong>Purpose</strong>: This method is invoked when the <code class="highlighter-rouge">ZtpHelpers</code> object is created.</p>
+
+<p>All of the following parameters are optional. Python’s default <code class="highlighter-rouge">syslog</code> capability is utilized for the setting below. When nothing is specified during object creation, then all logs are sent to a log rotated file <code class="highlighter-rouge">/tmp/ztp_python.log</code> (max size of 1MB)</p>
+
+<p><b><u>Input Parameters</u></b></p>
+
+<ul>
+  <li><code class="highlighter-rouge">syslog_server</code>: IP address of reachable Syslog Server
+    <ul>
+      <li><u>Parameter type</u>: <code class="highlighter-rouge">string</code></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">syslog_port</code>: Port for the reachable syslog server
+    <ul>
+      <li><u>Parameter type</u>: <code class="highlighter-rouge">int</code></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">syslog_file</code>: Alternative or add-on file to store syslog
+    <ul>
+      <li><u>Parameter type</u>: <code class="highlighter-rouge">string</code></li>
+    </ul>
+  </li>
+</ul>
+
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Debug Logging:  <pre><code>toggle_debug()</code></pre></b></p></div></div>
+
+<p><strong>Purpose</strong>: Used to Enable/disable verbose debug logging</p>
+
+<p><b><u>Input Parameters</u></b></p>
+
+<ul>
+  <li><code class="highlighter-rouge">enable</code>: Enable/Disable flag
+    <ul>
+      <li>Parameter Type: <code class="highlighter-rouge">int</code></li>
+    </ul>
+  </li>
+</ul>
+
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Show/Exec CLI commands:    <pre><code>xrcmd()</code></pre></b></p></div></div>
+
+<p><strong>Purpose</strong>: Issue an IOS-XR show command or exec command and obtain the output.</p>
+
+<p><b><u>Input Parameters</u></b></p>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">cmd</code>: Dictionary representing the XR exec cmd and response to potential prompts<br />
+<u>Parameter Type</u>: <code class="highlighter-rouge">dict</code><br />
+These values are encoded in the dict as follows<br /><code class="highlighter-rouge">{ 'exec_cmd': '', 'prompt_response': '' }</code>.</p>
+
+    <p>In the dictionary, <code class="highlighter-rouge">prompt_response</code> is an optional field meant for exec commands that require the script to answer prompts offered by the IOS-XR shell in response to <code class="highlighter-rouge">exec_cmd</code>.</p>
+  </li>
+</ul>
+
+<p><b><u>Return Value</u></b></p>
+
+<p><u>Return Type</u>: <code class="highlighter-rouge">dict</code></p>
+
+<p>Returns a dictionary with status and output in the format:<br />
+<code class="highlighter-rouge">{ 'status': 'error/success', 'output': '' }</code></p>
+
+<p>Here <code class="highlighter-rouge">status</code>=<code class="highlighter-rouge">error</code> if an invalid exec/show command is specified as input to XR CLI and <code class="highlighter-rouge">output</code> is the actual <code class="highlighter-rouge">show command output</code> or <code class="highlighter-rouge">exec command response</code> in case of success.</p>
+
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Configuration Merge using a File: <pre><code>xrapply()</code></pre></b></p></div></div>
+
+<p><strong>Purpose</strong>: Apply Configuration to XR using a local file on the router. This method does a <strong>configuration merge</strong>.</p>
+
+<p><b><u>Input Parameters</u></b></p>
+<ul>
+  <li><code class="highlighter-rouge">filename</code>: Filepath for a local file containing valid IOS-XR CLI configuration
+    <ul>
+      <li><u>Parameter Type</u>: <code class="highlighter-rouge">string</code></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">reason</code>: Reason for the configuration commit. Will show up in the output of: <code class="highlighter-rouge">show configuration commit list &lt;&gt; detail</code>. <strong>This parameter is optional.</strong>
+    <ul>
+      <li><u>Parameter Type</u>: <code class="highlighter-rouge">string</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p><b><u>Return Value</u></b></p>
+
+<p><u>Return Type</u>: <code class="highlighter-rouge">dict</code></p>
+
+<p>Dictionary specifying the effect of the config change:<br />
+<code class="highlighter-rouge">{ 'status' : 'error/success', 'output': 'exec command based on status'}</code></p>
+
+<ul>
+  <li>
+    <p>Here <code class="highlighter-rouge">status</code>=<code class="highlighter-rouge">error</code> if the configuration merge was unsuccessful and the corresponding <code class="highlighter-rouge">output</code> is the response of the show command = <code class="highlighter-rouge">show configuration failed</code>.</p>
+  </li>
+  <li>
+    <p>Similarly, <code class="highlighter-rouge">status</code>=<code class="highlighter-rouge">success</code> if the configuration merge is successful and the corresponding <code class="highlighter-rouge">output</code> is the response of <code class="highlighter-rouge">show configuration commit changes last 1</code></p>
+  </li>
+</ul>
+
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Configuration Merge using a String: <pre><code>xrapply_string()</code></pre></b></p></div></div>
+
+<p><strong>Purpose</strong>: Apply Configuration to XR using a string. This method does a <strong>configuration merge</strong>.</p>
+
+<p><b><u>Input Parameters</u></b></p>
+<ul>
+  <li><code class="highlighter-rouge">cmd</code>: Single line or Multi-Line string that contains valid IOS-XR CLI configuration.</li>
+  <li>
+    <p><u>Parameter Type</u>: <code class="highlighter-rouge">string</code></p>
+  </li>
+  <li><code class="highlighter-rouge">reason</code>: Reason for the configuration commit. Will show up in the output of: <code class="highlighter-rouge">show configuration commit list &lt;&gt; detail</code>.<strong>This parameter is optional.</strong>
+    <ul>
+      <li><u>Parameter Type</u>: <code class="highlighter-rouge">string</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p><b><u>Return Value</u>&lt;/b</b></p>
+
+<p><u>Return Type</u>: <code class="highlighter-rouge">dict</code></p>
+
+<p>Dictionary specifying the effect of the config change:<br />
+<code class="highlighter-rouge">{ 'status' : 'error/success', 'output': 'exec command based on status'}</code></p>
+
+<ul>
+  <li>
+    <p>Here <code class="highlighter-rouge">status</code>=<code class="highlighter-rouge">error</code> if the configuration merge was unsuccessful and the corresponding <code class="highlighter-rouge">output</code> is the response of <code class="highlighter-rouge">show configuration failed</code>.</p>
+  </li>
+  <li>
+    <p>Similarly, <code class="highlighter-rouge">status</code>=<code class="highlighter-rouge">success</code> if the configuration merge is successful and the corresponding <code class="highlighter-rouge">output</code> is the response of <code class="highlighter-rouge">show configuration commit changes last 1</code></p>
+  </li>
+</ul>
+
+<div class="notice--primary" style="background-color: #bac5de; font-size: 1.1em !important; margin: 2em 0 !important; padding: 1.5em 1em 1em 1em;text-indent: initial; border-radius: 5px; box-shadow: 0 1px 1px rgba(88,88,91,0.25) "><div class="text-center"><p><b>Configuration Replace using a file: <pre><code>xrreplace()</code></pre></b></p></div></div>
+
+<p><strong>Purpose</strong>: Completely Replace existing Router configuration with the configuration specified in a file.</p>
+
+<p><b><u>Input Parameters</u></b></p>
+
+<ul>
+  <li><code class="highlighter-rouge">filename</code>: Filepath for a local file containing valid IOS-XR CLI configuration
+    <ul>
+      <li><u>Parameter Type</u>: <code class="highlighter-rouge">string</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p><b><u>Return Value</u></b><br /></p>
+
+<p><u>Return Type</u>: <code class="highlighter-rouge">dict</code></p>
+
+<p>Dictionary specifying the effect of the config change:</p>
+
+<p><code class="highlighter-rouge">{ 'status' : 'error/success', 'output': 'exec command based on status'}</code></p>
+
+<ul>
+  <li>
+    <p>Here <code class="highlighter-rouge">status</code>=<code class="highlighter-rouge">error</code> if the configuration merge was unsuccessful and the corresponding <code class="highlighter-rouge">output</code> is the response of <code class="highlighter-rouge">show configuration failed</code>.</p>
+  </li>
+  <li>
+    <p>Similarly, <code class="highlighter-rouge">status</code>=<code class="highlighter-rouge">success</code> if the configuration merge is successful and the corresponding <code class="highlighter-rouge">output</code> is the response of <code class="highlighter-rouge">show configuration commit changes last 1</code>.</p>
+  </li>
+</ul>

@@ -1,0 +1,912 @@
+<aside class="sidebar__right">
+<nav class="toc">
+    <header><h4 class="nav__title"><i class="fa fa-file-text"></i> On This Page</h4></header>
+<ul class="toc__menu" id="markdown-toc">
+  <li><a href="#setting-up-a-telemetry-clientcollector" id="markdown-toc-setting-up-a-telemetry-clientcollector">Setting up a Telemetry Client/Collector</a>    <ul>
+      <li><a href="#open-source-tool-pipeline" id="markdown-toc-open-source-tool-pipeline">Open-Source tool: Pipeline</a>        <ul>
+          <li><a href="#supported-capabilities" id="markdown-toc-supported-capabilities">Supported Capabilities</a></li>
+        </ul>
+      </li>
+      <li><a href="#testing-telemetry-yang-paths-on-box" id="markdown-toc-testing-telemetry-yang-paths-on-box">Testing Telemetry Yang Paths on-box</a>        <ul>
+          <li><a href="#set-up-ipv6-neighbors" id="markdown-toc-set-up-ipv6-neighbors">Set up IPv6 Neighbors</a>            <ul>
+              <li><a href="#configure-ipv6-on-router-r1" id="markdown-toc-configure-ipv6-on-router-r1">Configure IPv6 on router r1</a></li>
+              <li><a href="#configure-ipv6-on-router-r2" id="markdown-toc-configure-ipv6-on-router-r2">Configure IPv6 on router r2</a></li>
+              <li><a href="#bring-up-ipv6-neighbors" id="markdown-toc-bring-up-ipv6-neighbors">Bring up IPv6 neighbors</a></li>
+              <li><a href="#ping-the-reachable-neighbors" id="markdown-toc-ping-the-reachable-neighbors">Ping the reachable Neighbors</a></li>
+              <li><a href="#verify-neighbors-are-up" id="markdown-toc-verify-neighbors-are-up">Verify neighbors are up</a></li>
+            </ul>
+          </li>
+          <li><a href="#configure-telemetry-to-stream-ipv6-neighbor-information" id="markdown-toc-configure-telemetry-to-stream-ipv6-neighbor-information">Configure Telemetry to Stream IPv6 neighbor information</a></li>
+          <li><a href="#figure-out-the-yang-modelpath-to-use" id="markdown-toc-figure-out-the-yang-modelpath-to-use">Figure out the Yang Model/Path to use</a></li>
+          <li><a href="#setting-up-the-telemetry-configuration" id="markdown-toc-setting-up-the-telemetry-configuration">Setting up the Telemetry configuration</a></li>
+        </ul>
+      </li>
+      <li><a href="#testing-the-sensor-path" id="markdown-toc-testing-the-sensor-path">Testing the Sensor path</a></li>
+      <li><a href="#building-your-own-clients" id="markdown-toc-building-your-own-clients">Building your own clients</a></li>
+      <li><a href="#clean-up" id="markdown-toc-clean-up">Clean up!</a></li>
+    </ul>
+  </li>
+</ul>
+
+  </nav>
+</aside>
+
+<blockquote>
+  <p>Have a look at the set of Telemetry learning labs on DevNet for more details on Telemetry,
+available workflows, configurations and usage of tools:
+<a href="https://learninglabs.cisco.com/modules/iosxr-streaming-telemetry">https://learninglabs.cisco.com/modules/iosxr-streaming-telemetry</a></p>
+</blockquote>
+
+<h1 id="setting-up-a-telemetry-clientcollector">Setting up a Telemetry Client/Collector</h1>
+
+<p>Let’s consider the options available to set up a Telemetry client/collector that can receive Streaming data from the router.</p>
+
+<h2 id="open-source-tool-pipeline">Open-Source tool: Pipeline</h2>
+
+<p>Pipeline is a flexible, multi-function collection service that is written in Go. It can ingest telemetry data from any XR release starting from 6.0.1. Pipeline’s input stages support raw UDP and TCP, as well as gRPC dial-in and dial-out capability. For encoding, Pipeline can consume JSON, compact GPB and self-describing GPB. On the output side, Pipeline can write the telemetry data to a text file as a JSON object, push the data to a Kafka bus and/or format it for consumption by open source stacks. Pipeline can easily be extended to include other output stages and we encourage contributions from anyone who wants to get involved.</p>
+
+<p><img src="/images/telemetry_stack.png" alt="model-driven" style=" margin-left: auto; margin-right: auto; display: block;" align="middle" /></p>
+
+<p>It’s important to understand that Pipeline is not a complete big data analytics stack. Think of it as the first layer in a scalable, modular, analytics architecture. Depending on your use case, that architecture would also include separate components for big data storage, stream processing, analysis, alerting and visualization.</p>
+
+<h3 id="supported-capabilities">Supported Capabilities</h3>
+
+<p>Pipeline is the most comprehensive tool available for IOS-XR telemetry data consumption. It is Golang–based code which consumes IOS XR telemetry streams directly from routers or indirectly from a pub/sub bus (Kafka). Once collected, Pipeline performs transformations of the data and forwards the result to the configured consumer.</p>
+
+<p>Pipeline supports different input transport formats from routers (please be aware that multiple input modules of any type can run in parallel):</p>
+
+<ul>
+  <li>TCP</li>
+  <li>gRPC</li>
+  <li>UDP</li>
+  <li>Apache Kafka</li>
+</ul>
+
+<p>Pipeline can support different encodings as well:</p>
+
+<ul>
+  <li>(compact) GPB</li>
+  <li>KV-GPB</li>
+  <li>JSON</li>
+</ul>
+
+<p>Pipeline can stream data to several different consumers. Supported downstream consumers include:</p>
+
+<ul>
+  <li>InfluxDB (TSDB)</li>
+  <li>Prometheus (TSDB)</li>
+  <li>Apache Kafka</li>
+  <li>dump-to-file (mostly for diagnostics purposes)</li>
+</ul>
+
+<blockquote class="notice--info">
+  <p>Connect to your Pod first! Make sure your Anyconnect VPN connection to the Pod assigned to you is active.</p>
+
+  <p>If you haven’t connected yet, check out the instructions to do so here:
+<a href="https://sevt-sp.github.io/xr-programmability-lab/connect-to-pods/">https://sevt-sp.github.io/xr-programmability-lab/connect-to-pods/</a></p>
+
+  <p>Once you’re connected, use the following instructions to connect to the individual nodes.
+The instructions in the workshop will simply refer to the Name of the box to connect without
+repeating the connection details and credentials. So refer back to this list when you need it.</p>
+
+  <p>The 3 nodes in the topology are:</p>
+
+  <p style="font-size: 16px;"><b>Development Linux System (DevBox)</b></p>
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> IP Address: 10.10.20.170
+ Username/Password: [admin/admin]
+ SSH Port: 2211
+</code></pre></div>  </div>
+
+  <p style="font-size: 16px;"><b>IOS-XRv9000 R1: (Router r1)</b></p>
+
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>IP Address: 10.10.20.170  
+Username/Password: [admin/admin]   
+Management IP: 10.10.20.170  
+XR SSH Port: 2221    
+NETCONF Port: 8321   
+gRPC Port: 57021  
+XR-Bash SSH Port: 2222    
+</code></pre></div>  </div>
+
+  <p style="font-size: 16px;"><b>IOS-XRv9000 R2:  (Router r2)</b></p>
+
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>IP Address: 10.10.20.170   
+Username/Password: [admin/admin]   
+Management IP: 10.10.20.170   
+XR SSH Port: 2231    
+NETCONF Port: 8331   
+gRPC Port: 57031    
+XR-Bash SSH Port: 2232
+</code></pre></div>  </div>
+</blockquote>
+
+<p>The Topology in use is shown below:
+<img src="/images/topology_devnet.png" alt="topology_devnet.png" /></p>
+
+<h2 id="testing-telemetry-yang-paths-on-box">Testing Telemetry Yang Paths on-box</h2>
+
+<p>In this section, we intend to enable IPv6 on b2b interfaces on the two routers (<code class="highlighter-rouge">r1</code> and <code class="highlighter-rouge">r2</code>) and stream IPv6 neighbor information to an onbox utility to verify the data.</p>
+
+<p>We will construct a <code class="highlighter-rouge">dial-in</code> Telemetry collector/client wherein the client initiates a connection to the router and then subscribes to a pre-configured subscription on the router.</p>
+
+<h3 id="set-up-ipv6-neighbors">Set up IPv6 Neighbors</h3>
+
+<p>To start off, let’s enable IPv6 and configure IPv6 addresses on the b2b interfaces of r1 and r2.</p>
+
+<h4 id="configure-ipv6-on-router-r1">Configure IPv6 on router r1</h4>
+
+<p>Connect to router <code class="highlighter-rouge">r1</code>:</p>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Username</b>: admin<br /><b>Password</b>: admin<br /><b>SSH port</b>: 2221<br /><b>IP</b>: 10.10.20.170
+</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Laptop-terminal:$ ssh -p 2221 admin@10.10.20.170
+
+
+--------------------------------------------------------------------------
+  Router 1 (Cisco IOS XR Sandbox)
+--------------------------------------------------------------------------
+
+
+Password:
+
+
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+
+</code></pre></div></div>
+
+<p>Apply the following configuration on router <code class="highlighter-rouge">r1</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#conf t
+Mon Sep  3 09:00:33.672 UTC
+RP/0/RP0/CPU0:r1(config)#interface GigabitEthernet 0/0/0/0
+RP/0/RP0/CPU0:r1(config-if)#ipv6 enable
+RP/0/RP0/CPU0:r1(config-if)#ipv6 address 1010:1010::10/64
+RP/0/RP0/CPU0:r1(config-if)#no shut
+RP/0/RP0/CPU0:r1(config-if)#      
+RP/0/RP0/CPU0:r1(config-if)#
+RP/0/RP0/CPU0:r1(config-if)#exit
+RP/0/RP0/CPU0:r1(config)#
+RP/0/RP0/CPU0:r1(config)#interface GigabitEthernet 0/0/0/1
+RP/0/RP0/CPU0:r1(config-if)#ipv6 enable                      
+RP/0/RP0/CPU0:r1(config-if)#ipv6 address 2020:2020::10/64    
+RP/0/RP0/CPU0:r1(config-if)#no shut
+RP/0/RP0/CPU0:r1(config-if)#commit
+Mon Sep  3 09:01:59.484 UTC
+RP/0/RP0/CPU0:r1(config-if)#
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#show  configuration commit changes last 1
+Mon Sep  3 09:02:08.867 UTC
+Building configuration...
+!! IOS XR Configuration version = 6.4.1
+interface GigabitEthernet0/0/0/0
+ ipv6 address 1010:1010::10/64
+ ipv6 enable
+ no shutdown
+!
+interface GigabitEthernet0/0/0/1
+ ipv6 address 2020:2020::10/64
+ ipv6 enable
+ no shutdown
+!
+end
+
+RP/0/RP0/CPU0:r1#
+
+</code></pre></div></div>
+
+<h4 id="configure-ipv6-on-router-r2">Configure IPv6 on router r2</h4>
+
+<p>Similarly, connect to router <code class="highlighter-rouge">r2</code>:</p>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Username</b>: admin<br /><b>Password</b>: admin<br /><b>SSH port</b>: 2231<br /><b>IP</b>: 10.10.20.170
+</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Laptop-terminal:$ ssh -p 2231 admin@10.10.20.170
+
+
+--------------------------------------------------------------------------
+  Router 2 (Cisco IOS XR Sandbox)
+--------------------------------------------------------------------------
+
+
+Password:
+
+
+RP/0/RP0/CPU0:r2#
+RP/0/RP0/CPU0:r2#
+
+</code></pre></div></div>
+
+<p>Apply the following configuration to router <code class="highlighter-rouge">r2</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RP/0/RP0/CPU0:r2#
+RP/0/RP0/CPU0:r2#conf t
+Mon Sep  3 09:04:32.472 UTC
+RP/0/RP0/CPU0:r2(config)#interface GigabitEthernet 0/0/0/0
+RP/0/RP0/CPU0:r2(config-if)#ipv6 enable
+RP/0/RP0/CPU0:r2(config-if)#ipv6 address 1010:1010::20/64
+RP/0/RP0/CPU0:r2(config-if)#no shut
+RP/0/RP0/CPU0:r2(config-if)#exit
+RP/0/RP0/CPU0:r2(config)#interface GigabitEthernet 0/0/0/1
+RP/0/RP0/CPU0:r2(config-if)#ipv6 enable
+RP/0/RP0/CPU0:r2(config-if)#ipv6 address 2020:2020::20/64
+RP/0/RP0/CPU0:r2(config-if)#no shut
+RP/0/RP0/CPU0:r2(config-if)#commit
+Mon Sep  3 09:05:37.371 UTC
+RP/0/RP0/CPU0:r2(config-if)#
+RP/0/RP0/CPU0:r2#
+RP/0/RP0/CPU0:r2#show  configuration commit changes last 1
+Mon Sep  3 09:05:51.846 UTC
+Building configuration...
+!! IOS XR Configuration version = 6.4.1
+interface GigabitEthernet0/0/0/0
+ ipv6 address 1010:1010::20/64
+ ipv6 enable
+ no shutdown
+!
+interface GigabitEthernet0/0/0/1
+ ipv6 address 2020:2020::20/64
+ ipv6 enable
+ no shutdown
+!
+end
+
+RP/0/RP0/CPU0:r2#
+
+</code></pre></div></div>
+
+<h4 id="bring-up-ipv6-neighbors">Bring up IPv6 neighbors</h4>
+
+<p>IPv6 Neighbor Discovery (ND) works much the same way as ARP. Neighbor discovery messages are not sent out until traffic flow for a particular IPv6 destination needs to traverse the IPv6 enabled interface.<br />
+So if we dump the <code class="highlighter-rouge">ipv6 neighbor</code> information on the two routers, we don’t notice any reachable neighbors just yet.</p>
+
+<p>Router r1:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RP/0/RP0/CPU0:r1#show  ipv6 neighbors
+Mon Sep  3 09:13:17.796 UTC
+IPv6 Address                             Age  Link-layer Add State Interface            Location
+[Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/0            0/0/CPU0       
+[Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/1            0/0/CPU0       
+RP/0/RP0/CPU0:r1#
+</code></pre></div></div>
+
+<p>Router r2:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RP/0/RP0/CPU0:r2#show  ipv6 neighbors
+Mon Sep  3 09:12:52.780 UTC
+IPv6 Address                             Age  Link-layer Add State Interface            Location
+[Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/0            0/0/CPU0       
+[Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/1            0/0/CPU0       
+RP/0/RP0/CPU0:r2#
+</code></pre></div></div>
+
+<h4 id="ping-the-reachable-neighbors">Ping the reachable Neighbors</h4>
+
+<p>We’ll use pings (icmpv6) as the trigger to generate IPv6 ND messages and establish neighbors dynamically:</p>
+
+<p>On router <code class="highlighter-rouge">r1</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#ping 1010:1010::20
+Mon Sep  3 09:25:45.079 UTC
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 1010:1010::20, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 95/125/231 ms
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#ping 2020:2020::20
+Mon Sep  3 09:25:53.627 UTC
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2020:2020::20, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 97/125/214 ms
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+</code></pre></div></div>
+
+<h4 id="verify-neighbors-are-up">Verify neighbors are up</h4>
+
+<p>The IPv6 neighbors should now be up!</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RP/0/RP0/CPU0:r1#show  ipv6 neighbors
+Mon Sep  3 09:26:07.306 UTC
+IPv6 Address                             Age  Link-layer Add State Interface            Location
+1010:1010::20                            21   5254.0093.8ab0 REACH Gi0/0/0/0            0/0/CPU0       
+fe80::5054:ff:fe93:8ab0                  11   5254.0093.8ab0 REACH Gi0/0/0/0            0/0/CPU0       
+[Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/0            0/0/CPU0       
+2020:2020::20                            13   5254.0093.8ab1 REACH Gi0/0/0/1            0/0/CPU0       
+fe80::5054:ff:fe93:8ab1                  2    5254.0093.8ab1 REACH Gi0/0/0/1            0/0/CPU0       
+[Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/1            0/0/CPU0       
+RP/0/RP0/CPU0:r1#
+
+</code></pre></div></div>
+
+<h3 id="configure-telemetry-to-stream-ipv6-neighbor-information">Configure Telemetry to Stream IPv6 neighbor information</h3>
+
+<p>The IPv6 neighbors displayed using <code class="highlighter-rouge">show ipv6 neighbors</code> can be streamed using the IPv6-ND oper YANG model in IOS-XR.</p>
+
+<div style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #fdefef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"> The Yang models for IOS-XR per release can be found on Github here: <br />
+<blockquote>
+&lt;https://github.com/YangModels/yang/tree/master/vendor/cisco/xr&gt;
+</blockquote>  
+
+In this lab we're working with IOS-XR release `6.4.1`:  
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#show  version
+Mon Sep  3 09:46:31.320 UTC
+
+Cisco IOS XR Software, Version 6.4.1
+Copyright (c) 2013-2017 by Cisco Systems, Inc.
+
+Build Information:
+ Built By     : nkhai
+ Built On     : Wed Mar 28 19:20:20 PDT 2018
+ Build Host   : iox-lnx-090
+ Workspace    : /auto/srcarchive14/prod/6.4.1/xrv9k/ws
+ Version      : 6.4.1
+ Location     : /opt/cisco/XR/packages/
+
+cisco IOS-XRv 9000 () processor
+System uptime is 2 hours, 28 minutes
+
+RP/0/RP0/CPU0:r1#
+</code></pre></div>  
+
+The required Yang models for this release are thus available here:
+<blockquote>
+&lt;https://github.com/YangModels/yang/tree/master/vendor/cisco/xr/641&gt;
+</blockquote>  
+</div>
+
+<h3 id="figure-out-the-yang-modelpath-to-use">Figure out the Yang Model/Path to use</h3>
+
+<p>The Yang model we’re interested in is <code class="highlighter-rouge">Cisco-IOS-XR-ipv6-nd-oper.yang</code>, located here:</p>
+<blockquote>
+  <p><a href="https://github.com/YangModels/yang/blob/master/vendor/cisco/xr/641/Cisco-IOS-XR-ipv6-nd-oper.yang">https://github.com/YangModels/yang/blob/master/vendor/cisco/xr/641/Cisco-IOS-XR-ipv6-nd-oper.yang</a></p>
+</blockquote>
+
+<p>The easiest way to understand the information available within the Yang model is to display the YANG model in a tree format using a tool called <code class="highlighter-rouge">pyang</code>.</p>
+
+<p>For this purpose, connect to the devbox:</p>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);"><b>Username</b>: admin<br /><b>Password</b>: admin<br /><b>SSH port</b>: 2211<br /><b>IP</b>: 10.10.20.170
+</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Laptop-terminal:$ ssh -p 2211 admin@10.10.20.170
+admin@10.10.20.170's password:
+Last login: Mon Sep  3 01:28:30 2018 from 192.168.122.1
+admin@devbox:~$
+admin@devbox:~$
+
+</code></pre></div></div>
+
+<p>Clone the Yang git repo:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>admin@devbox:~$ git clone https://github.com/YangModels/yang
+Cloning into 'yang'...
+remote: Counting objects: 21847, done.
+remote: Compressing objects: 100% (218/218), done.
+remote: Total 21847 (delta 512), reused 709 (delta 505), pack-reused 21124
+Receiving objects: 100% (21847/21847), 42.52 MiB | 13.17 MiB/s, done.
+Resolving deltas: 100% (16807/16807), done.
+Checking connectivity... done.
+Checking out files: 100% (20153/20153), done.
+admin@devbox:~$
+admin@devbox:~$
+admin@devbox:~$ cd yang/vendor/cisco/xr/641/
+admin@devbox:641$ pwd
+/home/admin/yang/vendor/cisco/xr/641
+admin@devbox:641$
+
+</code></pre></div></div>
+
+<p>Dump the <code class="highlighter-rouge">Cisco-IOS-XR-ipv6-nd-oper.yang</code> model in a tree format:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>admin@devbox:641$ pyang -f tree Cisco-IOS-XR-ipv6-nd-oper.yang
+module: Cisco-IOS-XR-ipv6-nd-oper
+   +--ro ipv6-node-discovery
+      +--ro nodes
+         +--ro node* [node-name]
+            +--ro neighbor-interfaces
+            |  +--ro neighbor-interface* [interface-name]
+            |     +--ro host-addresses
+            |     |  +--ro host-address* [host-address]
+            |     |     +--ro host-address              inet:ipv6-address-no-zone
+            |     |     +--ro last-reached-time
+            |     |     |  +--ro seconds?   uint32
+            |     |     +--ro reachability-state?       Ipv6-nd-sh-state
+            |     |     +--ro link-layer-address?       yang:mac-address
+            |     |     +--ro encapsulation?            Ipv6-nd-media-encap
+            |     |     +--ro selected-encapsulation?   Ipv6-nd-media-encap
+            |     |     +--ro origin-encapsulation?     Ipv6-nd-neighbor-origin
+            |     |     +--ro interface-name?           string
+            |     |     +--ro location?                 xr:Node-id
+            |     |     +--ro is-router?                boolean
+            |     |     +--ro serg-flags?               uint32
+            |     |     +--ro vrfid?                    uint32
+            |     +--ro interface-name    xr:Interface-name
+            +--ro neighbor-summary
+            |  +--ro multicast
+            |  |  +--ro incomplete-entries?          uint32
+            |  |  +--ro reachable-entries?           uint32
+            |  |  +--ro stale-entries?               uint32
+            |  |  +--ro delayed-entries?             uint32
+            |  |  +--ro probe-entries?               uint32
+            |  |  +--ro deleted-entries?             uint32
+            |  |  +--ro subtotal-neighbor-entries?   uint32
+            |  +--ro static
+            |  |  +--ro incomplete-entries?          uint32
+            |  |  +--ro reachable-entries?           uint32
+            |  |  +--ro stale-entries?               uint32
+            |  |  +--ro delayed-entries?             uint32
+            |  |  +--ro probe-entries?               uint32
+            |  |  +--ro deleted-entries?             uint32
+            |  |  +--ro subtotal-neighbor-entries?   uint32
+            |  +--ro dynamic
+            |  |  +--ro incomplete-entries?          uint32
+            |  |  +--ro reachable-entries?           uint32
+            |  |  +--ro stale-entries?               uint32
+            |  |  +--ro delayed-entries?             uint32
+            |  |  +--ro probe-entries?               uint32
+            |  |  +--ro deleted-entries?             uint32
+            |  |  +--ro subtotal-neighbor-entries?   uint32
+            |  +--ro total-neighbor-entries?   uint32
+            +--ro bundle-nodes
+            |  +--ro bundle-node* [node-name]
+            |     +--ro node-name                   xr:Node-id
+            |     +--ro age
+            |     |  +--ro seconds?   uint32
+            |     +--ro group-id?                   uint32
+            |     +--ro process-name?               string
+            |     +--ro sent-sequence-number?       uint32
+            |     +--ro received-sequence-number?   uint32
+            |     +--ro state?                      Ipv6-nd-bndl-state
+            |     +--ro state-changes?              uint32
+            |     +--ro sent-packets?               uint32
+            |     +--ro received-packets?           uint32
+            +--ro bundle-interfaces
+            |  +--ro bundle-interface* [interface-name]
+            |     +--ro interface-name           xr:Interface-name
+            |     +--ro nd-parameters
+            |     |  +--ro is-dad-enabled?               boolean
+            |     |  +--ro dad-attempts?                 uint32
+            |     |  +--ro is-icm-pv6-redirect?          boolean
+            |     |  +--ro is-dhcp-managed?              boolean
+            |     |  +--ro is-route-address-managed?     boolean
+            |     |  +--ro is-suppressed?                boolean
+            |     |  +--ro send-unicast-ra?              boolean
+            |     |  +--ro nd-retransmit-interval?       uint32
+            |     |  +--ro nd-min-transmit-interval?     uint32
+            |     |  +--ro nd-max-transmit-interval?     uint32
+            |     |  +--ro nd-advertisement-lifetime?    uint32
+            |     |  +--ro nd-reachable-time?            uint32
+            |     |  +--ro nd-cache-limit?               uint32
+            |     |  +--ro complete-protocol-count?      uint32
+            |     |  +--ro complete-glean-count?         uint32
+            |     |  +--ro incomplete-protocol-count?    uint32
+            |     |  +--ro incomplete-glean-count?       uint32
+            |     |  +--ro dropped-protocol-req-count?   uint32
+            |     |  +--ro dropped-glean-req-count?      uint32
+            |     +--ro local-address
+            |     |  +--ro ipv6-address?     inet:ipv6-address
+            |     |  +--ro valid-lifetime?   uint32
+            |     |  +--ro pref-lifetime?    uint32
+            |     +--ro parent-interface-name?   xr:Interface-name
+            |     +--ro iftype?                  uint32
+            |     +--ro mtu?                     uint32
+            |     +--ro etype?                   uint32
+            |     +--ro vlan-tag?                uint16
+            |     +--ro mac-addr-size?           uint32
+            |     +--ro mac-addr?                yang:mac-address
+            |     +--ro is-interface-enabled?    boolean
+            |     +--ro is-ipv6-enabled?         boolean
+            |     +--ro is-mpls-enabled?         boolean
+            |     +--ro member-link*             uint32
+            |     +--ro global-address*
+            |     |  +--ro ipv6-address?     inet:ipv6-address
+            |     |  +--ro valid-lifetime?   uint32
+            |     |  +--ro pref-lifetime?    uint32
+            |     +--ro member-node*
+            |        +--ro node-name?     xr:Node-id
+            |        +--ro total-links?   uint32
+            +--ro interfaces
+            |  +--ro interface* [interface-name]
+            |     +--ro interface-name                xr:Interface-name
+            |     +--ro is-dad-enabled?               boolean
+            |     +--ro dad-attempts?                 uint32
+            |     +--ro is-icm-pv6-redirect?          boolean
+            |     +--ro is-dhcp-managed?              boolean
+            |     +--ro is-route-address-managed?     boolean
+            |     +--ro is-suppressed?                boolean
+            |     +--ro send-unicast-ra?              boolean
+            |     +--ro nd-retransmit-interval?       uint32
+            |     +--ro nd-min-transmit-interval?     uint32
+            |     +--ro nd-max-transmit-interval?     uint32
+            |     +--ro nd-advertisement-lifetime?    uint32
+            |     +--ro nd-reachable-time?            uint32
+            |     +--ro nd-cache-limit?               uint32
+            |     +--ro complete-protocol-count?      uint32
+            |     +--ro complete-glean-count?         uint32
+            |     +--ro incomplete-protocol-count?    uint32
+            |     +--ro incomplete-glean-count?       uint32
+            |     +--ro dropped-protocol-req-count?   uint32
+            |     +--ro dropped-glean-req-count?      uint32
+            +--ro nd-virtual-routers
+            |  +--ro nd-virtual-router* [interface-name]
+            |     +--ro interface-name        xr:Interface-name
+            |     +--ro local-address
+            |     |  +--ro ipv6-address?     inet:ipv6-address
+            |     |  +--ro valid-lifetime?   uint32
+            |     |  +--ro pref-lifetime?    uint32
+            |     +--ro link-layer-address?   yang:mac-address
+            |     +--ro context?              uint32
+            |     +--ro state?                Ipv6-nd-sh-vr-state
+            |     +--ro flags?                Ipv6-nd-sh-vr-flags
+            |     +--ro vr-gl-addr-ct?        uint32
+            |     +--ro vr-global-address*
+            |        +--ro ipv6-address?     inet:ipv6-address
+            |        +--ro valid-lifetime?   uint32
+            |        +--ro pref-lifetime?    uint32
+            +--ro slaac-interfaces
+            |  +--ro slaac-interface* [interface-name]
+            |     +--ro router-advert-detail
+            |     |  +--ro idb?   xr:Interface-name
+            |     |  +--ro ra*
+            |     |     +--ro elapsed-ra-time
+            |     |     |  +--ro seconds?   uint32
+            |     |     +--ro reachable-time
+            |     |     |  +--ro seconds?   uint32
+            |     |     +--ro retrans-time
+            |     |     |  +--ro seconds?   uint32
+            |     |     +--ro address?           inet:ipv6-address
+            |     |     +--ro hops?              uint32
+            |     |     +--ro flags?             uint32
+            |     |     +--ro life-time?         uint32
+            |     |     +--ro mtu?               uint32
+            |     |     +--ro err-msg?           boolean
+            |     |     +--ro vrf-id?            uint32
+            |     |     +--ro u6-tbl-id?         uint32
+            |     |     +--ro rib-protoid?       uint16
+            |     |     +--ro default-router?    boolean
+            |     |     +--ro reachability?      uint32
+            |     |     +--ro prefix-q*
+            |     |        +--ro prefix-address?        inet:ipv6-address
+            |     |        +--ro eui64?                 inet:ipv6-address
+            |     |        +--ro valid-life-time?       uint32
+            |     |        +--ro preferred-life-time?   uint32
+            |     |        +--ro prefix-len?            uint32
+            |     |        +--ro flags?                 uint32
+            |     |        +--ro pfx-flags?             uint32
+            |     +--ro interface-name          xr:Interface-name
+            +--ro node-name              xr:Node-id
+admin@devbox:641$
+
+</code></pre></div></div>
+
+<p>From the above dump, it becomes fairly clear that we intend to extract the following set of nodes from the model to match the information in the <code class="highlighter-rouge">show ipv6 neighbors</code> output:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+<mark>module: Cisco-IOS-XR-ipv6-nd-oper</mark>
+   <mark>+--ro ipv6-node-discovery</mark>
+      <mark>+--ro nodes</mark>
+         <mark>+--ro node* [node-name]</mark>
+            <mark>+--ro neighbor-interfaces</mark>
+            <mark>|  +--ro neighbor-interface* [interface-name]</mark>
+            <mark>|     +--ro host-addresses</mark>
+            <mark>|     |  +--ro host-address* [host-address]</mark>
+            |     |     +--ro host-address              inet:ipv6-address-no-zone
+            |     |     +--ro last-reached-time
+            |     |     |  +--ro seconds?   uint32
+            |     |     +--ro reachability-state?       Ipv6-nd-sh-state
+            |     |     +--ro link-layer-address?       yang:mac-address
+            |     |     +--ro encapsulation?            Ipv6-nd-media-encap
+            |     |     +--ro selected-encapsulation?   Ipv6-nd-media-encap
+            |     |     +--ro origin-encapsulation?     Ipv6-nd-neighbor-origin
+            |     |     +--ro interface-name?           string
+            |     |     +--ro location?                 xr:Node-id
+            |     |     +--ro is-router?                boolean
+            |     |     +--ro serg-flags?               uint32
+            |     |     +--ro vrfid?                    uint32
+
+</code></pre></div>
+
+<h3 id="setting-up-the-telemetry-configuration">Setting up the Telemetry configuration</h3>
+
+<p>The container path that we need to set up as part of the Telemetry configuration is highlighted above.
+On the router, this becomes the following <code class="highlighter-rouge">sensor-path</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>!
+telemetry model-driven
+ sensor-group IPV6Neighbor
+  sensor-path Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address
+ !
+</code></pre></div></div>
+
+<p>Creating a subscription out of this path to stream the data every 15 seconds, we get the following additional configuration:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+telemetry model-driven
+ sensor-group IPV6Neighbor
+  sensor-path Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address
+ !
+ <mark>subscription IPV6
+  sensor-group-id IPV6Neighbor sample-interval 15000</mark>
+ !
+!
+</code></pre></div>
+
+<p>If we wait a few seconds, we will notice that this sensor-path gets <code class="highlighter-rouge">Resolved</code> indicating that the router is now ready to send Telemetry data to an external collector.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#show  telemetry model-driven subscription IPV6 internal
+Mon Sep  3 10:50:20.451 UTC
+Subscription:  IPV6
+-------------
+  State:       NA
+  Sensor groups:
+  Id: IPV6Neighbor
+    Sample Interval:      15000 ms
+    Sensor Path:          Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address
+    <mark>Sensor Path State:    Resolved</mark>
+
+  Collection Groups:
+  ------------------
+  No active collection groups
+
+RP/0/RP0/CPU0:r1#
+
+</code></pre></div>
+
+<h2 id="testing-the-sensor-path">Testing the Sensor path</h2>
+
+<p>Before we proceed, let’s actually test the sensor path to make sure we’re getting the relevant data. Starting with release 6.3.1, this can be done on the router itself  by using the following CLI command:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+run mdt_exec -s &lt;your_sensor_path&gt; -c &lt;cadence&gt;
+</code></pre></div>
+
+<p>Trying this out on router <code class="highlighter-rouge">r1</code> for the sensor_path=<code class="highlighter-rouge">Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address</code> and cadence=<code class="highlighter-rouge">2000</code> (2 seconds), we get:</p>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #e6f2f7;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Just press `Enter` to terminate.
+</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RP/0/RP0/CPU0:r1#run mdt_exec -s Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address -c 2000
+Mon Sep  3 17:54:56.475 UTC
+Enter any key to exit...
+ Sub_id 200000001, flag 0, len 0
+ Sub_id 200000001, flag 4, len 3072
+--------
+{"node_id_str":"r1","subscription_id_str":"app_TEST_200000001","encoding_path":"Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address","collection_id":4,"collection_start_time":1535997296669,"msg_timestamp":1535997296675,"data_json":[{"timestamp":1535997296674,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/0","host-address":"1010:1010::20"},"content":{"last-reached-time":{"seconds":38},"reachability-state":"reachable","link-layer-address":"5254.0093.8ab0","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"dynamic","interface-name":"Gi0/0/0/0","location":"0/0/CPU0","is-router":true,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997296674,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/0","host-address":"fe80::5054:ff:fe93:8ab0"},"content":{"last-reached-time":{"seconds":179},"reachability-state":"reachable","link-layer-address":"5254.0093.8ab0","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"dynamic","interface-name":"Gi0/0/0/0","location":"0/0/CPU0","is-router":true,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997296675,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/0","host-address":"ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"},"content":{"last-reached-time":{"seconds":0},"reachability-state":"reachable","link-layer-address":"0000.0000.0000","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"static","interface-name":"Gi0/0/0/0","location":"0/0/CPU0","is-router":false,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997296676,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/1","host-address":"2020:2020::20"},"content":{"last-reached-time":{"seconds":170},"reachability-state":"reachable","link-layer-address":"5254.0093.8ab1","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"dynamic","interface-name":"Gi0/0/0/1","location":"0/0/CPU0","is-router":true,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997296676,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/1","host-address":"fe80::5054:ff:fe93:8ab1"},"content":{"last-reached-time":{"seconds":165},"reachability-state":"reachable","link-layer-address":"5254.0093.8ab1","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"dynamic","interface-name":"Gi0/0/0/1","location":"0/0/CPU0","is-router":true,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997296676,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/1","host-address":"ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"},"content":{"last-reached-time":{"seconds":0},"reachability-state":"reachable","link-layer-address":"0000.0000.0000","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"static","interface-name":"Gi0/0/0/1","location":"0/0/CPU0","is-router":false,"serg-flags":255,"vrfid":1610612736}}],"collection_end_time":1535997296677}
+--------
+ Sub_id 200000001, flag 4, len 3068
+--------
+{"node_id_str":"r1","subscription_id_str":"app_TEST_200000001","encoding_path":"Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address","collection_id":5,"collection_start_time":1535997298677,"msg_timestamp":1535997298684,"data_json":[{"timestamp":1535997298683,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/0","host-address":"1010:1010::20"},"content":{"last-reached-time":{"seconds":40},"reachability-state":"reachable","link-layer-address":"5254.0093.8ab0","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"dynamic","interface-name":"Gi0/0/0/0","location":"0/0/CPU0","is-router":true,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997298683,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/0","host-address":"fe80::5054:ff:fe93:8ab0"},"content":{"last-reached-time":{"seconds":181},"reachability-state":"delay","link-layer-address":"5254.0093.8ab0","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"dynamic","interface-name":"Gi0/0/0/0","location":"0/0/CPU0","is-router":true,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997298683,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/0","host-address":"ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"},"content":{"last-reached-time":{"seconds":0},"reachability-state":"reachable","link-layer-address":"0000.0000.0000","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"static","interface-name":"Gi0/0/0/0","location":"0/0/CPU0","is-router":false,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997298685,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/1","host-address":"2020:2020::20"},"content":{"last-reached-time":{"seconds":172},"reachability-state":"reachable","link-layer-address":"5254.0093.8ab1","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"dynamic","interface-name":"Gi0/0/0/1","location":"0/0/CPU0","is-router":true,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997298685,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/1","host-address":"fe80::5054:ff:fe93:8ab1"},"content":{"last-reached-time":{"seconds":167},"reachability-state":"reachable","link-layer-address":"5254.0093.8ab1","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"dynamic","interface-name":"Gi0/0/0/1","location":"0/0/CPU0","is-router":true,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997298685,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/1","host-address":"ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"},"content":{"last-reached-time":{"seconds":0},"reachability-state":"reachable","link-layer-address":"0000.0000.0000","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"static","interface-name":"Gi0/0/0/1","location":"0/0/CPU0","is-router":false,"serg-flags":255,"vrfid":1610612736}}],"collection_end_time":1535997298686}
+--------
+
+RP/0/RP0/CPU0:r1#
+
+</code></pre></div></div>
+
+<p>Let’s just structure the data above a little better to see what we’re
+receiving. Drop into router <code class="highlighter-rouge">r1</code>’s  python shell and use the json module to “pretty” print it.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RP/0/RP0/CPU0:r1#bash
+Mon Sep  3 17:58:00.770 UTC
+[r1:~]$
+[r1:~]$ python
+Python 2.7.3 (default, Dec 12 2017, 08:22:03)
+[GCC 4.9.1] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt; import json
+&gt;&gt;&gt;
+&gt;&gt;&gt; data="""{"node_id_str":"r1","subscription_id_str":"app_TEST_200000001","encoding_path":"Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address","collection_id":6,"collection_start_time":1535997300686,"msg_timestamp":1535997300703,"data_json":[{"timestamp":1535997300701,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/0","host-address":"1010:1010::20"},"content":{"last-reached-time":{"seconds":42},"reachability-state":"reachable","link-layer-address":"5254.0093.8ab0","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"dynamic","interface-name":"Gi0/0/0/0","location":"0/0/CPU0","is-router":true,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997300701,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/0","host-address":"fe80::5054:ff:fe93:8ab0"},"content":{"last-reached-time":{"seconds":183},"reachability-state":"delay","link-layer-address":"5254.0093.8ab0","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"dynamic","interface-name":"Gi0/0/0/0","location":"0/0/CPU0","is-router":true,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997300701,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/0","host-address":"ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"},"content":{"last-reached-time":{"seconds":0},"reachability-state":"reachable","link-layer-address":"0000.0000.0000","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"static","interface-name":"Gi0/0/0/0","location":"0/0/CPU0","is-router":false,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997300707,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/1","host-address":"2020:2020::20"},"content":{"last-reached-time":{"seconds":174},"reachability-state":"reachable","link-layer-address":"5254.0093.8ab1","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"dynamic","interface-name":"Gi0/0/0/1","location":"0/0/CPU0","is-router":true,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997300707,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/1","host-address":"fe80::5054:ff:fe93:8ab1"},"content":{"last-reached-time":{"seconds":169},"reachability-state":"reachable","link-layer-address":"5254.0093.8ab1","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"dynamic","interface-name":"Gi0/0/0/1","location":"0/0/CPU0","is-router":true,"serg-flags":255,"vrfid":1610612736}},{"timestamp":1535997300707,"keys":{"node-name":"0/0/CPU0","interface-name":"GigabitEthernet0/0/0/1","host-address":"ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"},"content":{"last-reached-time":{"seconds":0},"reachability-state":"reachable","link-layer-address":"0000.0000.0000","encapsulation":"arpa","selected-encapsulation":"arpa","origin-encapsulation":"static","interface-name":"Gi0/0/0/1","location":"0/0/CPU0","is-router":false,"serg-flags":255,"vrfid":1610612736}}],"collection_end_time":1535997300709}"""
+&gt;&gt;&gt;
+&gt;&gt;&gt;
+&gt;&gt;&gt; print json.dumps(json.loads(data), indent=4)
+{
+   "encoding_path": "Cisco-IOS-XR-ipv6-nd-oper:ipv6-node-discovery/nodes/node/neighbor-interfaces/neighbor-interface/host-addresses/host-address",
+   "subscription_id_str": "app_TEST_200000001",
+   "collection_start_time": 1535997300686,
+   "msg_timestamp": 1535997300703,
+   "collection_end_time": 1535997300709,
+   "node_id_str": "r1",
+   "data_json": [
+       {
+           "keys": {
+               "node-name": "0/0/CPU0",
+               "interface-name": "GigabitEthernet0/0/0/0",
+               "host-address": "1010:1010::20"
+           },
+           "timestamp": 1535997300701,
+           "content": {
+               "vrfid": 1610612736,
+               "interface-name": "Gi0/0/0/0",
+               "last-reached-time": {
+                   "seconds": 42
+               },
+               "link-layer-address": "5254.0093.8ab0",
+               "selected-encapsulation": "arpa",
+               "is-router": true,
+               "serg-flags": 255,
+               "reachability-state": "reachable",
+               "location": "0/0/CPU0",
+               "encapsulation": "arpa",
+               "origin-encapsulation": "dynamic"
+           }
+       },
+       {
+           "keys": {
+               "node-name": "0/0/CPU0",
+               "interface-name": "GigabitEthernet0/0/0/0",
+               "host-address": "fe80::5054:ff:fe93:8ab0"
+           },
+           "timestamp": 1535997300701,
+           "content": {
+               "vrfid": 1610612736,
+               "interface-name": "Gi0/0/0/0",
+               "last-reached-time": {
+                   "seconds": 183
+               },
+               "link-layer-address": "5254.0093.8ab0",
+               "selected-encapsulation": "arpa",
+               "is-router": true,
+               "serg-flags": 255,
+               "reachability-state": "delay",
+               "location": "0/0/CPU0",
+               "encapsulation": "arpa",
+               "origin-encapsulation": "dynamic"
+           }
+       },
+       {
+           "keys": {
+               "node-name": "0/0/CPU0",
+               "interface-name": "GigabitEthernet0/0/0/0",
+               "host-address": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"
+           },
+           "timestamp": 1535997300701,
+           "content": {
+               "vrfid": 1610612736,
+               "interface-name": "Gi0/0/0/0",
+               "last-reached-time": {
+                   "seconds": 0
+               },
+               "link-layer-address": "0000.0000.0000",
+               "selected-encapsulation": "arpa",
+               "is-router": false,
+               "serg-flags": 255,
+               "reachability-state": "reachable",
+               "location": "0/0/CPU0",
+               "encapsulation": "arpa",
+               "origin-encapsulation": "static"
+           }
+       },
+       {
+           "keys": {
+               "node-name": "0/0/CPU0",
+               "interface-name": "GigabitEthernet0/0/0/1",
+               "host-address": "2020:2020::20"
+           },
+           "timestamp": 1535997300707,
+           "content": {
+               "vrfid": 1610612736,
+               "interface-name": "Gi0/0/0/1",
+               "last-reached-time": {
+                   "seconds": 174
+               },
+               "link-layer-address": "5254.0093.8ab1",
+               "selected-encapsulation": "arpa",
+               "is-router": true,
+               "serg-flags": 255,
+               "reachability-state": "reachable",
+               "location": "0/0/CPU0",
+               "encapsulation": "arpa",
+               "origin-encapsulation": "dynamic"
+           }
+       },
+       {
+           "keys": {
+               "node-name": "0/0/CPU0",
+               "interface-name": "GigabitEthernet0/0/0/1",
+               "host-address": "fe80::5054:ff:fe93:8ab1"
+           },
+           "timestamp": 1535997300707,
+           "content": {
+               "vrfid": 1610612736,
+               "interface-name": "Gi0/0/0/1",
+               "last-reached-time": {
+                   "seconds": 169
+               },
+               "link-layer-address": "5254.0093.8ab1",
+               "selected-encapsulation": "arpa",
+               "is-router": true,
+               "serg-flags": 255,
+               "reachability-state": "reachable",
+               "location": "0/0/CPU0",
+               "encapsulation": "arpa",
+               "origin-encapsulation": "dynamic"
+           }
+       },
+       {
+           "keys": {
+               "node-name": "0/0/CPU0",
+               "interface-name": "GigabitEthernet0/0/0/1",
+               "host-address": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"
+           },
+           "timestamp": 1535997300707,
+           "content": {
+               "vrfid": 1610612736,
+               "interface-name": "Gi0/0/0/1",
+               "last-reached-time": {
+                   "seconds": 0
+               },
+               "link-layer-address": "0000.0000.0000",
+               "selected-encapsulation": "arpa",
+               "is-router": false,
+               "serg-flags": 255,
+               "reachability-state": "reachable",
+               "location": "0/0/CPU0",
+               "encapsulation": "arpa",
+               "origin-encapsulation": "static"
+           }
+       }
+   ],
+   "collection_id": 6
+}
+&gt;&gt;&gt;
+&gt;&gt;&gt;
+&gt;&gt;&gt; exit()
+[r1:~]$
+[r1:~]$ exit
+logout
+
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+
+</code></pre></div></div>
+
+<p style="margin: 2em 0!important;padding: 0.85em;font-family: CiscoSans,Arial,Helvetica,sans-serif;font-size: 0.85em !important;text-indent: initial;background-color: #eff9ef;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,127,171,0.25);">Perfect! We're receiving all the fields we need as per the original show command. You're now ready to start building your own Telemetry collector.
+</p>
+
+<h2 id="building-your-own-clients">Building your own clients</h2>
+
+<p>We learnt in the earlier sections that IOS-XR supports streaming Telemetry data over raw TCP (dial-out) and gRPC (dial-in and dial-out). The structure of the streamable data is derived from Oper YANG models.</p>
+
+<p>Now, these Oper Yang-models can also be mapped to equivalent protobuf models, represented in <code class="highlighter-rouge">.proto</code> files.
+This is especially useful when we need to write a Telemetry client code from scratch.
+By exposing these protobuf-based capabilities over a gRPC connection, it enables a user to utilize gRPC’s intrinsic architecture to generate bindings(code/libraries) in a language of choice (python, c++, golang etc.).</p>
+
+<p>To view the .proto files corresponding to the Oper Yang models in XR, clone the following git repo on the <code class="highlighter-rouge">devbox</code> and peek into the <code class="highlighter-rouge">proto_archive/</code> directory:</p>
+
+<blockquote>
+  <p><a href="https://github.com/cisco/bigmuddy-network-telemetry-proto">https://github.com/cisco/bigmuddy-network-telemetry-proto</a></p>
+</blockquote>
+
+<p>This represents all the available Oper Yang models arranged as folders containing the .proto files.
+We can generate bindings in the language of choice (python, c++, golang etc.) using these .proto files and leverage the bindings to subscribe to the router’s Telemetry stream as well as decode the data received. We will delve into these scenarios and write our own Telemetry client/collector in subsequent labs in this module.</p>
+
+<h2 id="clean-up">Clean up!</h2>
+
+<p>Finally, clean up the telemetry configuration from router r1 as we progress to the next stage of the lab:</p>
+
+<p>Remove existing telemetry configurations from <code class="highlighter-rouge">r1</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#conf t
+Tue Sep  4 08:01:03.269 UTC
+RP/0/RP0/CPU0:r1(config)#no telemetry model-driven
+RP/0/RP0/CPU0:r1(config)#commit
+Tue Sep  4 08:01:06.422 UTC
+RP/0/RP0/CPU0:r1(config)#
+RP/0/RP0/CPU0:r1#
+RP/0/RP0/CPU0:r1#
+
+</code></pre></div></div>
