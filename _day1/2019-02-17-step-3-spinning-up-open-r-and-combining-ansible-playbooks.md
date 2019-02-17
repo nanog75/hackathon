@@ -17,3 +17,20 @@ tags:
 {% include toc %}
 {% include base_path %} 
 
+
+
+If you've accomplished the tasks in Step2, then you're one step closer to finishing off Day1 operations.
+
+At the end of Step2, you should have:
+
+
+1.  IBGP configuration applied to rtr1 and rtr4
+
+2.  A Telemetry collector running inside a docker container collecting data over gNMI from a router of your choice and pushing the data to a kafka bus.
+
+
+
+**Note**: Even if you were not able to complete the steps in Step 2, you can still proceed with the steps outlined below and go back to solving the problem statements in Step 2.
+
+
+
