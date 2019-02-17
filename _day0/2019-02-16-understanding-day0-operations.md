@@ -130,7 +130,7 @@ The goal of the Day0 group is to make all the routers perform ZTP to attain a ba
 
 **Important**: ZTP is an impactful operation and can affect other users in the topology. Therefore, to start off, only `rtr2` has been earmarked for exclusive use by the Day0 group.
 **DO NOT** perform ZTP on the other routers in your topology until you have a working ZTP script.
-
+{: .notice--danger}
 
 ## The Basics
 
@@ -158,7 +158,12 @@ To respond to the router with the required file (script or config), the DHCP ser
 The DHCP server expects the serial number to  provided by the IOS-XR router in Option 61 (client-identifier) for DHCPv4 as well as in option 124 which contains both the Serial Number as well as the platform family and vendor code (9 for Cisco).
 
 You are NOT required to set up the DHCP server settings. This is already done for you.
-Each router in the topology has a unique, persistent Serial-Number as well as 
+Each router in the topology has a unique, persistent Serial-Number as well as a unique IP assigned to that Serial Number.
+
+As the file below shows, the following IP addresses are assigned based on the Serial Numbers:
+
+
+
 
 
 On the ZTP node, dump the `/etc/dhcp/dhcpd.conf` file:
