@@ -390,8 +390,8 @@ The DHCP settings relevant to rtr2 are highlighted below:
               {
                 if (substring(option vendor-class.cisco-vendor-id-vendor-class,19,99)="R-IOSXRV9000-CC")
                 {
-                    <mark>option bootfile-name "http://100.96.0.20/scripts/ztp_ncclient.py";
-                    #option bootfile-name "http://100.96.0.20/configs/rtr2.config";</mark>
+                    <mark>option bootfile-name "http://100.96.0.20/scripts/ztp_ncclient.py";</mark>
+                    <mark>#option bootfile-name "http://100.96.0.20/configs/rtr2.config";</mark>
                 }
               }
             }
