@@ -19,9 +19,9 @@ tags:
 
 
 
-If you've accomplished the tasks in Step2, then you're one step closer to finishing off Day1 operations.
+If you've accomplished the tasks in Step 2, then you're one step closer to finishing off Day1 operations.
 
-At the end of Step2, you should have:
+At the end of Step 2, you should have:
 
 
 1.  IBGP configuration applied to rtr1 and rtr4
@@ -37,7 +37,7 @@ At the end of Step2, you should have:
 ### Check if BGP neighbors are up on rtr1 and rtr4
 
 
-Now, if Step2 was successful, you should have the following configuration on rtr1 and rtr4 for BGP:
+Now, if Step 2 was successful, you should have the following configuration on rtr1 and rtr4 for BGP:
 
 
 **rtr1 BGP configuration**:
@@ -118,7 +118,7 @@ RP/0/RP0/CPU0:rtr1#
 
 ```
 
-It's idle! Well this should be obvious, we don't have an IGP running to distribute the loopbacks  (loopback 0) that are used for BGP session configuration.
+It's idle! Well this should be obvious, we don't have an IGP running to distribute the loopbacks  (loopback0) that are used for BGP session configuration.
 
 You could run an IGP of your choice (isis, ospf) using YDK or ncclient scripts, but let's make things interesting by using  Open/R as an IGP instead.
 
@@ -176,7 +176,7 @@ tesuto@dev1:~/code-samples/ansible/playbooks/openr_bringup$ tree .
 tesuto@dev1:~/code-samples/ansible/playbooks/openr_bringup$ 
 ```
 
-You'll see that there is an ansible playbook (docker_bringup.yml) along with a few scripts.
+You'll see that there is an Ansible playbook (docker_bringup.yml) along with a few scripts.
 The `automate_docker_setup.py` script is a simple python script that restarts the docker daemon on the routers and pulls the `akshshar/openr-xr` docker image onto each router.
 The remaining files under the `openr` directory are associated with the basic launch and configuration settings of open/R for each router.  
 
@@ -264,9 +264,9 @@ tesuto@dev1:~/code-samples/ansible/playbooks/openr_bringup$ cat docker_bringup.y
 
 ```
 
-*  Thus,  the playbook first executes the `automate_docker_setup.py` script on each router thereby pulling the required docker image on to each router.  
+*  The playbook first executes the `automate_docker_setup.py` script on each router thereby pulling the required docker image on to each router.  
 *  Next it transfers all the required configuration files and scripts to the `/misc/app_host` directory on the routers from where it would be easy to mount these files into the final running container on each router.
-*  In the end, it checks if Open/R is already running and if so, it removes it before spinning up a new one.  
+*  Finally, it checks if Open/R is already running and if so, it removes it before spinning up a new one.  
 
 
 ### Run the Ansible playbook for Open/R
