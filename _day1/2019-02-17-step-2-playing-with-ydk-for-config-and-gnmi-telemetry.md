@@ -645,7 +645,7 @@ tesuto@dev1:~/yang$
 
 
 
-## Your Task
+## Your Tasks
 
 
 Your task is to get the following configuration on rtr1 and rtr2 using YDK.
@@ -699,7 +699,7 @@ router bgp 65000
 ```
 
 
-### Use Ansible with YDK
+### Task 1:  Use Ansible with YDK
 
 
 Since you are going to spend time to figure out the YDK code to create the above configuration, you might as well do it as a module of Ansible!
@@ -1011,15 +1011,113 @@ tesuto@dev1:~/code-samples/ansible$
 
 ```
 
-This is using the exact same code as the earlier YDK script in the `config_bgp_ipv4()` function above. So deconstruct the fields from `openconfig-bgp.yang model` you need to fill out for YDK to generate the required RPC call for you and complete the code in the above library file.
+This is using the exact same code as the earlier YDK script in the `config_bgp_ipv4()` function above. So deconstruct the fields from `openconfig-bgp.yang model` you need to fill out, for YDK to generate the required RPC call. Then you can complete the code in the above library file.
 
-No need to touch any part of the code other than  config_bgp_ipv4() (look for the comment in the code) and you should be then able to run the ansible-playbook to configure BGP for you. It will eventually look something like this (verbose output with ansible):
+No need to touch any part of the code other than  `config_bgp_ipv4()` (look for the comment in the code) and you should be then able to run the ansible-playbook to configure BGP for you.
+
+
+
+
+
+### Telemetry with gNMI and YDK
+
+
+It is also possible to use YDK with gNMI to create a simple telemetry collector. The code for this can be found in the `code-samples/telemetry` directory:
+
+
+```python
+tesuto@dev1:~$ cd ~/code-samples/telemetry/
+tesuto@dev1:~/code-samples/telemetry$ pwd
+/home/tesuto/code-samples/telemetry
+tesuto@dev1:~/code-samples/telemetry$ 
+tesuto@dev1:~/code-samples/telemetry$ 
+tesuto@dev1:~/code-samples/telemetry$ 
+tesuto@dev1:~/code-samples/telemetry$ cat telemetry.py 
+#!/usr/bin/env python
+import pdb
+import json
+
+#import logging
+#logger = logging.getLogger("ydk")
+#logger.setLevel(logging.INFO)
+#handler = logging.StreamHandler()
+#formatter = logging.Formatter(("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+#handler.setFormatter(formatter)
+#logger.addHandler(handler)
+import time
+
+from ydk.models.openconfig import openconfig_interfaces
+from ydk.models.openconfig import openconfig_network_instance
+from ydk.path import Repository
+from ydk.gnmi.providers import gNMIServiceProvider
+from ydk.gnmi.services import gNMIService
+from ydk.gnmi.services import gNMISubscription
+from ydk.filters import YFilter
+import pdb, sys
+import json
+import grpc
+from gnmi_pb2 import SubscribeResponse
+
+from google.protobuf import text_format
+from google.protobuf.json_format import MessageToJson
+from kafka import KafkaConsumer, KafkaProducer
+
+producer = KafkaProducer(bootstrap_servers='100.96.0.22:9092')
+
+# Callback function to handle telemetry data
+def push_to_kafka(var):
+    response = SubscribeResponse()
+    text_format.Parse(var, response)
+    jsonResponse = MessageToJson(response)
+    producer.send('gnmi-telemetry', json.dumps(jsonResponse).encode('utf-8'))
+
+
+# Function to subscribe to telemetry data
+def subscribe(func):
+    gnmi = gNMIService()
+
+    try:
+        try:
+            #Running on dev1 environment of tesuto cloud setup for Nanog75
+            repository = Repository('/home/tesuto/yang/')
+        except:
+            #Running in a docker container started off image akshshar/nanog75-telemetry
+            repository = Repository('/root/yang/')
+            raise
+    except Exception as e:
+        print("Failed to import yang models, check repository path,  aborting....")
+        sys.exit(1)
+
+    provider = gNMIServiceProvider(repo=repository, address='100.96.0.14', port=57777, username='rtrdev', password='nanog75sf')
+
+    # The below will create a telemetry subscription path 'openconfig-interfaces:interfaces/interface'
+    interfaces = openconfig_interfaces.Interfaces()
+    interface = openconfig_interfaces.Interfaces.Interface()
+    interfaces.interface.append(interface)
+
+    network_instances = openconfig_network_instance.NetworkInstances()
+
+
+    subscription = gNMISubscription()
+    subscription.entity = interfaces #network_instances
+
+    subscription.subscription_mode = "SAMPLE";
+    subscription.sample_interval = 10* 1000000000;
+    subscription.suppress_redundant = False;
+    subscription.heartbeat_interval = 100 * 1000000000;
+
+    # Subscribe for updates in STREAM mode.
+    var = gnmi.subscribe(provider, subscription, 10, "STREAM", "PROTO", func)
+
+
+if __name__ == "__main__":
+    subscribe(push_to_kafka)
+
+tesuto@dev1:~/code-samples/telemetry$ 
 
 
 ```
 
 
 
-
-```
 
