@@ -1143,5 +1143,120 @@ This is simple. We have already created a docker image for you that contains all
 with the tag:  `akshshar/nanog75-telemetry`
 
 
+This docker image can be spun up as follows:  
+
+
+```
+tesuto@dev1:~/code-samples/telemetry$ pwd
+/home/tesuto/code-samples/telemetry
+tesuto@dev1:~/code-samples/telemetry$ docker run -itd --name telemetry  -v /home/tesuto/code-samples/telemetry/telemetry.py:/root/telemetry.py akshshar/nanog75-telemetry  /bin/bash -c "python3 /root/telemetry.py"
+de69c0b8ecc43f5b931ca17346a729688106367cb5f91b7d7ab9ee07d962e9ba
+tesuto@dev1:~/code-samples/telemetry$ 
+tesuto@dev1:~/code-samples/telemetry$ docker ps -l
+CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS               NAMES
+de69c0b8ecc4        akshshar/nanog75-telemetry   "/bin/bash -c 'pytho…"   15 seconds ago      Up 13 seconds                           telemetry
+tesuto@dev1:~/code-samples/telemetry$ 
+
+
+```
+
+
+To test that the telemetry collector inside the docker container is actually sending data to the kafka bus, let's execute the kafka consumer script provided as an aid in the same `telemetry/` directory:
+
+
+You would need to install `kafka-python` before you execute the `kafka_consumer.py` script:
+
+```
+esuto@dev1:~/code-samples/telemetry$ 
+tesuto@dev1:~/code-samples/telemetry$ 
+tesuto@dev1:~/code-samples/telemetry$ sudo pip3 install kafka-python
+The directory '/home/tesuto/.cache/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+The directory '/home/tesuto/.cache/pip' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+Collecting kafka-python
+  Downloading https://files.pythonhosted.org/packages/5f/89/f13d9b1f32cc37168788215a7ad1e4c133915f6853660a447660393b577d/kafka_python-1.4.4-py2.py3-none-any.whl (255kB)
+    100% |████████████████████████████████| 256kB 12.5MB/s 
+Installing collected packages: kafka-python
+Successfully installed kafka-python-1.4.4
+tesuto@dev1:~/code-samples/telemetry$ 
+```
+
+
+Now run the kafka_consumer.py script:  
+
+
+
+```
+tesuto@dev1:~/code-samples/telemetry$ 
+tesuto@dev1:~/code-samples/telemetry$ python3 kafka_consumer.py 
+{
+  "update": {
+    "update": [
+      {
+        "path": {
+          "elem": [
+            {
+              "key": {
+                "name": "MgmtEth0/RP0/CPU0/0"
+              },
+              "name": "interface"
+            },
+            {
+              "name": "state"
+            },
+            {
+              "name": "type"
+            }
+          ]
+        },
+        "val": {
+          "stringVal": "ethernetCsmacd"
+        }
+      },
+      {
+        "path": {
+          "elem": [
+            {
+              "key": {
+                "name": "MgmtEth0/RP0/CPU0/0"
+              },
+              "name": "interface"
+            },
+            {
+              "name": "state"
+            },
+            {
+              "name": "mtu"
+            }
+          ]
+        },
+        "val": {
+          "uintVal": "1514"
+        }
+      },
+      {
+        "path": {
+          "elem": [
+            {
+              "key": {
+                "name": "MgmtEth0/RP0/CPU0/0"
+              },
+              "name": "interface"
+            },
+            {
+              "name": "state"
+            },
+            {
+              "name": "name"
+            }
+          ]
+        },
+        "val": {
+          "stringVal": "MgmtEth0/RP0/CPU0/0"
+        }
+      },
+      
+    ...........
+
+```
 
 
