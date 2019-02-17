@@ -299,6 +299,129 @@ prose:
     - _config.travis.yml
 
   metadata:
+    _day0:
+      - name: "title"
+        field:
+            element: "text"
+            label: "Title"
+            value: ""
+      - name: "author"
+        field:
+            element: "text"
+            label: "Author"
+      - name: "excerpt"
+        field:
+            element: "text"
+            help: "Brief description of the blog"
+            label: "Excerpt"
+      - name: "tags"
+        field:
+            element: "multiselect"
+            label: "Add Tags"
+            placeholder: "Choose Tags"
+            alterable: true
+            options:
+             - name: "nanog75"
+               value: "nanog75"
+             - name: "IOS-XR"
+               value: "iosxr"
+             - name: "Cisco"
+               value: "cisco"
+             - name: "tesuto"
+               value: "tesuto"
+      - name: "published"
+        field:
+            label: "Published"
+            element: "checkbox"
+            value: false
+      - name: "date"
+        field:
+            element: "text"
+            label: "Date"
+            value: "CURRENT_DATETIME"
+
+    _day1:
+      - name: "title"
+        field:
+            element: "text"
+            label: "Title"
+            value: ""
+      - name: "author"
+        field:
+            element: "text"
+            label: "Author"
+      - name: "excerpt"
+        field:
+            element: "text"
+            help: "Brief description of the blog"
+            label: "Excerpt"
+      - name: "tags"
+        field:
+            element: "multiselect"
+            label: "Add Tags"
+            placeholder: "Choose Tags"
+            alterable: true
+            options:
+             - name: "nanog75"
+               value: "nanog75"
+             - name: "IOS-XR"
+               value: "iosxr"
+             - name: "Cisco"
+               value: "cisco"
+             - name: "tesuto"
+               value: "tesuto"
+      - name: "published"
+        field:
+            label: "Published"
+            element: "checkbox"
+            value: false
+      - name: "date"
+        field:
+            element: "text"
+            label: "Date"
+            value: "CURRENT_DATETIME"
+
+    _day3:
+      - name: "title"
+        field:
+            element: "text"
+            label: "Title"
+            value: ""
+      - name: "author"
+        field:
+            element: "text"
+            label: "Author"
+      - name: "excerpt"
+        field:
+            element: "text"
+            help: "Brief description of the blog"
+            label: "Excerpt"
+      - name: "tags"
+        field:
+            element: "multiselect"
+            label: "Add Tags"
+            placeholder: "Choose Tags"
+            alterable: true
+            options:
+             - name: "nanog75"
+               value: "nanog75"
+             - name: "IOS-XR"
+               value: "iosxr"
+             - name: "Cisco"
+               value: "cisco"
+             - name: "tesuto"
+               value: "tesuto"
+      - name: "published"
+        field:
+            label: "Published"
+            element: "checkbox"
+            value: false
+      - name: "date"
+        field:
+            element: "text"
+            label: "Date"
+            value: "CURRENT_DATETIME"
+
     _wkinstructions:
       - name: "title"
         field:
