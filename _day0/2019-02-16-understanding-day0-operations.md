@@ -604,7 +604,6 @@ class ZtpFunctions(ZtpHelpers):
                 self.logger.debug(response["error"])
             return ""
 
-
 if __name__ == '__main__':
 
     # ZtpFunctions is a child class that inherits capabilities from
@@ -648,9 +647,7 @@ if __name__ == '__main__':
     else:
         ztp_script.syslogger.info("Failed to download python-pip rpm")
         sys.exit(1) 
-  
-
-
+ 
     
     # Install packages through pip and import them. Requires internet access
     # through the gateway in your ZTP LAN
