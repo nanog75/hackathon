@@ -13,3 +13,14 @@ tags:
 
 {% include toc %}
 {% include base_path %}
+
+
+
+## Day 1 Operations
+
+Day1 operations would comprise any service or feature activation or application deployment that is orchestrated on the routers after the Day0 operations have applied a base configuration on the routers.  
+
+
+
+
+
