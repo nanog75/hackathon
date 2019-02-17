@@ -161,6 +161,7 @@ collections:
   day2:
     output: true
     permalink: /:collection/:path/
+    
 
 # Defaults
 defaults:
@@ -381,7 +382,7 @@ prose:
             label: "Date"
             value: "CURRENT_DATETIME"
 
-    _day3:
+    _day2:
       - name: "title"
         field:
             element: "text"
