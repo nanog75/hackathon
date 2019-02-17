@@ -1030,8 +1030,6 @@ tesuto@dev1:~$ cd ~/code-samples/telemetry/
 tesuto@dev1:~/code-samples/telemetry$ pwd
 /home/tesuto/code-samples/telemetry
 tesuto@dev1:~/code-samples/telemetry$ 
-tesuto@dev1:~/code-samples/telemetry$ 
-tesuto@dev1:~/code-samples/telemetry$ 
 tesuto@dev1:~/code-samples/telemetry$ cat telemetry.py 
 #!/usr/bin/env python
 import pdb
@@ -1118,6 +1116,7 @@ tesuto@dev1:~/code-samples/telemetry$
 
 ```
 
+It can be seen from the above code YDK can be used with gNMI to set up a streaming subscriber that creates a callback to a function `push_to_kafka` in the code above. In other words, this code automatically pushes data received into the Kafka bus running on `dev1` at `100.96.0.20:9092`.
 
 
 
