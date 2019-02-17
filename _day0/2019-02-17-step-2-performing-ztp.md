@@ -165,4 +165,19 @@ Killed
 </div>
 
 
+
 ### Initiating a wipe and reset (Repair)
+
+The other option is to perform a repair on the node from the Tesuto UI.
+
+For this purpose login to the Tesuto UI at :   
+
+><https://cloud.tesuto.com>  
+
+with the following credentials:
+
+**Username**: pod**x**@tesuto.com # Replace x with your pod number
+**Password**: nanog75sf
+{: .notice--info}
+
+
