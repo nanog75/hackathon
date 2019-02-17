@@ -785,7 +785,7 @@ It shows 4 important steps:
         
     ```
 
-4)  Finally, clean up the environment set up on the router during the ncclient_init() process:
+4.  Finally, clean up the environment set up on the router during the ncclient_init() process:
     
     ```
     # Cleaning up the internal loopback configuration created as part of the
