@@ -49,12 +49,15 @@ tesuto@jumpbox:~$
 
 As the above output indicates, on the Base pod VM you press `?` to see the list of commands available to you.
 
-To console into router rtr2, simply type:  `console rtr2`:
+To console into router rtr2, simply type:  `console rtr2` on the base Pod VM:
 
-**Username**: rtrdev
-**Password**: nanog75sf
+>For your convenience, we have set up a backdoor user on the router with credentials:  
+>
+>**Username**: rtrdev
+>**Password**: nanog75sf  
+>
+>
 {: .notice--info}
-
 
 
 ```
