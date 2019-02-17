@@ -252,3 +252,10 @@ Cisco IOS-XR Team:
   bio         : "A Team of coders and network engineers determined to build the best network operating system for Service Providers."
   avatar      : "xrdocs_logo_circle.png"
   twitter     : "xrdocs"
+
+Nanog75 Hackathon Team:
+  name        : "Nanog75 Hackathon Team"
+  github      : "nanog75"
+  bio         : ""
+  avatar      : "nanog_hackathon_logo.png"
+  twitter     : "nanog"
