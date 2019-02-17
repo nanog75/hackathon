@@ -87,7 +87,7 @@ In the current topology for Day 1 (rtr2 is not available for Day1 and Day2 opera
 
 1. Ansible to orchestrate all the configurations and applications on the network and on all routers.
 
-2. Using gNMI as a way of communicating with the router for configuration using Yang models over gRPC as well as to subscribe to telemetry data from the routers.
+2. gNMI as a way of communicating with the router for configuration using Yang models over gRPC as well as to subscribe to telemetry data from the routers.
 
 3. YDK to enable the use of Yang models through python objects. Learn more about YDK here: <http://ydk.io> and its integration with gNMI here : <https://github.com/CiscoDevNet/ydk-py/tree/master/gnmi/samples>
 
