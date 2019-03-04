@@ -293,7 +293,7 @@ with the following credentials:
 
 
 
-![tesuto_repair_1.png]({{site.baseurl}}/images/tesuto_repair_1.png)
+
 
 
 Now click on your assigned pod number (`podx`) and it will open up the devices page for you. Hover to the button on right of the name `rtr2`, click and select `repair`.
