@@ -42,9 +42,8 @@ The topology for the hack is shown below:
 
 You will need the tesuto private key to ssh to the instances in your topology.  
 
-This key can be downloaded from here:    
-><https://storage.googleapis.com/tesuto-public/nanog75.key>  
-
+>The key location should have been sent to you via email.    
+ 
 Download and save the key in your local machine. This document assumes you saved it to ~/nanog75.key 
 
 ```
@@ -335,13 +334,3 @@ You will eventually need to have a playbook for each of the following operations
 
 
 Proceed to [Step 2]({{ base_path }}) to start understanding the provided code and building the ansible playbooks together.
-
-
-
-
-
-
-
-
-
-
