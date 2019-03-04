@@ -275,7 +275,8 @@ Killed
 
 ### Initiating a wipe and reset (Repair)
 
-**Note**:  You only need to do this to showcase a true ZTP workflow once you've already tested the ZTP script and the manual ZTP workflow as described above. Repair takes a long time (10+ minutes). Use the manual ZTP trigger process shown above to initiate the ZTP process while coding the script.
+**Note**:  You only need![pod_pic.png]({{site.baseurl}}/images/pod_pic.png)
+ to do this to showcase a true ZTP workflow once you've already tested the ZTP script and the manual ZTP workflow as described above. Repair takes a long time (10+ minutes). Use the manual ZTP trigger process shown above to initiate the ZTP process while coding the script.
 {: .notice--warning} 
 
 
@@ -287,13 +288,13 @@ For this purpose login to the Tesuto UI at :
 
 with the following credentials:
 
-**Username**:  &lt;Your email id&gt;
+**Username**:  &lt;Your email id&gt;  
 **Password**:  &lt;password provided via email&gt;
 {: .notice--info}
 
 
 
-
+![]({{site.baseurl}}/images/pod_pic.png)
 
 
 Now click on your assigned pod number (`podx`) and it will open up the devices page for you. Hover to the button on right of the name `rtr2`, click and select `repair`.
@@ -318,7 +319,8 @@ When ZTP is executing (whether manual or through repair), to view the ongoing lo
 <code>
 RP/0/RP0/CPU0:ios#
 RP/0/RP0/CPU0:ios#<mark>bash</mark>
-Sun Feb 17 09:50:47.670 UTC
+Sun Feb 17 09:50:47.670 UTC![pod_pic.png]({{site.baseurl}}/images/pod_pic.png)
+
 
 [host:~]$ 
 [host:~]$ <mark>tail -f /var/log/ztp.log</mark>
