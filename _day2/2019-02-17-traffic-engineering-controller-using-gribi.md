@@ -58,11 +58,10 @@ The topology for the hack is shown below:
 {% capture "connect_text" %}
 ### Connecting to the nodes in the topology:  
 
-You will need the tesuto private key to ssh to the instances in your topology.  
+You will need the tesuto private key to ssh to the instances in your topology.    
 
-This key can be downloaded from here:    
-><https://storage.googleapis.com/tesuto-public/nanog75.key>  
-
+>The key location should have been sent to you via email.    
+ 
 Download and save the key in your local machine. This document assumes you saved it to ~/nanog75.key 
 
 ```
@@ -1218,6 +1217,3 @@ And there you have it. Interface data streaming to dev2 from the kafka cluster r
 Now parse this information to create a snapshot of the state of the interfaces in the network depending upon which router this was gathered for.
 Then when an interface on the router is shut down, parse the DOWN state and trigger an event for the gribi controller to change LSP paths if needed!
 {: .notice--success}
-
-
-
