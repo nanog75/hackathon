@@ -294,7 +294,7 @@ with the following credentials:
 
 
 **Important**: DO NOT interact with any pod other than the pod assigned to you. Be careful when you click on the pod number as you proceed.  
-{: .notice--danger} . 
+{: .notice--danger}
 
 ![]({{site.baseurl}}/images/pod_pic.png)
 
