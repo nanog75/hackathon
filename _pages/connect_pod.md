@@ -25,7 +25,7 @@ You will need the tesuto private key to ssh to the instances in your topology.
 >The key location should have been sent to you via email.    
  
 
-Download and save the key in your local machine. This document assumes you saved it to ~/nanog75.key 
+Download and save the key in your local machine. This document assumes you saved it to `~/nanog75.key`. 
 
 
 Change the permission of the key file before using it:
