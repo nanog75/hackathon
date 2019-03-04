@@ -76,62 +76,6 @@ ssh -i ~/nanog75.key tesuto@ztp.hackathon.podx.cloud.tesuto.com
 
 
 
-
-
-The instructions to connect to your pod can be found here: 
-
->[Connect to your pod]({{ base_path }}/assets/NANOG75_Hackathon_Lab_Info.pdf)
-
-
-The topology for the hack is shown below: 
-
-![]({{ base_path }}/images/topology_nanog75.png)  
-
-
-{% capture "connect_text" %}
-### Connecting to the nodes in the topology:  
-
-You will need the tesuto private key to ssh to the instances in your topology.  
-
->The key location should have been sent to you via email.    
- 
-Download and save the key in your local machine. This document assumes you saved it to ~/nanog75.key 
-
-```
-curl -o ~/nanog75.key https://storage.googleapis.com/tesuto-public/nanog75.key 
-```
-
-Change the permission of the key file before using it:
-
-```
-chmod 400 ~/nanog75.key
-```
-
-
-Assuming the pod number assigned to you is `x`, the FQDN to access each of the nodes in the topology is: 
-
-> 1. **JumpHost**:     hackathon.pod`x`.cloud.tesuto.com
-> 2. **ztp**:          ztp.hackathon.pod`x`.cloud.tesuto.com
-> 3. **dev1**:         dev1.hackathon.pod`x`.cloud.tesuto.com
-> 4. **dev2**:         dev2.hackathon.pod`x`.cloud.tesuto.com
-
-Using the key downloaded, ssh to the instances like so (for example for the dev1 node):
-
-```
-ssh -i ~/nanog75.key tesuto@dev1.hackathon.podx.cloud.tesuto.com
-
-```
-{% endcapture %}
-
-
-<div class="notice--info">
-  {{ connect_text | markdownify }}
- </div>
-
-
-
-
-
 ## Basic Components
 
 In the current topology for Day 1 (rtr2 is not available for Day1 and Day2 operations until Day0 group successfully bootstraps it),  the components we intend to use are:
