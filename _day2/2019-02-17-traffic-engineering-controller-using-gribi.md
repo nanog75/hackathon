@@ -47,11 +47,6 @@ The API model (proto files) can be found here :
 Make sure you have access to a Pod based on the pod number assigned to you.
 The instructions to connect to your pod can be found here: 
 
-## Before we Begin
-
-Make sure you have access to a Pod based on the pod number assigned to you.
-The instructions to connect to your pod can be found here: 
-
 >[Connect to your pod]({{ base_path }}/connect-to-pods/)
 
 
