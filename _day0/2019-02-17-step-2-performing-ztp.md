@@ -287,8 +287,8 @@ For this purpose login to the Tesuto UI at :
 
 with the following credentials:
 
-**Username**: pod**x**@tesuto.com # Replace x with your pod number
-**Password**: nanog75sf
+**Username**:  <Your email id>
+**Password**:  <password provided via email>
 {: .notice--info}
 
 
@@ -296,7 +296,7 @@ with the following credentials:
 ![tesuto_repair_1.png]({{site.baseurl}}/images/tesuto_repair_1.png)
 
 
-Now click on `hackathon` and it will open up the devices page for you. Hover to the button on right of the name `rtr2`, click and select `repair`.
+Now click on your assigned pod number (`podx`) and it will open up the devices page for you. Hover to the button on right of the name `rtr2`, click and select `repair`.
 
 
 ![tesuto_repair2.png]({{site.baseurl}}/images/tesuto_repair2.png)
@@ -341,8 +341,3 @@ You're all set to execute ZTP!
 
 
 To understand how to modify the ZTP script provided and to use appropriate Yang Models to achieve the required configuration, move on to [Step3]({{ base_path }})
-
-
-
-
-
