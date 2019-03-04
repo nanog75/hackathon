@@ -287,8 +287,8 @@ For this purpose login to the Tesuto UI at :
 
 with the following credentials:
 
-**Username**:  <Your email id>
-**Password**:  <password provided via email>
+**Username**:  &lt;Your email id&gt;
+**Password**:  &lt;password provided via email&gt;
 {: .notice--info}
 
 
