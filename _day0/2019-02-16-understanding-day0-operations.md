@@ -22,7 +22,7 @@ excerpt: >-
 Make sure you have access to a Pod based on the pod number assigned to you.
 The instructions to connect to your pod can be found here: 
 
->[Connect to your pod]({{ base_path }}/assets/NANOG75_Hackathon_Lab_Info.pdf)
+>[Connect to your pod]({{ base_path }}/connect-to-pods/)
 
 
 The topology for the hack is shown below: 
@@ -39,9 +39,6 @@ You will need the tesuto private key to ssh to the instances in your topology.
 
 Download and save the key in your local machine. This document assumes you saved it to ~/nanog75.key 
 
-```
-curl -o ~/nanog75.key https://storage.googleapis.com/tesuto-public/nanog75.key 
-```
 
 Change the permission of the key file before using it:
 
