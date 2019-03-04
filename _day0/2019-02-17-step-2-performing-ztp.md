@@ -289,7 +289,7 @@ For this purpose login to the Tesuto UI at :
 with the following credentials:
 
 **Username**:  &lt;Your email id&gt;  
-**Password**:  &lt;password provided via email&gt;
+**Password**:  &lt;hackpod123&gt;
 {: .notice--info}
 
 
